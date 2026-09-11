@@ -186,3 +186,100 @@ function cms_nhomc_tin_tuc_ngang_shortcode($atts) {
 }
 add_shortcode('tin_tuc_ngang', 'cms_nhomc_tin_tuc_ngang_shortcode');
 
+/**
+ * Render Widget: BÀI VIẾT MỚI (Recent Posts)
+ */
+function cms_nhomc_render_recent_posts_widget($limit = 5, $title = 'BÀI VIẾT MỚI') {
+    $args = array(
+        'posts_per_page'      => intval($limit),
+        'post_status'         => 'publish',
+        'orderby'             => 'date',
+        'order'               => 'DESC',
+        'ignore_sticky_posts' => 1,
+    );
+    $query = new WP_Query($args);
+
+    if ($query->have_posts()) :
+    ?>
+        <div class="cms-sidebar-widget widget-recent-posts">
+            <h3 class="widget-title widget-title-recent"><?php echo esc_html($title); ?></h3>
+            <ul class="sidebar-post-list">
+                <?php while ($query->have_posts()) : $query->the_post(); 
+                    $thumb_url = cms_nhomc_get_post_thumbnail_url(get_the_ID());
+                ?>
+                    <li class="sidebar-post-item">
+                        <div class="sidebar-post-thumb">
+                            <a href="<?php the_permalink(); ?>">
+                                <img src="<?php echo esc_url($thumb_url); ?>" alt="<?php the_title_attribute(); ?>" loading="lazy" />
+                            </a>
+                        </div>
+                        <div class="sidebar-post-info">
+                            <h4 class="sidebar-post-title">
+                                <a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
+                            </h4>
+                            <span class="sidebar-post-date"><?php echo get_the_date('d/m/Y'); ?></span>
+                        </div>
+                    </li>
+                <?php endwhile; wp_reset_postdata(); ?>
+            </ul>
+        </div>
+    <?php
+    endif;
+}
+
+/**
+ * Render Widget: BÀI VIẾT NỔI BẬT (Featured Posts)
+ */
+function cms_nhomc_render_featured_posts_widget($limit = 5, $title = 'BÀI VIẾT NỔI BẬT') {
+    // 1. Tìm các bài viết thuộc tag hoặc category "Nổi Bật" hoặc có meta _is_featured
+    $args = array(
+        'posts_per_page'      => intval($limit),
+        'post_status'         => 'publish',
+        'category_name'       => 'noi-bat',
+        'orderby'             => 'date',
+        'order'               => 'DESC',
+        'ignore_sticky_posts' => 1,
+    );
+    $query = new WP_Query($args);
+
+    // Nếu chưa có category nổi bật hoặc ít hơn limit, lấy theo thứ tự khác hoặc các bài còn lại
+    if (!$query->have_posts() || $query->post_count < 2) {
+        $args_fallback = array(
+            'posts_per_page'      => intval($limit),
+            'post_status'         => 'publish',
+            'orderby'             => 'date',
+            'order'               => 'ASC', // Lấy các bài nổi bật đặc thù
+            'ignore_sticky_posts' => 1,
+        );
+        $query = new WP_Query($args_fallback);
+    }
+
+    if ($query->have_posts()) :
+    ?>
+        <div class="cms-sidebar-widget widget-featured-posts">
+            <h3 class="widget-title widget-title-featured"><?php echo esc_html($title); ?></h3>
+            <ul class="sidebar-post-list">
+                <?php while ($query->have_posts()) : $query->the_post(); 
+                    $thumb_url = cms_nhomc_get_post_thumbnail_url(get_the_ID());
+                ?>
+                    <li class="sidebar-post-item">
+                        <div class="sidebar-post-thumb">
+                            <a href="<?php the_permalink(); ?>">
+                                <img src="<?php echo esc_url($thumb_url); ?>" alt="<?php the_title_attribute(); ?>" loading="lazy" />
+                            </a>
+                        </div>
+                        <div class="sidebar-post-info">
+                            <h4 class="sidebar-post-title">
+                                <a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
+                            </h4>
+                            <span class="sidebar-post-date"><?php echo get_the_date('d/m/Y'); ?></span>
+                        </div>
+                    </li>
+                <?php endwhile; wp_reset_postdata(); ?>
+            </ul>
+        </div>
+    <?php
+    endif;
+}
+
+
