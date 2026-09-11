@@ -844,3 +844,305 @@ section#footer {
     padding-right: 8px;
   }
 }
+
+/* ====================================================
+   (4) GIAO DIỆN CHI TIẾT BÀI VIẾT (SINGLE POST DETAIL)
+   ==================================================== */
+.cms-single-container {
+  max-width: 980px;
+  margin: 30px auto 50px;
+  padding: 0 20px;
+}
+
+.cms-single-article {
+  background: #ffffff;
+  padding: 36px 40px;
+  border-radius: 6px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+  border: 1px solid #eef2f6;
+}
+
+/* Breadcrumbs */
+.cms-breadcrumb {
+  font-size: 13px;
+  color: #8c98a4;
+  margin-bottom: 24px;
+  line-height: 1.5;
+}
+
+.cms-breadcrumb a {
+  color: #555555;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.cms-breadcrumb a:hover {
+  color: #1254b8;
+}
+
+.cms-breadcrumb .sep {
+  margin: 0 8px;
+  color: #cbd5e1;
+}
+
+.cms-breadcrumb .current {
+  color: #8c98a4;
+}
+
+/* Tiêu đề bài viết H1 */
+.single-post-title {
+  font-size: 26px;
+  font-weight: 700;
+  line-height: 1.38;
+  color: #111827;
+  margin-bottom: 20px;
+}
+
+/* Sapo / Đoạn dẫn */
+.single-post-lead {
+  font-size: 14.5px;
+  font-style: italic;
+  color: #4b5563;
+  line-height: 1.65;
+  margin-bottom: 24px;
+  text-align: justify;
+}
+
+.single-post-lead p {
+  margin-bottom: 0;
+}
+
+/* Nội dung bài viết */
+.single-post-content {
+  font-size: 15px;
+  color: #2b3445;
+  line-height: 1.75;
+}
+
+.single-post-content p {
+  margin-bottom: 18px;
+  text-align: justify;
+}
+
+.single-post-content img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 24px auto;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.single-post-content blockquote {
+  margin: 24px 0;
+  padding: 16px 22px;
+  background: #f8fafc;
+  border-left: 3px solid #1254b8;
+  font-style: italic;
+  color: #475569;
+  border-radius: 0 4px 4px 0;
+}
+
+.single-post-content blockquote p {
+  margin-bottom: 8px;
+}
+
+.single-post-content blockquote p:last-child {
+  margin-bottom: 0;
+}
+
+.single-post-content ul,
+.single-post-content ol {
+  margin: 16px 0 20px 24px;
+}
+
+.single-post-content li {
+  margin-bottom: 8px;
+}
+
+.single-post-content strong {
+  color: #0f172a;
+  font-weight: 700;
+}
+
+/* Tags viền nét đứt */
+.single-post-tags {
+  border-top: 1px dashed #cbd5e1;
+  border-bottom: 1px dashed #cbd5e1;
+  padding: 14px 0;
+  margin: 36px 0 28px;
+  font-size: 13.5px;
+  color: #64748b;
+}
+
+.single-post-tags .tags-label {
+  font-weight: 600;
+  color: #1e293b;
+  margin-right: 6px;
+}
+
+.single-post-tags a {
+  color: #1254b8;
+  text-decoration: none;
+}
+
+.single-post-tags a:hover {
+  text-decoration: underline;
+}
+
+/* Khung điều hướng bài trước / bài kế tiếp */
+.single-post-nav {
+  display: flex;
+  border: 1px solid #e2e8f0;
+  border-radius: 4px;
+  margin-bottom: 45px;
+  background: #fafbfc;
+}
+
+.single-post-nav .nav-box {
+  flex: 1;
+  padding: 18px 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.single-post-nav .nav-prev {
+  border-right: 1px solid #e2e8f0;
+  text-align: left;
+}
+
+.single-post-nav .nav-next {
+  text-align: right;
+}
+
+.single-post-nav .nav-label {
+  font-size: 11.5px;
+  color: #94a3b8;
+  text-transform: capitalize;
+  margin-bottom: 6px;
+  font-weight: 500;
+}
+
+.single-post-nav .nav-title {
+  font-size: 13.5px;
+  font-weight: 600;
+  line-height: 1.45;
+  margin-bottom: 6px;
+}
+
+.single-post-nav .nav-title a {
+  color: #1e293b;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.single-post-nav .nav-title a:hover {
+  color: #1254b8;
+}
+
+.single-post-nav .nav-date {
+  font-size: 11.5px;
+  color: #94a3b8;
+}
+
+/* Bài viết liên quan */
+.single-related-section {
+  margin-top: 36px;
+}
+
+.single-related-section .related-heading {
+  font-size: 18px;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 20px;
+}
+
+.single-related-section .related-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 22px;
+}
+
+.single-related-section .related-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.single-related-section .related-thumb {
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  border-radius: 4px;
+  background-color: #f1f5f9;
+  margin-bottom: 12px;
+}
+
+.single-related-section .related-thumb a {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.single-related-section .related-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.35s ease;
+}
+
+.single-related-section .related-item:hover .related-thumb img {
+  transform: scale(1.04);
+}
+
+.single-related-section .related-title {
+  font-size: 13.5px;
+  font-weight: 600;
+  line-height: 1.45;
+  margin: 0;
+}
+
+.single-related-section .related-title a {
+  color: #1e293b;
+  text-decoration: none;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  transition: color 0.2s ease;
+}
+
+.single-related-section .related-title a:hover {
+  color: #1254b8;
+}
+
+/* Responsive cho Single Post */
+@media (max-width: 768px) {
+  .cms-single-article {
+    padding: 24px 18px;
+  }
+
+  .single-post-title {
+    font-size: 21px;
+  }
+
+  .single-post-nav {
+    flex-direction: column;
+  }
+
+  .single-post-nav .nav-prev {
+    border-right: none;
+    border-bottom: 1px solid #e2e8f0;
+  }
+
+  .single-post-nav .nav-next {
+    text-align: left;
+  }
+
+  .single-related-section .related-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+}
+

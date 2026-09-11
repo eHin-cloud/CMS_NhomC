@@ -48,6 +48,38 @@ function cms_nhomc_scripts() {
 add_action('wp_enqueue_scripts', 'cms_nhomc_scripts');
 
 /**
+ * Helper to get post thumbnail URL with smart fallbacks
+ */
+function cms_nhomc_get_post_thumbnail_url($post_id) {
+    $post = get_post($post_id);
+    if (!$post) return '';
+
+    if (has_post_thumbnail($post->ID)) {
+        return get_the_post_thumbnail_url($post->ID, 'large');
+    }
+
+    $slug = $post->post_name;
+    $theme_dir = get_template_directory_uri();
+    if (strpos($slug, 'tuyen-sinh') !== false) {
+        return $theme_dir . '/assets/images/tdc-tuyen-sinh.jpg';
+    } elseif (strpos($slug, 'thang-06') !== false || strpos($slug, 'toa-nha') !== false) {
+        return $theme_dir . '/assets/images/tdc-toa-nha-xanh.jpg';
+    } elseif (strpos($slug, 'kiem-dinh') !== false || strpos($slug, 'thong-tin') !== false) {
+        return $theme_dir . '/assets/images/tdc-hoi-nghi-cntt.jpg';
+    } elseif (strpos($slug, 'tu-sach') !== false || strpos($slug, 'ho-chi-minh') !== false) {
+        return $theme_dir . '/assets/images/tdc-tu-sach-dien-tu.jpg';
+    } else {
+        $fallbacks = array(
+            $theme_dir . '/assets/images/tdc-tuyen-sinh.jpg',
+            $theme_dir . '/assets/images/tdc-toa-nha-xanh.jpg',
+            $theme_dir . '/assets/images/tdc-hoi-nghi-cntt.jpg',
+            $theme_dir . '/assets/images/tdc-tu-sach-dien-tu.jpg',
+        );
+        return $fallbacks[absint($post->ID) % count($fallbacks)];
+    }
+}
+
+/**
  * Render single post card matching the design specification
  */
 function cms_nhomc_render_post_card($post_id = null) {
@@ -72,31 +104,8 @@ function cms_nhomc_render_post_card($post_id = null) {
     }
     $categories_html = !empty($cat_links) ? implode(', ', $cat_links) : '<a href="#">Tin Tức</a>';
 
-    // Thumbnail URL & Smart Fallbacks
-    $thumb_url = '';
-    if (has_post_thumbnail($post->ID)) {
-        $thumb_url = get_the_post_thumbnail_url($post->ID, 'large');
-    } else {
-        $slug = $post->post_name;
-        $theme_dir = get_template_directory_uri();
-        if (strpos($slug, 'tuyen-sinh') !== false) {
-            $thumb_url = $theme_dir . '/assets/images/tdc-tuyen-sinh.jpg';
-        } elseif (strpos($slug, 'thang-06') !== false || strpos($slug, 'toa-nha') !== false) {
-            $thumb_url = $theme_dir . '/assets/images/tdc-toa-nha-xanh.jpg';
-        } elseif (strpos($slug, 'kiem-dinh') !== false || strpos($slug, 'thong-tin') !== false) {
-            $thumb_url = $theme_dir . '/assets/images/tdc-hoi-nghi-cntt.jpg';
-        } elseif (strpos($slug, 'tu-sach') !== false || strpos($slug, 'ho-chi-minh') !== false) {
-            $thumb_url = $theme_dir . '/assets/images/tdc-tu-sach-dien-tu.jpg';
-        } else {
-            $fallbacks = array(
-                $theme_dir . '/assets/images/tdc-tuyen-sinh.jpg',
-                $theme_dir . '/assets/images/tdc-toa-nha-xanh.jpg',
-                $theme_dir . '/assets/images/tdc-hoi-nghi-cntt.jpg',
-                $theme_dir . '/assets/images/tdc-tu-sach-dien-tu.jpg',
-            );
-            $thumb_url = $fallbacks[absint($post->ID) % count($fallbacks)];
-        }
-    }
+    // Thumbnail URL
+    $thumb_url = cms_nhomc_get_post_thumbnail_url($post->ID);
 
     // Excerpt: only display if explicitly set or if post has excerpt
     $excerpt = !empty($post->post_excerpt) ? $post->post_excerpt : '';
