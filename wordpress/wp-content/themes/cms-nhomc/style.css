@@ -342,15 +342,199 @@ body {
   margin-bottom: 16px;
 }
 
-/* FOOTER */
-.site-footer {
-  background-color: #ffffff;
-  border-top: 1px solid var(--nav-border);
-  padding: 24px 16px;
-  text-align: center;
-  font-size: 13px;
-  color: #6b7280;
+/* ====================================================
+   (3) FOOTER THEO MẪU BOOTSNIPP (https://bootsnipp.com/snippets/rlXdE)
+   ==================================================== */
+section#footer {
+  padding: 60px 0 35px 0;
+  background: #007b5e !important;
+  color: #ffffff;
   margin-top: 40px;
+}
+
+#footer .container {
+  width: 100%;
+  max-width: 1140px;
+  margin: 0 auto;
+  padding-right: 15px;
+  padding-left: 15px;
+}
+
+#footer .row {
+  display: flex;
+  flex-wrap: wrap;
+  margin-right: -15px;
+  margin-left: -15px;
+}
+
+#footer .col-xs-12 {
+  flex: 0 0 100%;
+  max-width: 100%;
+  padding-right: 15px;
+  padding-left: 15px;
+}
+
+@media (min-width: 768px) {
+  #footer .col-sm-4 {
+    flex: 0 0 33.333333%;
+    max-width: 33.333333%;
+    text-align: left;
+  }
+  #footer .mt-sm-5 {
+    margin-top: 3rem;
+  }
+  #footer .mt-sm-2 {
+    margin-top: 0.5rem;
+  }
+}
+
+@media (max-width: 767px) {
+  #footer .text-xs-center {
+    text-align: center;
+  }
+  #footer .col-xs-12 {
+    margin-bottom: 25px;
+  }
+}
+
+#footer h5 {
+  padding-left: 10px;
+  border-left: 3px solid #eeeeee;
+  padding-bottom: 6px;
+  margin-bottom: 20px;
+  color: #ffffff;
+  font-size: 19px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+}
+
+#footer a {
+  color: #ffffff;
+  text-decoration: none !important;
+  background-color: transparent;
+  -webkit-text-decoration-skip: objects;
+}
+
+#footer .list-unstyled {
+  list-style: none;
+  padding-left: 0;
+  margin-bottom: 0;
+}
+
+#footer ul.quick-links {
+  padding-left: 0;
+  list-style: none;
+}
+
+#footer ul.quick-links li {
+  padding: 4px 0;
+  -webkit-transition: .5s all ease;
+  -moz-transition: .5s all ease;
+  transition: .5s all ease;
+  font-size: 14px;
+}
+
+#footer ul.quick-links li a {
+  color: #ffffff;
+  display: block;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+#footer ul.quick-links li:hover {
+  padding: 4px 0;
+  margin-left: 5px;
+  font-weight: 700;
+}
+
+#footer ul.quick-links li a i {
+  margin-right: 8px;
+  font-size: 12px;
+}
+
+#footer ul.quick-links li:hover a i {
+  font-weight: 700;
+}
+
+/* Social icons */
+#footer ul.social {
+  padding-left: 0;
+  list-style: none;
+  margin-bottom: 12px;
+}
+
+#footer ul.social li {
+  padding: 3px 0;
+  display: inline-block;
+  margin: 0 8px;
+}
+
+#footer ul.social li a i {
+  margin-right: 0;
+  font-size: 26px;
+  color: #ffffff;
+  -webkit-transition: .5s all ease;
+  -moz-transition: .5s all ease;
+  transition: .5s all ease;
+  display: inline-block;
+}
+
+#footer ul.social li:hover a i {
+  font-size: 30px;
+  margin-top: -8px;
+  color: #eeeeee;
+}
+
+/* Legal text & copyright */
+#footer .footer-legal-link {
+  text-decoration: underline !important;
+  color: #ffffff;
+  font-weight: 500;
+}
+
+#footer .footer-legal-link:hover {
+  color: #e2e8f0;
+}
+
+#footer p {
+  color: #ffffff;
+  font-size: 13.5px;
+  line-height: 1.65;
+  margin-bottom: 8px;
+}
+
+#footer .h6 {
+  font-size: 14px;
+  font-weight: 400;
+  color: #ffffff;
+}
+
+#footer .text-green {
+  color: #ffffff !important;
+  font-weight: 600;
+  margin-left: 6px;
+}
+
+#footer .text-green:hover {
+  text-decoration: underline !important;
+}
+
+#footer .text-center {
+  text-align: center;
+}
+
+@media (max-width: 767px) {
+  #footer h5 {
+    padding-left: 0;
+    border-left: transparent;
+    padding-bottom: 0px;
+    margin-bottom: 12px;
+    text-align: center;
+  }
+  #footer ul.quick-links li {
+    text-align: center;
+  }
 }
 
 /* ====================================================

@@ -39,7 +39,10 @@ add_action('after_setup_theme', 'cms_nhomc_setup');
  * Nạp Style và Script
  */
 function cms_nhomc_scripts() {
+    // Nạp Font Awesome 4.7.0 cho các icon Footer và điều hướng
+    wp_enqueue_style('font-awesome', 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css', array(), '4.7.0');
+
     // Nạp style.css của Theme
-    wp_enqueue_style('cms-nhomc-style', get_stylesheet_uri(), array(), '1.0.0');
+    wp_enqueue_style('cms-nhomc-style', get_stylesheet_uri(), array('font-awesome'), '1.1.0');
 }
 add_action('wp_enqueue_scripts', 'cms_nhomc_scripts');
