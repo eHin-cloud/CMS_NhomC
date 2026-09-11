@@ -314,13 +314,226 @@ body {
 }
 
 /* ====================================================
-   TRANG NỘI DUNG MẪU
+   (2) NỘI DUNG DANH SÁCH BÀI VIẾT (CONTENT) - THEO MẪU THIẾT KẾ
    ==================================================== */
 .site-content {
   max-width: 1200px;
   margin: 32px auto;
   padding: 0 20px;
   min-height: 60vh;
+}
+
+.cms-post-list {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  width: 100%;
+}
+
+.cms-post-card {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  background: #ffffff;
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.07), 0 4px 12px rgba(0, 0, 0, 0.03);
+  border: 1px solid #eef2f6;
+  overflow: hidden;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.cms-post-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.09);
+}
+
+/* Cột Thumbnail Trái */
+.cms-post-thumb {
+  flex: 0 0 380px;
+  width: 380px;
+  min-height: 230px;
+  max-height: 250px;
+  overflow: hidden;
+  background-color: #f1f5f9;
+  position: relative;
+}
+
+.cms-post-thumb a {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.cms-thumb-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.cms-post-card:hover .cms-thumb-img {
+  transform: scale(1.035);
+}
+
+/* Cột Thông Tin Phải */
+.cms-post-body {
+  flex: 1;
+  padding: 24px 32px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  min-width: 0;
+}
+
+/* Hàng Tiêu Đề: Date Badge + Tiêu Đề & Chuyên Mục */
+.cms-post-header {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 24px;
+}
+
+/* Khối Ngày Tháng (Date Badge) */
+.cms-date-badge {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+  padding-top: 1px;
+}
+
+.cms-date-day {
+  font-size: 46px;
+  font-weight: 800;
+  line-height: 0.92;
+  color: #1254b8; /* Royal blue chuẩn theo ảnh */
+  letter-spacing: -1.5px;
+  font-family: var(--font-family);
+}
+
+.cms-date-meta {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  line-height: 1.15;
+}
+
+.cms-date-month {
+  font-size: 11px;
+  font-weight: 700;
+  color: #3b82f6; /* Medium blue */
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.cms-date-year {
+  font-size: 11px;
+  font-weight: 700;
+  color: #3b82f6;
+  margin-top: 2px;
+}
+
+/* Tiêu Đề & Categories */
+.cms-title-wrap {
+  flex: 1;
+  min-width: 0;
+}
+
+.cms-post-title {
+  margin: 0;
+  padding: 0;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.4;
+  color: #0f172a;
+}
+
+.cms-post-title a {
+  color: #0f172a;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.cms-post-title a:hover {
+  color: #1254b8;
+}
+
+.cms-post-meta {
+  margin-top: 8px;
+  font-size: 12.5px;
+  color: #64748b;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.cms-cat-label {
+  color: #64748b;
+  font-style: italic;
+}
+
+.cms-cat-links a {
+  color: #64748b;
+  font-style: italic;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.cms-cat-links a:hover {
+  color: #1254b8;
+  text-decoration: underline;
+}
+
+/* Mô Tả Ngắn (Excerpt) */
+.cms-post-excerpt {
+  margin-top: 18px;
+  font-size: 13.5px;
+  color: #475569;
+  line-height: 1.62;
+  text-align: justify;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Phân Trang (Pagination) */
+.cms-pagination {
+  margin: 40px 0 20px;
+  display: flex;
+  justify-content: center;
+}
+
+.cms-pagination .nav-links {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.cms-pagination .page-numbers {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 38px;
+  height: 38px;
+  padding: 0 12px;
+  border-radius: 4px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  color: #334155;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.cms-pagination .page-numbers:hover,
+.cms-pagination .page-numbers.current {
+  background: #1254b8;
+  border-color: #1254b8;
+  color: #ffffff;
 }
 
 .content-card {
@@ -341,6 +554,41 @@ body {
   color: #4b5563;
   margin-bottom: 16px;
 }
+
+/* Responsive Media Queries */
+@media (max-width: 991px) {
+  .cms-post-thumb {
+    flex: 0 0 300px;
+    width: 300px;
+  }
+  .cms-post-body {
+    padding: 20px;
+  }
+}
+
+@media (max-width: 767px) {
+  .cms-post-card {
+    flex-direction: column;
+  }
+  .cms-post-thumb {
+    flex: none;
+    width: 100%;
+    height: 220px;
+  }
+  .cms-post-header {
+    gap: 16px;
+  }
+  .cms-date-day {
+    font-size: 38px;
+  }
+  .cms-post-title {
+    font-size: 16px;
+  }
+  .cms-post-body {
+    padding: 18px 16px;
+  }
+}
+
 
 /* ====================================================
    (3) FOOTER THEO MẪU BOOTSNIPP (https://bootsnipp.com/snippets/rlXdE)

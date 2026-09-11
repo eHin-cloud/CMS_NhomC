@@ -9,24 +9,24 @@ get_header();
 ?>
 
 <main class="site-content">
-    <div class="content-card">
-        <h1>Chào mừng bạn đến với Website của Nhóm C (Group C)</h1>
-        <p>Header phía trên được tùy biến chuẩn theo mẫu thiết kế giao diện cho đồ án CMS.</p>
-    </div>
-
     <?php if (have_posts()) : ?>
-        <div class="posts-list">
-            <?php while (have_posts()) : the_post(); ?>
-                <article id="post-<?php the_ID(); ?>" <?php post_class('content-card'); ?>>
-                    <h2><a href="<?php the_permalink(); ?>" style="text-decoration: none; color: #1f2937;"><?php the_title(); ?></a></h2>
-                    <div class="post-meta" style="font-size: 13px; color: #6b7280; margin: 8px 0 16px;">
-                        Đăng ngày <?php echo get_the_date(); ?> | Tác giả: <?php the_author(); ?>
-                    </div>
-                    <div class="post-excerpt">
-                        <?php the_excerpt(); ?>
-                    </div>
-                </article>
-            <?php endwhile; ?>
+        <div class="cms-post-list">
+            <?php
+            while (have_posts()) :
+                the_post();
+                cms_nhomc_render_post_card(get_the_ID());
+            endwhile;
+            ?>
+        </div>
+
+        <div class="cms-pagination">
+            <?php
+            the_posts_pagination(array(
+                'mid_size'  => 2,
+                'prev_text' => __('&laquo; Trước', 'cms-nhomc'),
+                'next_text' => __('Sau &raquo;', 'cms-nhomc'),
+            ));
+            ?>
         </div>
     <?php else : ?>
         <div class="content-card">

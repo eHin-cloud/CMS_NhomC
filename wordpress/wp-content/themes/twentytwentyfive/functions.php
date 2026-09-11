@@ -214,6 +214,13 @@ if ( ! function_exists( 'twentytwentyfive_tin_tuc_ngang_shortcode' ) ) :
 			12 => 'THÁNG 12',
 		);
 
+		$fallbacks = array(
+			get_template_directory_uri() . '/assets/images/tdc-tuyen-sinh.jpg',
+			get_template_directory_uri() . '/assets/images/tdc-toa-nha-xanh.jpg',
+			get_template_directory_uri() . '/assets/images/tdc-hoi-nghi-cntt.jpg',
+			get_template_directory_uri() . '/assets/images/tdc-tu-sach-dien-tu.jpg',
+		);
+
 		ob_start();
 		?>
 		<div class="ttn-post-list">
@@ -221,6 +228,7 @@ if ( ! function_exists( 'twentytwentyfive_tin_tuc_ngang_shortcode' ) ) :
 			while ( $query->have_posts() ) :
 				$query->the_post();
 
+				$post_id    = get_the_ID();
 				$post_day   = get_the_date( 'd' );
 				$post_month = intval( get_the_date( 'n' ) );
 				$post_year  = get_the_date( 'Y' );
@@ -231,41 +239,61 @@ if ( ! function_exists( 'twentytwentyfive_tin_tuc_ngang_shortcode' ) ) :
 				foreach ( $categories as $cat ) {
 					$cat_names[] = '<a href="' . esc_url( get_category_link( $cat->term_id ) ) . '">' . esc_html( $cat->name ) . '</a>';
 				}
-				$cat_output = ! empty( $cat_names ) ? implode( ', ', $cat_names ) : '';
+				$cat_output = ! empty( $cat_names ) ? implode( ', ', $cat_names ) : '<a href="#">Tin Tức</a>';
 
-				$excerpt = get_the_excerpt();
-				if ( empty( $excerpt ) ) {
-					$excerpt = wp_trim_words( get_the_content(), 30, '...' );
+				$thumb_url = '';
+				if ( has_post_thumbnail() ) {
+					$thumb_url = get_the_post_thumbnail_url( $post_id, 'large' );
+				} else {
+					$slug = get_post_field( 'post_name', $post_id );
+					$theme_dir = get_template_directory_uri();
+					if ( strpos( $slug, 'tuyen-sinh' ) !== false ) {
+						$thumb_url = $theme_dir . '/assets/images/tdc-tuyen-sinh.jpg';
+					} elseif ( strpos( $slug, 'thang-06' ) !== false || strpos( $slug, 'toa-nha' ) !== false ) {
+						$thumb_url = $theme_dir . '/assets/images/tdc-toa-nha-xanh.jpg';
+					} elseif ( strpos( $slug, 'kiem-dinh' ) !== false || strpos( $slug, 'thong-tin' ) !== false ) {
+						$thumb_url = $theme_dir . '/assets/images/tdc-hoi-nghi-cntt.jpg';
+					} elseif ( strpos( $slug, 'tu-sach' ) !== false || strpos( $slug, 'ho-chi-minh' ) !== false ) {
+						$thumb_url = $theme_dir . '/assets/images/tdc-tu-sach-dien-tu.jpg';
+					} else {
+						$idx = absint( $post_id ) % count( $fallbacks );
+						$thumb_url = $fallbacks[ $idx ];
+					}
 				}
+
+				$excerpt = ! empty( $post->post_excerpt ) ? $post->post_excerpt : '';
 				?>
 				<article class="ttn-post-item">
-					<a class="ttn-thumbnail-link" href="<?php the_permalink(); ?>" tabindex="-1" aria-hidden="true">
-						<div class="ttn-thumbnail">
-							<?php if ( has_post_thumbnail() ) : ?>
-								<?php the_post_thumbnail( 'medium', array( 'alt' => esc_attr( get_the_title() ) ) ); ?>
-							<?php else : ?>
-								<div class="ttn-thumbnail-placeholder"></div>
-							<?php endif; ?>
-						</div>
-					</a>
-
-					<div class="ttn-date-box">
-						<span class="ttn-day"><?php echo esc_html( $post_day ); ?></span>
-						<span class="ttn-month"><?php echo esc_html( $month_label ); ?></span>
-						<span class="ttn-year"><?php echo esc_html( $post_year ); ?></span>
+					<div class="ttn-thumbnail">
+						<a class="ttn-thumbnail-link" href="<?php the_permalink(); ?>" aria-label="<?php the_title_attribute(); ?>">
+							<img src="<?php echo esc_url( $thumb_url ); ?>" alt="<?php the_title_attribute(); ?>" class="ttn-thumb-img" loading="lazy" />
+						</a>
 					</div>
 
 					<div class="ttn-content">
-						<h2 class="ttn-title">
-							<a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
-						</h2>
+						<div class="ttn-header-row">
+							<div class="ttn-date-badge">
+								<span class="ttn-day"><?php echo esc_html( $post_day ); ?></span>
+								<div class="ttn-date-meta">
+									<span class="ttn-month"><?php echo esc_html( $month_label ); ?></span>
+									<span class="ttn-year"><?php echo esc_html( $post_year ); ?></span>
+								</div>
+							</div>
+
+							<div class="ttn-heading-box">
+								<h2 class="ttn-title">
+									<a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
+								</h2>
+								<div class="ttn-categories">
+									<span class="ttn-cat-label">Categories</span>
+									<span class="ttn-cat-links"><?php echo wp_kses_post( $cat_output ); ?></span>
+								</div>
+							</div>
+						</div>
+
 						<?php if ( ! empty( $excerpt ) ) : ?>
-							<p class="ttn-excerpt"><?php echo esc_html( $excerpt ); ?></p>
-						<?php endif; ?>
-						<?php if ( ! empty( $cat_output ) ) : ?>
-							<div class="ttn-categories">
-								<span class="ttn-cat-label">Categories</span>
-								<span class="ttn-cat-links"><?php echo wp_kses_post( $cat_output ); ?></span>
+							<div class="ttn-excerpt">
+								<?php echo esc_html( $excerpt ); ?>
 							</div>
 						<?php endif; ?>
 					</div>

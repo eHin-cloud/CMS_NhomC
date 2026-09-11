@@ -1,7 +1,8 @@
 /*
  * Custom Post List - Horizontal Layout
- * Layout: [Thumbnail] | [Date Box] | [Title + Excerpt + Category]
- * Matches the design in the screenshot.
+ * Layout: [Thumbnail] | [Date Badge (Day + Month/Year)] [Title + Categories]
+ * Excerpt below header row.
+ * Matches the design in the screenshot exactly.
  */
 
 /* =========================================================
@@ -9,241 +10,225 @@
    ========================================================= */
 .ttn-post-list {
 	width: 100%;
+	display: flex;
+	flex-direction: column;
+	gap: 22px;
 	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 }
 
 /* =========================================================
-   Each post row
+   Each post card
    ========================================================= */
 .ttn-post-item {
 	display: flex;
 	flex-direction: row;
 	align-items: stretch;
-	border-bottom: 1px solid #e5e5e5;
-	min-height: 140px;
-	background: #fff;
-	transition: background 0.2s ease;
-}
-
-.ttn-post-item:last-child {
-	border-bottom: none;
+	background: #ffffff;
+	border-radius: 4px;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.07), 0 4px 12px rgba(0, 0, 0, 0.03);
+	border: 1px solid #eef2f6;
+	overflow: hidden;
+	transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
 .ttn-post-item:hover {
-	background: #f9f9f9;
+	transform: translateY(-2px);
+	box-shadow: 0 6px 18px rgba(0, 0, 0, 0.09);
 }
 
 /* =========================================================
    Thumbnail (left column)
    ========================================================= */
+.ttn-thumbnail {
+	flex: 0 0 380px;
+	width: 380px;
+	min-height: 230px;
+	max-height: 250px;
+	overflow: hidden;
+	background-color: #f1f5f9;
+	position: relative;
+}
+
 .ttn-thumbnail-link {
 	display: block;
-	flex: 0 0 260px;
-	width: 260px;
-	overflow: hidden;
-	text-decoration: none;
+	width: 100%;
+	height: 100%;
 }
 
-.ttn-thumbnail {
-	width: 260px;
-	height: 160px;
-	overflow: hidden;
-	background: #e8e8e8;
-}
-
-.ttn-thumbnail img {
+.ttn-thumb-img {
 	width: 100%;
 	height: 100%;
 	object-fit: cover;
 	display: block;
-	transition: transform 0.35s ease;
+	transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
-.ttn-post-item:hover .ttn-thumbnail img {
-	transform: scale(1.04);
-}
-
-.ttn-thumbnail-placeholder {
-	width: 100%;
-	height: 100%;
-	background: linear-gradient(135deg, #d0d0d0 0%, #b0b0b0 100%);
-}
-
-/* =========================================================
-   Date Box (center column)
-   ========================================================= */
-.ttn-date-box {
-	flex: 0 0 110px;
-	width: 110px;
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	justify-content: center;
-	padding: 10px 8px;
-	border-right: 1px solid #e5e5e5;
-	border-left: 1px solid #e5e5e5;
-	text-align: center;
-	background: #fff;
-}
-
-.ttn-day {
-	display: block;
-	font-size: 3rem;
-	font-weight: 800;
-	line-height: 1;
-	color: #1a1a1a;
-	letter-spacing: -1px;
-}
-
-.ttn-month {
-	display: block;
-	font-size: 0.65rem;
-	font-weight: 700;
-	text-transform: uppercase;
-	letter-spacing: 0.5px;
-	color: #555;
-	margin-top: 2px;
-	line-height: 1.2;
-}
-
-.ttn-year {
-	display: block;
-	font-size: 0.65rem;
-	font-weight: 600;
-	color: #888;
-	margin-top: 1px;
-	line-height: 1.2;
+.ttn-post-item:hover .ttn-thumb-img {
+	transform: scale(1.035);
 }
 
 /* =========================================================
    Content Area (right column)
    ========================================================= */
 .ttn-content {
-	flex: 1 1 0;
-	padding: 16px 20px;
+	flex: 1;
+	padding: 24px 32px;
 	display: flex;
 	flex-direction: column;
 	justify-content: flex-start;
-	overflow: hidden;
+	min-width: 0;
 }
 
-/* Title */
+/* Header Row: Date Badge + Title/Category */
+.ttn-header-row {
+	display: flex;
+	flex-direction: row;
+	align-items: flex-start;
+	gap: 24px;
+}
+
+/* =========================================================
+   Date Badge (Day left, Month & Year stacked right)
+   ========================================================= */
+.ttn-date-badge {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	gap: 8px;
+	flex-shrink: 0;
+	padding-top: 1px;
+}
+
+.ttn-day {
+	font-size: 46px;
+	font-weight: 800;
+	line-height: 0.92;
+	color: #1254b8; /* Royal Blue chuẩn mẫu */
+	letter-spacing: -1.5px;
+}
+
+.ttn-date-meta {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	line-height: 1.15;
+}
+
+.ttn-month {
+	font-size: 11px;
+	font-weight: 700;
+	color: #3b82f6; /* Medium Blue */
+	text-transform: uppercase;
+	letter-spacing: 0.4px;
+}
+
+.ttn-year {
+	font-size: 11px;
+	font-weight: 700;
+	color: #3b82f6;
+	margin-top: 2px;
+}
+
+/* =========================================================
+   Heading Box (Title + Categories)
+   ========================================================= */
+.ttn-heading-box {
+	flex: 1;
+	min-width: 0;
+}
+
 .ttn-title {
-	margin: 0 0 8px 0;
+	margin: 0;
 	padding: 0;
-	font-size: 1rem;
+	font-size: 18px;
 	font-weight: 700;
 	line-height: 1.4;
-	color: #1a1a1a;
+	color: #0f172a;
 }
 
 .ttn-title a {
-	color: #1a1a1a;
+	color: #0f172a;
 	text-decoration: none;
 	transition: color 0.2s ease;
 }
 
 .ttn-title a:hover {
-	color: #0073aa;
-	text-decoration: underline;
+	color: #1254b8;
 }
 
-/* Excerpt */
-.ttn-excerpt {
-	margin: 0 0 10px 0;
-	font-size: 0.82rem;
-	line-height: 1.5;
-	color: #555;
-	display: -webkit-box;
-	-webkit-line-clamp: 2;
-	-webkit-box-orient: vertical;
-	overflow: hidden;
-}
-
-/* Categories row */
 .ttn-categories {
+	margin-top: 8px;
+	font-size: 12.5px;
+	color: #64748b;
 	display: flex;
-	flex-direction: row;
 	align-items: center;
 	gap: 6px;
-	margin-top: auto;
-	font-size: 0.8rem;
 }
 
 .ttn-cat-label {
-	color: #666;
-	font-weight: 500;
+	color: #64748b;
+	font-style: italic;
 }
 
 .ttn-cat-links a {
-	color: #0073aa;
+	color: #64748b;
+	font-style: italic;
 	text-decoration: none;
-	font-weight: 600;
-	font-size: 0.8rem;
+	transition: color 0.2s ease;
 }
 
 .ttn-cat-links a:hover {
+	color: #1254b8;
 	text-decoration: underline;
 }
 
-/* Separator between label and link */
-.ttn-cat-label::after {
-	content: " ";
-}
-
-/* No-posts message */
-.ttn-no-posts {
-	padding: 20px;
-	text-align: center;
-	color: #888;
-	font-size: 0.9rem;
+/* =========================================================
+   Excerpt
+   ========================================================= */
+.ttn-excerpt {
+	margin-top: 18px;
+	font-size: 13.5px;
+	color: #475569;
+	line-height: 1.62;
+	text-align: justify;
+	display: -webkit-box;
+	-webkit-line-clamp: 3;
+	-webkit-box-orient: vertical;
+	overflow: hidden;
 }
 
 /* =========================================================
    Responsive
    ========================================================= */
-@media (max-width: 768px) {
+@media (max-width: 991px) {
+	.ttn-thumbnail {
+		flex: 0 0 300px;
+		width: 300px;
+	}
+	.ttn-content {
+		padding: 20px;
+	}
+}
+
+@media (max-width: 767px) {
 	.ttn-post-item {
 		flex-direction: column;
-		min-height: unset;
 	}
-
-	.ttn-thumbnail-link {
-		flex: none;
-		width: 100%;
-	}
-
 	.ttn-thumbnail {
-		width: 100%;
-		height: 200px;
-	}
-
-	.ttn-date-box {
 		flex: none;
 		width: 100%;
-		flex-direction: row;
-		justify-content: flex-start;
-		gap: 8px;
-		padding: 8px 16px;
-		border-right: none;
-		border-left: none;
-		border-bottom: 1px solid #e5e5e5;
-		text-align: left;
+		height: 220px;
 	}
-
+	.ttn-header-row {
+		gap: 16px;
+	}
 	.ttn-day {
-		font-size: 2rem;
+		font-size: 38px;
 	}
-
-	.ttn-month,
-	.ttn-year {
-		font-size: 0.7rem;
-		align-self: flex-end;
-		margin-top: 0;
-		margin-bottom: 4px;
+	.ttn-title {
+		font-size: 16px;
 	}
-
 	.ttn-content {
-		padding: 12px 16px;
+		padding: 18px 16px;
 	}
 }
