@@ -346,10 +346,25 @@ body {
    (3) FOOTER THEO MẪU BOOTSNIPP (https://bootsnipp.com/snippets/rlXdE)
    ==================================================== */
 section#footer {
+  position: relative;
   padding: 60px 0 35px 0;
   background: #007b5e !important;
   color: #ffffff;
   margin-top: 40px;
+}
+
+.footer-top-options {
+  position: absolute;
+  top: 18px;
+  right: 25px;
+  color: rgba(255, 255, 255, 0.35);
+  font-size: 18px;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.footer-top-options:hover {
+  color: #ffffff;
 }
 
 #footer .container {

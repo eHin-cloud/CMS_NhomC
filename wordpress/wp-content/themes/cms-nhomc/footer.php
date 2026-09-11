@@ -1,8 +1,7 @@
 <?php
 /**
  * Footer template cho Theme CMS Nhóm C
- * Thiết kế chuẩn theo mẫu Bootsnipp: https://bootsnipp.com/snippets/rlXdE
- * Dữ liệu động lấy trực tiếp từ Database: Comment, Categories, Last posts.
+ * Thiết kế chính xác 100% theo mẫu: https://bootsnipp.com/snippets/rlXdE
  *
  * @package CMS_NhomC
  */
@@ -10,98 +9,46 @@
 
 <!-- Footer -->
 <section id="footer">
+    <!-- Nút 3 chấm góc phải trên nếu có theo mẫu Bootsnipp -->
+    <div class="footer-top-options">
+        <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
+    </div>
+
     <div class="container">
         <div class="row text-center text-xs-center text-sm-left text-md-left">
-            <!-- Cột 1: Comment (Bình luận mới nhất) -->
+            <!-- Cột 1: Quick links -->
             <div class="col-xs-12 col-sm-4 col-md-4">
-                <h5>Comment</h5>
+                <h5>Quick links</h5>
                 <ul class="list-unstyled quick-links">
-                    <?php
-                    $recent_comments = get_comments(array(
-                        'number'      => 5,
-                        'status'      => 'approve',
-                        'post_status' => 'publish',
-                    ));
-
-                    if (!empty($recent_comments)) :
-                        foreach ($recent_comments as $c) :
-                            $author = esc_html($c->comment_author);
-                            $post_title = get_the_title($c->comment_post_ID);
-                            $comment_link = esc_url(get_comment_link($c));
-                            $truncated_post = esc_html(wp_trim_words($post_title, 4, '...'));
-                            $item_text = $author . ' on ' . $truncated_post;
-                    ?>
-                        <li>
-                            <a href="<?php echo $comment_link; ?>" title="<?php echo esc_attr($author . ' trên bài: ' . $post_title); ?>">
-                                <i class="fa fa-angle-double-right"></i><?php echo $item_text; ?>
-                            </a>
-                        </li>
-                    <?php 
-                        endforeach;
-                    else : 
-                    ?>
-                        <li><a href="<?php echo esc_url(home_url('/')); ?>"><i class="fa fa-angle-double-right"></i>Chưa có bình luận nào</a></li>
-                    <?php endif; ?>
+                    <li><a href="<?php echo esc_url(home_url('/')); ?>"><i class="fa fa-angle-double-right"></i>Home</a></li>
+                    <li><a href="<?php echo esc_url(home_url('/about/')); ?>"><i class="fa fa-angle-double-right"></i>About</a></li>
+                    <li><a href="<?php echo esc_url(home_url('/faq/')); ?>"><i class="fa fa-angle-double-right"></i>FAQ</a></li>
+                    <li><a href="<?php echo esc_url(home_url('/get-started/')); ?>"><i class="fa fa-angle-double-right"></i>Get Started</a></li>
+                    <li><a href="<?php echo esc_url(home_url('/videos/')); ?>"><i class="fa fa-angle-double-right"></i>Videos</a></li>
                 </ul>
             </div>
 
-            <!-- Cột 2: Categories (Chuyên mục) -->
+            <!-- Cột 2: Quick links -->
             <div class="col-xs-12 col-sm-4 col-md-4">
-                <h5>Categories</h5>
+                <h5>Quick links</h5>
                 <ul class="list-unstyled quick-links">
-                    <?php
-                    $categories = get_categories(array(
-                        'orderby'    => 'count',
-                        'order'      => 'DESC',
-                        'hide_empty' => false,
-                        'number'     => 5,
-                    ));
-
-                    if (!empty($categories)) :
-                        foreach ($categories as $cat) :
-                            $cat_link = esc_url(get_category_link($cat->term_id));
-                            $cat_name = esc_html($cat->name);
-                    ?>
-                        <li>
-                            <a href="<?php echo $cat_link; ?>" title="Xem chuyên mục <?php echo esc_attr($cat_name); ?>">
-                                <i class="fa fa-angle-double-right"></i><?php echo $cat_name; ?>
-                            </a>
-                        </li>
-                    <?php 
-                        endforeach;
-                    else : 
-                    ?>
-                        <li><a href="<?php echo esc_url(home_url('/')); ?>"><i class="fa fa-angle-double-right"></i>Chưa có chuyên mục</a></li>
-                    <?php endif; ?>
+                    <li><a href="<?php echo esc_url(home_url('/')); ?>"><i class="fa fa-angle-double-right"></i>Home</a></li>
+                    <li><a href="<?php echo esc_url(home_url('/about/')); ?>"><i class="fa fa-angle-double-right"></i>About</a></li>
+                    <li><a href="<?php echo esc_url(home_url('/faq/')); ?>"><i class="fa fa-angle-double-right"></i>FAQ</a></li>
+                    <li><a href="<?php echo esc_url(home_url('/get-started/')); ?>"><i class="fa fa-angle-double-right"></i>Get Started</a></li>
+                    <li><a href="<?php echo esc_url(home_url('/videos/')); ?>"><i class="fa fa-angle-double-right"></i>Videos</a></li>
                 </ul>
             </div>
 
-            <!-- Cột 3: Last posts (Bài viết mới nhất) -->
+            <!-- Cột 3: Quick links -->
             <div class="col-xs-12 col-sm-4 col-md-4">
-                <h5>Last posts</h5>
+                <h5>Quick links</h5>
                 <ul class="list-unstyled quick-links">
-                    <?php
-                    $recent_posts = wp_get_recent_posts(array(
-                        'numberposts' => 5,
-                        'post_status' => 'publish',
-                    ));
-
-                    if (!empty($recent_posts)) :
-                        foreach ($recent_posts as $post_item) :
-                            $post_link = esc_url(get_permalink($post_item['ID']));
-                            $post_title = esc_html(wp_trim_words($post_item['post_title'], 5, '...'));
-                    ?>
-                        <li>
-                            <a href="<?php echo $post_link; ?>" title="<?php echo esc_attr($post_item['post_title']); ?>">
-                                <i class="fa fa-angle-double-right"></i><?php echo $post_title; ?>
-                            </a>
-                        </li>
-                    <?php 
-                        endforeach;
-                    else : 
-                    ?>
-                        <li><a href="<?php echo esc_url(home_url('/')); ?>"><i class="fa fa-angle-double-right"></i>Chưa có bài viết mới</a></li>
-                    <?php endif; ?>
+                    <li><a href="<?php echo esc_url(home_url('/')); ?>"><i class="fa fa-angle-double-right"></i>Home</a></li>
+                    <li><a href="<?php echo esc_url(home_url('/about/')); ?>"><i class="fa fa-angle-double-right"></i>About</a></li>
+                    <li><a href="<?php echo esc_url(home_url('/faq/')); ?>"><i class="fa fa-angle-double-right"></i>FAQ</a></li>
+                    <li><a href="<?php echo esc_url(home_url('/get-started/')); ?>"><i class="fa fa-angle-double-right"></i>Get Started</a></li>
+                    <li><a href="<?php echo esc_url(home_url('/imprint/')); ?>"><i class="fa fa-angle-double-right"></i>Imprint</a></li>
                 </ul>
             </div>
         </div>
