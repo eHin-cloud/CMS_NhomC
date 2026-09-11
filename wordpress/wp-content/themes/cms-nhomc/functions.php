@@ -60,23 +60,61 @@ function cms_nhomc_get_post_thumbnail_url($post_id) {
 
     $slug = $post->post_name;
     $theme_dir = get_template_directory_uri();
+
+    // 1. Tuyển sinh
     if (strpos($slug, 'tuyen-sinh') !== false) {
         return $theme_dir . '/assets/images/tdc-tuyen-sinh.jpg';
-    } elseif (strpos($slug, 'thang-06') !== false || strpos($slug, 'toa-nha') !== false) {
-        return $theme_dir . '/assets/images/tdc-toa-nha-xanh.jpg';
-    } elseif (strpos($slug, 'kiem-dinh') !== false || strpos($slug, 'thong-tin') !== false) {
-        return $theme_dir . '/assets/images/tdc-hoi-nghi-cntt.jpg';
-    } elseif (strpos($slug, 'tu-sach') !== false || strpos($slug, 'ho-chi-minh') !== false) {
-        return $theme_dir . '/assets/images/tdc-tu-sach-dien-tu.jpg';
-    } else {
-        $fallbacks = array(
-            $theme_dir . '/assets/images/tdc-tuyen-sinh.jpg',
-            $theme_dir . '/assets/images/tdc-toa-nha-xanh.jpg',
-            $theme_dir . '/assets/images/tdc-hoi-nghi-cntt.jpg',
-            $theme_dir . '/assets/images/tdc-tu-sach-dien-tu.jpg',
-        );
-        return $fallbacks[absint($post->ID) % count($fallbacks)];
     }
+    // 2. Tòa nhà TDC xanh / Tháng 06
+    if (strpos($slug, 'thang-06') !== false || strpos($slug, 'toa-nha') !== false) {
+        return $theme_dir . '/assets/images/tdc-toa-nha-xanh.jpg';
+    }
+    // 3. Hội nghị kiểm định CNTT
+    if (strpos($slug, 'kiem-dinh') !== false || strpos($slug, 'nghe-cong-nghe') !== false) {
+        return $theme_dir . '/assets/images/tdc-hoi-nghi-cntt.jpg';
+    }
+    // 4. Tủ sách điện tử Bác Hồ
+    if (strpos($slug, 'tu-sach') !== false || strpos($slug, 'ho-chi-minh') !== false) {
+        return $theme_dir . '/assets/images/tdc-tu-sach-hcm.jpg';
+    }
+    // 5. Mở lối tương lai AI
+    if (strpos($slug, 'mo-loi') !== false || strpos($slug, 'ky-nguyen-ai') !== false || strpos($slug, '-ai') !== false) {
+        return $theme_dir . '/assets/images/tdc-mo-loi-ai.jpg';
+    }
+    // 6. Ký kết hợp tác chiến lược
+    if (strpos($slug, 'ky-ket') !== false || strpos($slug, 'doanh-nghiep') !== false) {
+        return $theme_dir . '/assets/images/tdc-ky-ket-hop-tac.jpg';
+    }
+    // 7. Đoàn - Hội Khoa CNTT hoạt động
+    if (strpos($slug, 'doan-hoi-khoa-cntt-to-chuc') !== false || strpos($slug, 'chuoi-hoat-dong') !== false) {
+        return $theme_dir . '/assets/images/tdc-doan-hoi-cntt.jpg';
+    }
+    // 8. Chúc mừng năm mới 2026
+    if (strpos($slug, 'chuc-mung-nam-moi') !== false || strpos($slug, 'nam-moi-2026') !== false) {
+        return $theme_dir . '/assets/images/tdc-tet-2026.jpg';
+    }
+    // 9. Công trình thanh niên
+    if (strpos($slug, 'tuoi-tre-tdc') !== false || strpos($slug, 'thanh-nien') !== false) {
+        return $theme_dir . '/assets/images/tdc-cong-trinh-thanh-nien.jpg';
+    }
+    // 10. Đại tiệc ngày hội việc làm
+    if (strpos($slug, 'dai-tiec') !== false || strpos($slug, '3-trong-1') !== false || strpos($slug, 'viec-lam') !== false) {
+        return $theme_dir . '/assets/images/tdc-dai-tiec-viec-lam.jpg';
+    }
+
+    $fallbacks = array(
+        $theme_dir . '/assets/images/tdc-tuyen-sinh.jpg',
+        $theme_dir . '/assets/images/tdc-toa-nha-xanh.jpg',
+        $theme_dir . '/assets/images/tdc-hoi-nghi-cntt.jpg',
+        $theme_dir . '/assets/images/tdc-tu-sach-hcm.jpg',
+        $theme_dir . '/assets/images/tdc-mo-loi-ai.jpg',
+        $theme_dir . '/assets/images/tdc-ky-ket-hop-tac.jpg',
+        $theme_dir . '/assets/images/tdc-doan-hoi-cntt.jpg',
+        $theme_dir . '/assets/images/tdc-tet-2026.jpg',
+        $theme_dir . '/assets/images/tdc-cong-trinh-thanh-nien.jpg',
+        $theme_dir . '/assets/images/tdc-dai-tiec-viec-lam.jpg',
+    );
+    return $fallbacks[absint($post->ID) % count($fallbacks)];
 }
 
 /**
