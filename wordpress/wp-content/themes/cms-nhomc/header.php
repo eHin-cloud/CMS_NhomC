@@ -29,7 +29,11 @@
             </a>
 
             <form role="search" method="get" class="nav-search-form" id="headerSearchForm" action="<?php echo esc_url(home_url('/')); ?>">
-                <input type="search" id="headerSearchInput" name="s" placeholder="Search" value="<?php echo esc_attr(get_search_query()); ?>" />
+                <?php
+                $header_query = get_search_query(false);
+                $header_clean = is_string($header_query) ? $header_query : '';
+                ?>
+                <input type="search" id="headerSearchInput" name="s" placeholder="Search" value="<?php echo esc_attr($header_clean); ?>" />
                 <button type="submit">Submit</button>
             </form>
         </div>

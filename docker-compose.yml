@@ -1,0 +1,55 @@
+services:
+  db:
+    image: mysql:8.0
+    container_name: cms_nhomc_db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: cms_nhomc
+      MYSQL_USER: cms_user
+      MYSQL_PASSWORD: cmspassword
+    volumes:
+      - cms_nhomc_db_data:/var/lib/mysql
+    networks:
+      - cms_nhomc_network
+
+  wordpress:
+    image: wordpress:latest
+    container_name: cms_nhomc_app
+    restart: always
+    ports:
+      - "8000:80"
+    environment:
+      WORDPRESS_DB_HOST: db:3306
+      WORDPRESS_DB_USER: root
+      WORDPRESS_DB_PASSWORD: rootpassword
+      WORDPRESS_DB_NAME: cms_nhomc
+    volumes:
+      - ./wordpress:/var/www/html
+    networks:
+      - cms_nhomc_network
+    depends_on:
+      - db
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    container_name: cms_nhomc_phpmyadmin
+    restart: always
+    ports:
+      - "8082:80"
+    environment:
+      PMA_HOST: db
+      PMA_PORT: 3306
+      MYSQL_ROOT_PASSWORD: rootpassword
+    networks:
+      - cms_nhomc_network
+    depends_on:
+      - db
+
+volumes:
+  cms_nhomc_db_data:
+
+networks:
+  cms_nhomc_network:
+    driver: bridge
+

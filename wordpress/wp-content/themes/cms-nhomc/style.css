@@ -397,3 +397,463 @@ body {
     padding-right: 8px;
   }
 }
+
+/* ====================================================
+   (5) SEARCH RESULT - GIAO DIỆN KẾT QUẢ TÌM KIẾM FIT-TDC
+   ==================================================== */
+.search-results-page {
+  max-width: 1120px;
+  margin: 36px auto;
+  padding: 0 20px;
+}
+
+.search-header-bar {
+  background: #ffffff;
+  border-radius: 8px;
+  padding: 22px 26px;
+  margin-bottom: 26px;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.search-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: #111827;
+  margin-bottom: 6px;
+}
+
+.search-keyword {
+  color: #1e40af;
+}
+
+.search-highlight {
+  background-color: #fef08a;
+  color: #854d0e;
+  padding: 1px 4px;
+  border-radius: 3px;
+  font-weight: 600;
+}
+
+.search-count {
+  font-size: 14px;
+  color: #6b7280;
+}
+
+/* Danh sách Card bài viết */
+.search-results-list {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.search-post-card {
+  display: grid;
+  grid-template-columns: 360px 1fr;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.search-post-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
+}
+
+/* Cột trái: Thumbnail */
+.search-post-thumb {
+  position: relative;
+  overflow: hidden;
+  height: 230px;
+  background-color: #f3f4f6;
+}
+
+.search-post-thumb a {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.search-thumb-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.search-post-card:hover .search-thumb-img {
+  transform: scale(1.08);
+}
+
+.search-thumb-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
+  color: #ffffff;
+  gap: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.placeholder-icon {
+  opacity: 0.85;
+}
+
+/* Cột phải: Thân bài viết */
+.search-post-body {
+  padding: 22px 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.search-post-header {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  margin-bottom: 12px;
+}
+
+/* Date Badge theo phong cách FIT TDC */
+.search-date-badge {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-right: 16px;
+  border-right: 2px solid #e5e7eb;
+  flex-shrink: 0;
+  min-width: 110px;
+}
+
+.search-date-badge .date-day {
+  font-size: 40px;
+  font-weight: 800;
+  color: #1e40af;
+  line-height: 1;
+  letter-spacing: -1px;
+  min-width: 48px;
+  text-align: center;
+}
+
+.search-date-badge .date-month-year {
+  display: flex;
+  flex-direction: column;
+  font-size: 11px;
+  line-height: 1.35;
+  font-weight: 600;
+}
+
+.search-date-badge .date-month {
+  text-transform: uppercase;
+  color: #6b7280;
+  white-space: nowrap;
+}
+
+.search-date-badge .date-year {
+  color: #2563eb;
+  font-size: 12px;
+}
+
+/* Tiêu đề & Categories */
+.search-title-section {
+  flex-grow: 1;
+  min-width: 0;
+}
+
+.search-post-title {
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.4;
+  margin-bottom: 8px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.search-post-title a {
+  color: #111827;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.search-post-title a:hover {
+  color: #2563eb;
+}
+
+.search-post-categories {
+  font-size: 12px;
+  color: #6b7280;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.search-post-categories .cat-label {
+  font-weight: 600;
+  color: #374151;
+  background: #f3f4f6;
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+.search-post-categories a {
+  color: #2563eb;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.search-post-categories a:hover {
+  text-decoration: underline;
+}
+
+/* Excerpt */
+.search-post-excerpt {
+  font-size: 14px;
+  color: #4b5563;
+  line-height: 1.6;
+  margin-bottom: 14px;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.search-post-excerpt p {
+  margin: 0;
+}
+
+/* Nút Đọc thêm / Xem chi tiết */
+.search-post-footer {
+  display: flex;
+  justify-content: flex-end;
+  border-top: 1px solid #f3f4f6;
+  padding-top: 10px;
+}
+
+.search-readmore-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #2563eb;
+  text-decoration: none;
+  transition: color 0.2s ease, gap 0.2s ease;
+}
+
+.search-readmore-link:hover {
+  color: #1d4ed8;
+  gap: 10px;
+}
+
+/* Phân trang (Pagination) phong cách FIT TDC */
+.search-pagination-wrapper {
+  margin-top: 40px;
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: center;
+}
+
+.search-pagination-wrapper ul.page-numbers {
+  display: flex;
+  list-style: none;
+  gap: 6px;
+  padding: 0;
+  margin: 0;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.search-pagination-wrapper .page-numbers {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 38px;
+  height: 38px;
+  padding: 0 12px;
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  color: #4b5563;
+  background-color: #ffffff;
+  transition: all 0.2s ease;
+}
+
+.search-pagination-wrapper a.page-numbers:hover {
+  background-color: #f3f4f6;
+  color: #111827;
+  border-color: #9ca3af;
+}
+
+.search-pagination-wrapper .page-numbers.current {
+  background-color: #eff6ff;
+  color: #2563eb;
+  border-color: #93c5fd;
+  font-weight: 700;
+  pointer-events: none;
+}
+
+.search-pagination-wrapper .page-numbers.dots {
+  border: none;
+  background: transparent;
+  color: #9ca3af;
+}
+
+/* Trạng thái không tìm thấy kết quả */
+.search-no-results {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 48px 24px;
+  text-align: center;
+  max-width: 640px;
+  margin: 30px auto;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.no-results-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 76px;
+  height: 76px;
+  border-radius: 50%;
+  background-color: #f3f4f6;
+  margin-bottom: 20px;
+}
+
+.search-no-results h2 {
+  font-size: 20px;
+  font-weight: 700;
+  color: #1f2937;
+  margin-bottom: 8px;
+}
+
+.search-no-results p {
+  font-size: 14px;
+  color: #6b7280;
+  margin-bottom: 24px;
+}
+
+.search-retry-box {
+  margin-bottom: 28px;
+}
+
+.search-retry-form {
+  display: flex;
+  max-width: 440px;
+  margin: 0 auto;
+  gap: 8px;
+}
+
+.search-retry-input {
+  flex-grow: 1;
+  padding: 10px 14px;
+  font-size: 14px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.search-retry-input:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+.search-retry-btn {
+  padding: 10px 20px;
+  background-color: #2563eb;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 600;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  white-space: nowrap;
+}
+
+.search-retry-btn:hover {
+  background-color: #1d4ed8;
+}
+
+.search-retry-suggestions {
+  text-align: left;
+  background: #f9fafb;
+  border-radius: 6px;
+  padding: 16px 20px;
+  font-size: 13px;
+  color: #4b5563;
+  border: 1px solid #f3f4f6;
+}
+
+.search-retry-suggestions p {
+  margin-bottom: 8px;
+  color: #374151;
+}
+
+.search-retry-suggestions ul {
+  padding-left: 20px;
+}
+
+.search-retry-suggestions li {
+  margin-bottom: 4px;
+}
+
+.search-retry-suggestions a {
+  color: #2563eb;
+  text-decoration: none;
+}
+
+/* Responsive cho Card bài viết */
+@media (max-width: 900px) {
+  .search-post-card {
+    grid-template-columns: 280px 1fr;
+  }
+
+  .search-post-thumb {
+    height: 210px;
+  }
+}
+
+@media (max-width: 680px) {
+  .search-post-card {
+    grid-template-columns: 1fr;
+  }
+
+  .search-post-thumb {
+    height: 200px;
+  }
+
+  .search-post-header {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .search-date-badge {
+    border-right: none;
+    border-bottom: 1px solid #e5e7eb;
+    padding-right: 0;
+    padding-bottom: 10px;
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .search-retry-form {
+    flex-direction: column;
+  }
+}
