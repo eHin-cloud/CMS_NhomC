@@ -33,8 +33,16 @@
                 $header_query = get_search_query(false);
                 $header_clean = is_string($header_query) ? $header_query : '';
                 ?>
-                <input type="search" id="headerSearchInput" name="s" placeholder="Search" value="<?php echo esc_attr($header_clean); ?>" />
-                <button type="submit">Submit</button>
+                <div class="search-input-wrapper">
+                    <span class="search-icon-inside" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" width="15" height="15" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                        </svg>
+                    </span>
+                    <input type="search" id="headerSearchInput" name="s" placeholder="<?php esc_attr_e('Search...', 'cms-nhomc'); ?>" value="<?php echo esc_attr($header_clean); ?>" autocomplete="off" />
+                </div>
+                <button type="submit"><?php esc_html_e('Submit', 'cms-nhomc'); ?></button>
             </form>
         </div>
 

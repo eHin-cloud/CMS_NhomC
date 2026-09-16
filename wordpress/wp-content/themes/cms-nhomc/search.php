@@ -36,7 +36,12 @@ $clean_query = is_string($raw_query) ? trim($raw_query) : '';
                 </div>
             </div>
 
-        <?php else : ?>
+        <?php else : 
+            $typo_suggestion = null;
+            if (class_exists('CMS_NhomC_Vietnamese_Search')) {
+                $typo_suggestion = CMS_NhomC_Vietnamese_Search::get_instance()->detect_typo_and_suggest($clean_query);
+            }
+        ?>
 
             <!-- Thanh thông tin kết quả tìm kiếm -->
             <header class="search-header-bar">
@@ -59,6 +64,18 @@ $clean_query = is_string($raw_query) ? trim($raw_query) : '';
                     ?>
                 </p>
             </header>
+
+            <!-- Banner gợi ý sửa lỗi chính tả từ từ điển Viet74K (Fuzzy matching) -->
+            <?php if ($typo_suggestion && !empty($typo_suggestion['suggested'])) : ?>
+                <div class="search-typo-notice">
+                    <div class="typo-box">
+                        <span class="typo-lamp">💡</span> <?php esc_html_e('Có phải bạn muốn tìm:', 'cms-nhomc'); ?> 
+                        <a href="<?php echo esc_url(home_url('/?s=' . urlencode($typo_suggestion['suggested']))); ?>" class="typo-link">
+                            <strong><?php echo esc_html($typo_suggestion['suggested']); ?></strong>
+                        </a>?
+                    </div>
+                </div>
+            <?php endif; ?>
 
             <?php if (have_posts()) : ?>
                 <!-- Danh sách bài viết -->
@@ -102,7 +119,15 @@ $clean_query = is_string($raw_query) ? trim($raw_query) : '';
 
                     <div class="search-retry-box">
                         <form role="search" method="get" class="search-retry-form" action="<?php echo esc_url(home_url('/')); ?>">
-                            <input type="search" name="s" class="search-retry-input" placeholder="<?php esc_attr_e('Nhập từ khóa khác...', 'cms-nhomc'); ?>" value="<?php echo esc_attr($clean_query); ?>" required />
+                            <div class="search-input-wrapper">
+                                <span class="search-icon-inside" aria-hidden="true">
+                                    <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                        <circle cx="11" cy="11" r="8"></circle>
+                                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                                    </svg>
+                                </span>
+                                <input type="search" name="s" class="search-retry-input" placeholder="<?php esc_attr_e('Nhập từ khóa khác...', 'cms-nhomc'); ?>" value="<?php echo esc_attr($clean_query); ?>" required />
+                            </div>
                             <button type="submit" class="search-retry-btn"><?php esc_html_e('Tìm kiếm lại', 'cms-nhomc'); ?></button>
                         </form>
                     </div>

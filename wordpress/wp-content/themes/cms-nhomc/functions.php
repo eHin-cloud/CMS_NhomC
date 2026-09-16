@@ -9,6 +9,9 @@ if (!defined('ABSPATH')) {
     exit; // Exit if accessed directly.
 }
 
+// Nạp bộ xử lý tìm kiếm thông minh tiếng Việt (Viet74K)
+require_once get_template_directory() . '/inc/class-vietnamese-search.php';
+
 function cms_nhomc_setup() {
     // Hỗ trợ thẻ Title tự động của WordPress
     add_theme_support('title-tag');
@@ -43,7 +46,16 @@ function cms_nhomc_scripts() {
     wp_enqueue_style('font-awesome', 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css', array(), '4.7.0');
 
     // Nạp style.css của Theme
-    wp_enqueue_style('cms-nhomc-style', get_stylesheet_uri(), array('font-awesome'), '1.2.0');
+    wp_enqueue_style('cms-nhomc-style', get_stylesheet_uri(), array('font-awesome'), '1.3.0');
+
+    // Nạp JavaScript Smart Search & Autocomplete
+    wp_enqueue_script('cms-nhomc-smart-search', get_template_directory_uri() . '/assets/js/smart-search.js', array(), '1.0.0', true);
+    wp_localize_script('cms-nhomc-smart-search', 'cmsNhomcSearch', array(
+        'ajaxUrl' => admin_url('admin-ajax.php'),
+        'restUrl' => esc_url_raw(rest_url('cms-nhomc/v1')),
+        'nonce'   => wp_create_nonce('cms_nhomc_search_nonce'),
+        'homeUrl' => home_url('/'),
+    ));
 }
 add_action('wp_enqueue_scripts', 'cms_nhomc_scripts');
 
@@ -119,8 +131,6 @@ function cms_nhomc_exact_relevant_search_sql($search, $query) {
         $search = $wpdb->prepare("
             AND (
                 ({$wpdb->posts}.post_title LIKE %s)
-                OR ({$wpdb->posts}.post_excerpt LIKE %s)
-                OR ({$wpdb->posts}.post_content LIKE %s)
                 OR ({$wpdb->posts}.ID IN (
                     SELECT tr_sub.object_id 
                     FROM {$wpdb->term_relationships} tr_sub 
@@ -130,7 +140,7 @@ function cms_nhomc_exact_relevant_search_sql($search, $query) {
                       AND t_sub.name LIKE %s
                 ))
             )
-        ", $escaped, $escaped, $escaped, $escaped);
+        ", $escaped, $escaped);
     }
     return $search;
 }
@@ -265,21 +275,47 @@ function cms_nhomc_highlight_keyword($text, $query = null) {
     });
 
     $escaped_terms = array();
+    $accent_map = array(
+        'a' => '[aàáảãạăằắẳẵặâầấẩẫậ]',
+        'A' => '[AÀÁẢÃẠĂẰẮẲẴẶÂẦẤẨẪẬ]',
+        'd' => '[dđ]',
+        'D' => '[DĐ]',
+        'e' => '[eèéẻẽẹêềếểễệ]',
+        'E' => '[EÈÉẺẼẸÊỀẾỂỄỆ]',
+        'i' => '[iìíỉĩị]',
+        'I' => '[IÌÍỈĨỊ]',
+        'o' => '[oòóỏõọôồốổỗộơờớởỡợ]',
+        'O' => '[OÒÓỎÕỌÔỒỐỔỖỘƠỜỚỞỠỢ]',
+        'u' => '[uùúủũụưừứửữự]',
+        'U' => '[UÙÚỦŨỤƯỪỨỬỮỰ]',
+        'y' => '[yỳýỷỹỵ]',
+        'Y' => '[YỲÝỶỸỴ]',
+    );
+
     foreach ($keywords as $kw) {
         $first_char = mb_substr($kw, 0, 1, 'UTF-8');
         $has_word_start = preg_match('/[\p{L}\p{N}]/u', $first_char);
-        $quoted = preg_quote($kw, '/');
+
+        // Chuyển ký tự không dấu thành pattern chấp nhận cả có dấu
+        $chars = preg_split('//u', $kw, -1, PREG_SPLIT_NO_EMPTY);
+        $accent_quoted = '';
+        foreach ($chars as $ch) {
+            if (isset($accent_map[$ch])) {
+                $accent_quoted .= $accent_map[$ch];
+            } else {
+                $accent_quoted .= preg_quote($ch, '/');
+            }
+        }
 
         // Lookbehind ngăn không khớp vào giữa/cuối từ khác (ví dụ: 'AI' không khớp 'Blockchain' hay 'thứ hai', 'an' không khớp 'Ban')
         $prefix = $has_word_start ? '(?<![\p{L}\p{N}])' : '';
 
         // Đối với từ khóa ngắn (<= 2 ký tự) kết thúc bằng chữ/số (như '3', 'C', 'AI', 'IT', 'an'):
-        // Thêm lookahead để tránh khớp sai vào số có nhiều chữ số (như '3' khớp '35') hoặc từ dài hơn (như 'C' khớp 'Cao', 'AI' khớp 'AIDA')
         $last_char = mb_substr($kw, -1, 1, 'UTF-8');
         $has_word_end = preg_match('/[\p{L}\p{N}]/u', $last_char);
         $suffix = (mb_strlen($kw, 'UTF-8') <= 2 && $has_word_end) ? '(?![\p{L}\p{N}])' : '';
 
-        $escaped_terms[] = $prefix . $quoted . $suffix;
+        $escaped_terms[] = $prefix . $accent_quoted . $suffix;
     }
 
     $pattern = '/(' . implode('|', $escaped_terms) . ')/iu';
@@ -343,7 +379,7 @@ function cms_nhomc_get_post_thumbnail_url($post_id) {
         return get_the_post_thumbnail_url($post->ID, 'large');
     }
 
-    $slug = $post->post_name;
+    $slug = (isset($post->post_name) && is_string($post->post_name)) ? $post->post_name : '';
     $theme_dir = get_template_directory_uri();
 
     // 1. Tuyển sinh
