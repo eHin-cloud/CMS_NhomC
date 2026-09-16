@@ -1,6 +1,6 @@
 <?php
 /**
- * Sidebar template for CMS Nhóm C
+ * Sidebar template for CMS Nhóm C (Bao gồm Categories & Widget)
  *
  * @package CMS_NhomC
  */
@@ -15,12 +15,23 @@ if (empty($sidebar_type)) {
     }
 }
 ?>
-<aside class="cms-sidebar" aria-label="Sidebar">
+<aside id="secondary" class="widget-area site-sidebar cms-sidebar" aria-label="Sidebar">
     <?php
+    // 1. Module 9: Hiển thị widget Categories theo mẫu thiết kế (Anh Quý)
+    if (function_exists('cms_nhomc_render_categories_widget')) {
+        cms_nhomc_render_categories_widget();
+    }
+
+    // 2. Hiển thị Bài viết mới hoặc Bài viết nổi bật
     if ($sidebar_type === 'recent') {
         cms_nhomc_render_recent_posts_widget(5, 'BÀI VIẾT MỚI');
     } else {
         cms_nhomc_render_featured_posts_widget(5, 'BÀI VIẾT NỔI BẬT');
     }
+
+    // 3. Hỗ trợ thêm các widget khác nếu được kéo thả trong Admin
+    if (is_active_sidebar('main-sidebar')) :
+        dynamic_sidebar('main-sidebar');
+    endif;
     ?>
 </aside>

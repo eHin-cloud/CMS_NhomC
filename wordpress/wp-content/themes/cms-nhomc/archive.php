@@ -1,6 +1,6 @@
 <?php
 /**
- * Archive template file
+ * Archive template file (Chuyên mục & Lưu trữ)
  *
  * @package CMS_NhomC
  */
@@ -43,9 +43,10 @@ get_header();
             <?php endif; ?>
         </main>
 
-        <!-- Sidebar bên phải: Hiển thị Bài viết nổi bật & Bài viết mới -->
+        <!-- Sidebar bên phải: Hiển thị Categories, Bài viết nổi bật & Bài viết mới -->
         <aside class="cms-sidebar-column">
             <?php 
+            cms_nhomc_render_categories_widget();
             cms_nhomc_render_featured_posts_widget(5, 'BÀI VIẾT NỔI BẬT'); 
             cms_nhomc_render_recent_posts_widget(5, 'BÀI VIẾT MỚI');
             ?>
