@@ -38,8 +38,9 @@ get_header();
             <?php endif; ?>
         </main>
 
-        <!-- Sidebar bên phải: BÀI VIẾT NỔI BẬT trong Content -->
+        <!-- Sidebar bên phải: Categories & BÀI VIẾT NỔI BẬT trong Content -->
         <aside class="cms-sidebar-column">
+            <?php cms_nhomc_render_categories_widget(); ?>
             <?php cms_nhomc_render_featured_posts_widget(5, 'BÀI VIẾT NỔI BẬT'); ?>
         </aside>
     </div>
