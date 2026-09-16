@@ -857,3 +857,57 @@ function cms_nhomc_create_default_comments() {
 }
 add_action('after_setup_theme', 'cms_nhomc_create_default_comments');
 
+/**
+ * Custom Comment Callback theo phong cách Bootsnipp rNEdR
+ */
+function cms_nhomc_comment_callback($comment, $args, $depth) {
+    $GLOBALS['comment'] = $comment;
+    $comment_id = get_comment_ID();
+    $avatar_url = get_avatar_url($comment, array('size' => 48, 'default' => 'mm'));
+    ?>
+    <li <?php comment_class('cms-comment-item'); ?> id="comment-<?php echo $comment_id; ?>">
+        <div class="cms-comment-card">
+            <div class="cms-comment-header">
+                <div class="cms-comment-avatar">
+                    <img src="<?php echo esc_url($avatar_url); ?>" alt="<?php echo esc_attr(get_comment_author()); ?>" width="44" height="44" class="rounded-circle" />
+                </div>
+                <div class="cms-comment-meta">
+                    <h5 class="cms-comment-author"><?php comment_author(); ?></h5>
+                    <span class="cms-comment-date">
+                        <i class="fa fa-clock-o"></i> <?php echo human_time_diff(get_comment_time('U'), current_time('timestamp')) . ' trước'; ?>
+                        <span class="cms-comment-exact-date">(<?php echo get_comment_date('d/m/Y H:i'); ?>)</span>
+                    </span>
+                </div>
+                <?php if (current_user_can('edit_comment', $comment_id)) : ?>
+                    <div class="cms-comment-admin-actions">
+                        <a href="<?php echo esc_url(get_edit_comment_link($comment_id)); ?>" class="comment-edit-link" title="Chỉnh sửa">
+                            <i class="fa fa-pencil"></i> Sửa
+                        </a>
+                    </div>
+                <?php endif; ?>
+            </div>
+
+            <div class="cms-comment-body">
+                <?php if ($comment->comment_approved == '0') : ?>
+                    <p class="cms-comment-moderation-notice"><em>Bình luận của bạn đang chờ quản trị viên phê duyệt.</em></p>
+                <?php endif; ?>
+                <div class="cms-comment-text">
+                    <?php comment_text(); ?>
+                </div>
+            </div>
+
+            <div class="cms-comment-footer">
+                <?php
+                comment_reply_link(array_merge($args, array(
+                    'depth'      => $depth,
+                    'max_depth'  => $args['max_depth'],
+                    'reply_text' => '<i class="fa fa-reply"></i> Trả lời',
+                    'before'     => '<span class="cms-reply-btn">',
+                    'after'      => '</span>'
+                )));
+                ?>
+            </div>
+        </div>
+    <?php
+}
+
