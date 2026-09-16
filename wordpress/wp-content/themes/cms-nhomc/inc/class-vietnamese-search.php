@@ -571,8 +571,22 @@ class CMS_NhomC_Vietnamese_Search {
                 $score += 40;
             }
 
-            // 4. Token Matching trong Title
-            foreach ($unaccent_tokens as $t) {
+            // 4. Token Matching trong Title:
+            // Chỉ khi bài viết chứa ĐẦY ĐỦ TẤT CẢ các từ (AND matching) trong cụm tìm kiếm nhiều từ,
+            // tránh trường hợp tìm 'công nghệ' bị bắt nhầm vào bài 'nghệ thuật'.
+            if (count($unaccent_tokens) > 1) {
+                $all_tokens_found = true;
+                foreach ($unaccent_tokens as $t) {
+                    if ($t === '' || strpos($title_unaccent, $t) === false) {
+                        $all_tokens_found = false;
+                        break;
+                    }
+                }
+                if ($all_tokens_found) {
+                    $score += 40;
+                }
+            } elseif (count($unaccent_tokens) === 1) {
+                $t = reset($unaccent_tokens);
                 if ($t !== '' && strpos($title_unaccent, $t) !== false) {
                     $score += 20;
                 }
