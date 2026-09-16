@@ -1,6 +1,6 @@
 <?php
 /**
- * Main template file (Content)
+ * Archive template file (Chuyên mục & Lưu trữ)
  *
  * @package CMS_NhomC
  */
@@ -9,8 +9,13 @@ get_header();
 ?>
 
 <div class="site-content cms-container-layout">
+    <header class="cms-archive-header">
+        <h1 class="cms-archive-title"><?php the_archive_title(); ?></h1>
+        <?php the_archive_description('<div class="cms-archive-desc">', '</div>'); ?>
+    </header>
+
     <div class="cms-layout-grid">
-        <!-- Cột nội dung danh sách bài viết -->
+        <!-- Cột nội dung chính danh sách bài viết lưu trữ -->
         <main class="cms-main-column">
             <?php if (have_posts()) : ?>
                 <div class="cms-post-list">
@@ -33,16 +38,19 @@ get_header();
                 </div>
             <?php else : ?>
                 <div class="content-card">
-                    <p>Chưa có bài viết nào được đăng tải. Bạn có thể vào trang quản trị để thêm bài viết mới.</p>
+                    <p>Chưa có bài viết nào trong mục này.</p>
                 </div>
             <?php endif; ?>
         </main>
 
-        <!-- Sidebar bên phải: Categories & BÀI VIẾT NỔI BẬT trong Content -->
+        <!-- Sidebar bên phải: Hiển thị Categories, Bài viết nổi bật, Bài viết mới & Comments -->
         <aside class="cms-sidebar-column">
-            <?php cms_nhomc_render_categories_widget(); ?>
-            <?php cms_nhomc_render_featured_posts_widget(5, 'BÀI VIẾT NỔI BẬT'); ?>
-            <?php cms_nhomc_render_comments_widget(3, 'Comments'); ?>
+            <?php 
+            cms_nhomc_render_categories_widget();
+            cms_nhomc_render_featured_posts_widget(5, 'BÀI VIẾT NỔI BẬT'); 
+            cms_nhomc_render_recent_posts_widget(5, 'BÀI VIẾT MỚI');
+            cms_nhomc_render_comments_widget(3, 'Comments');
+            ?>
         </aside>
     </div>
 </div>

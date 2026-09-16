@@ -1,5 +1,6 @@
+# File cấu hình tương đương docker-compose.yml
+# Có thể chạy bằng lệnh: docker compose up -d (tự nhận docker-compose.yml) hoặc docker compose -f docker.yml up -d
 services:
-  # Dịch vụ Database MariaDB (tương thích hoàn toàn với bản dump cms_nhomc.sql)
   db:
     image: mariadb:10.6
     container_name: wordpressc_db
@@ -15,7 +16,6 @@ services:
     networks:
       - wordpressc_network
 
-  # Dịch vụ WordPress kèm Apache phục vụ Virtual Host WordpressC.local
   wordpress:
     image: wordpress:php8.2-apache
     container_name: wordpressc_app
@@ -36,7 +36,6 @@ services:
     networks:
       - wordpressc_network
 
-  # Công cụ quản lý cơ sở dữ liệu qua giao diện Web (PhpMyAdmin)
   phpmyadmin:
     image: phpmyadmin:latest
     container_name: wordpressc_phpmyadmin
