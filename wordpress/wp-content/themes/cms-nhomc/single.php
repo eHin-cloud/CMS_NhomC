@@ -67,36 +67,61 @@ get_header();
                         ?>
                     </div>
 
-                    <!-- Điều hướng bài trước / bài kế tiếp -->
+                    <!-- Điều hướng bài trước / bài kế tiếp (7) Prev - Next Post chuẩn mẫu TDC -->
                     <?php
                     $prev_post = get_previous_post();
                     $next_post = get_next_post();
-                    ?>
-                    <div class="single-post-nav">
-                        <div class="nav-box nav-prev">
-                            <?php if (!empty($prev_post)) : ?>
-                                <div class="nav-label">Bài viết trước</div>
-                                <h4 class="nav-title">
-                                    <a href="<?php echo esc_url(get_permalink($prev_post->ID)); ?>">
-                                        <?php echo esc_html(get_the_title($prev_post->ID)); ?>
-                                    </a>
-                                </h4>
-                                <span class="nav-date"><?php echo get_the_date('d-m-Y', $prev_post->ID); ?></span>
-                            <?php endif; ?>
-                        </div>
 
-                        <div class="nav-box nav-next">
-                            <?php if (!empty($next_post)) : ?>
-                                <div class="nav-label">Bài viết kế tiếp</div>
-                                <h4 class="nav-title">
-                                    <a href="<?php echo esc_url(get_permalink($next_post->ID)); ?>">
-                                        <?php echo esc_html(get_the_title($next_post->ID)); ?>
-                                    </a>
-                                </h4>
-                                <span class="nav-date"><?php echo get_the_date('d-m-Y', $next_post->ID); ?></span>
+                    if (!empty($next_post) || !empty($prev_post)) :
+                    ?>
+                    <nav class="single-post-nav tdc-post-nav" aria-label="Điều hướng bài viết">
+                        <ul class="tdc-post-nav-list">
+                            <?php if (!empty($next_post)) : 
+                                $next_day   = get_the_date('d', $next_post->ID);
+                                $next_month = get_the_date('m', $next_post->ID);
+                                $next_year  = get_the_date('y', $next_post->ID);
+                            ?>
+                                <li class="tdc-post-nav-item tdc-nav-next">
+                                    <div class="tdc-nav-date">
+                                        <span class="tdc-day-month">
+                                            <span class="tdc-day"><?php echo esc_html($next_day); ?></span>
+                                            <span class="tdc-divider"></span>
+                                            <span class="tdc-month"><?php echo esc_html($next_month); ?></span>
+                                        </span>
+                                        <span class="tdc-year"><?php echo esc_html($next_year); ?></span>
+                                    </div>
+                                    <div class="tdc-nav-title-wrap">
+                                        <a href="<?php echo esc_url(get_permalink($next_post->ID)); ?>" class="tdc-nav-link">
+                                            <?php echo esc_html(get_the_title($next_post->ID)); ?>
+                                        </a>
+                                    </div>
+                                </li>
                             <?php endif; ?>
-                        </div>
-                    </div>
+
+                            <?php if (!empty($prev_post)) : 
+                                $prev_day   = get_the_date('d', $prev_post->ID);
+                                $prev_month = get_the_date('m', $prev_post->ID);
+                                $prev_year  = get_the_date('y', $prev_post->ID);
+                            ?>
+                                <li class="tdc-post-nav-item tdc-nav-prev">
+                                    <div class="tdc-nav-date">
+                                        <span class="tdc-day-month">
+                                            <span class="tdc-day"><?php echo esc_html($prev_day); ?></span>
+                                            <span class="tdc-divider"></span>
+                                            <span class="tdc-month"><?php echo esc_html($prev_month); ?></span>
+                                        </span>
+                                        <span class="tdc-year"><?php echo esc_html($prev_year); ?></span>
+                                    </div>
+                                    <div class="tdc-nav-title-wrap">
+                                        <a href="<?php echo esc_url(get_permalink($prev_post->ID)); ?>" class="tdc-nav-link">
+                                            <?php echo esc_html(get_the_title($prev_post->ID)); ?>
+                                        </a>
+                                    </div>
+                                </li>
+                            <?php endif; ?>
+                        </ul>
+                    </nav>
+                    <?php endif; ?>
 
                     <!-- Bài viết liên quan -->
                     <?php
