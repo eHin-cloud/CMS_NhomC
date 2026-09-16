@@ -1,6 +1,6 @@
 <?php
 /**
- * Main template file
+ * Archive template (Chuyên mục & Lưu trữ)
  *
  * @package CMS_NhomC
  */
@@ -11,11 +11,17 @@ get_header();
 <div class="site-main-wrapper">
     <div class="site-container">
         <div class="content-layout">
-            <!-- Cột nội dung chính bên trái -->
+            <!-- Cột nội dung danh sách bài viết theo chuyên mục bên trái -->
             <main class="primary-content">
                 <div class="content-card">
-                    <h1>Chào mừng bạn đến với Website của Nhóm C (Group C)</h1>
-                    <p>Hệ thống website CMS WordPress - Giao diện chuẩn theo mẫu thiết kế đồ án.</p>
+                    <h1 style="font-size: 24px; color: #1f2937; margin-bottom: 8px;">
+                        Chuyên mục: <?php single_cat_title(); ?>
+                    </h1>
+                    <?php if (category_description()) : ?>
+                        <div class="archive-description" style="color: #6b7280; font-size: 14px;">
+                            <?php echo category_description(); ?>
+                        </div>
+                    <?php endif; ?>
                 </div>
 
                 <?php if (have_posts()) : ?>
@@ -34,7 +40,7 @@ get_header();
                     </div>
                 <?php else : ?>
                     <div class="content-card">
-                        <p>Chưa có bài viết nào được đăng tải. Bạn có thể vào trang quản trị để thêm bài viết mới.</p>
+                        <p>Hiện chưa có bài viết nào trong chuyên mục này.</p>
                     </div>
                 <?php endif; ?>
             </main>
