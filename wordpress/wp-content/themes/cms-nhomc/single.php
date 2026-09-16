@@ -98,6 +98,13 @@ get_header();
                         </div>
                     </div>
 
+                    <!-- Khu vực bình luận (Comments) -->
+                    <?php
+                    if (comments_open() || get_comments_number()) :
+                        comments_template();
+                    endif;
+                    ?>
+
                     <!-- Bài viết liên quan -->
                     <?php
                     $related_args = array(
