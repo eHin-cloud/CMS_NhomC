@@ -41,13 +41,11 @@ get_header();
                 <div class="posts-grid">
                     <?php while (have_posts()) : the_post(); ?>
                         <article id="post-<?php the_ID(); ?>" <?php post_class('search-post-card'); ?>>
-                            <?php if (has_post_thumbnail()) : ?>
-                                <div class="post-thumbnail">
-                                    <a href="<?php the_permalink(); ?>" aria-hidden="true" tabindex="-1">
-                                        <?php the_post_thumbnail('medium_large'); ?>
-                                    </a>
-                                </div>
-                            <?php endif; ?>
+                            <div class="post-thumbnail">
+                                <a href="<?php the_permalink(); ?>" aria-hidden="true" tabindex="-1">
+                                    <img src="<?php echo esc_url(cms_nhomc_get_post_thumbnail_url(get_the_ID())); ?>" alt="<?php the_title_attribute(); ?>" loading="lazy" />
+                                </a>
+                            </div>
 
                             <div class="post-card-body">
                                 <h2 class="post-card-title">

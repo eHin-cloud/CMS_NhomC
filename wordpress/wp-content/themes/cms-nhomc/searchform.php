@@ -9,6 +9,10 @@
 <form role="search" method="get" class="card card-sm bootsnipp-search-form" action="<?php echo esc_url(home_url('/')); ?>">
     <div class="card-body row no-gutters align-items-center">
         <div class="col-auto search-icon-col">
+            <svg class="search-icon-svg" viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2.3" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <circle cx="11" cy="11" r="7.5"></circle>
+                <line x1="21" y1="21" x2="16.5" y2="16.5"></line>
+            </svg>
             <i class="fa fa-search fas fa-search" aria-hidden="true"></i>
         </div>
         <!--end of col-->
@@ -28,3 +32,4 @@
         <!--end of col-->
     </div>
 </form>
+
