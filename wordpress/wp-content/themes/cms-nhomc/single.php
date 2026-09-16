@@ -144,6 +144,7 @@ get_header();
         <aside class="cms-sidebar-column">
             <?php cms_nhomc_render_categories_widget(); ?>
             <?php cms_nhomc_render_recent_posts_widget(5, 'BÀI VIẾT MỚI'); ?>
+            <?php cms_nhomc_render_comments_widget(3, 'Comments'); ?>
         </aside>
     </div>
 </div>
