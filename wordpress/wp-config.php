@@ -20,22 +20,30 @@
 
 // ** Database settings - You can get this info from your web host ** //
 /** The name of the database for WordPress */
-define( 'DB_NAME', 'cms_nhomc' );
+define( 'DB_NAME', getenv( 'WORDPRESS_DB_NAME' ) ?: 'cms_nhomc' );
 
 /** Database username */
-define( 'DB_USER', 'root' );
+define( 'DB_USER', getenv( 'WORDPRESS_DB_USER' ) ?: 'root' );
 
 /** Database password */
-define( 'DB_PASSWORD', '' );
+define( 'DB_PASSWORD', getenv( 'WORDPRESS_DB_PASSWORD' ) !== false ? getenv( 'WORDPRESS_DB_PASSWORD' ) : '' );
 
 /** Database hostname */
-define( 'DB_HOST', 'localhost' );
+define( 'DB_HOST', getenv( 'WORDPRESS_DB_HOST' ) ?: 'localhost' );
 
 /** Database charset to use in creating database tables. */
 define( 'DB_CHARSET', 'utf8mb4' );
 
 /** The database collate type. Don't change this if in doubt. */
 define( 'DB_COLLATE', '' );
+
+/** Cấu hình Virtual Host URL cho WordpressC.local */
+if ( ! defined( 'WP_HOME' ) ) {
+	define( 'WP_HOME', 'http://WordpressC.local' );
+}
+if ( ! defined( 'WP_SITEURL' ) ) {
+	define( 'WP_SITEURL', 'http://WordpressC.local' );
+}
 
 /**#@+
  * Authentication unique keys and salts.
@@ -88,8 +96,8 @@ $table_prefix = 'wp_';
 define( 'WP_DEBUG', false );
 
 /* Add any custom values between this line and the "stop editing" line. */
-define( 'WP_HOME', 'http://localhost/CMS_NhomC/wordpress' );
-define( 'WP_SITEURL', 'http://localhost/CMS_NhomC/wordpress' );
+
+
 
 /* That's all, stop editing! Happy publishing. */
 
