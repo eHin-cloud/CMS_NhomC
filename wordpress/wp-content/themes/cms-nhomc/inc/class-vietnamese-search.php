@@ -643,7 +643,7 @@ class CMS_NhomC_Vietnamese_Search {
             $results[] = array(
                 'id'                  => $p->ID,
                 'title'               => get_the_title($p),
-                'highlighted_title'   => cms_nhomc_highlight_keyword(get_the_title($p), $query_str),
+                'highlighted_title'   => get_the_title($p),
                 'permalink'           => get_permalink($p),
                 'date'                => array(
                     'day'   => get_the_date('d', $p),
@@ -653,7 +653,7 @@ class CMS_NhomC_Vietnamese_Search {
                 'thumbnail_url'       => $thumb_url,
                 'categories'          => $categories,
                 'excerpt'             => $excerpt_raw,
-                'highlighted_excerpt' => cms_nhomc_highlight_keyword($excerpt_raw, $query_str),
+                'highlighted_excerpt' => $excerpt_raw,
                 'score'               => $item['score'],
             );
         }

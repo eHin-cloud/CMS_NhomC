@@ -13,10 +13,8 @@ $post_year  = get_the_date('Y', $post_id);
 
 $raw_title = get_the_title();
 $title_to_display = (is_string($raw_title) && trim($raw_title) !== '') ? $raw_title : __('(Không có tiêu đề)', 'cms-nhomc');
-$highlighted_title = cms_nhomc_highlight_keyword($title_to_display);
 
 $raw_excerpt = get_the_excerpt();
-$highlighted_excerpt = is_string($raw_excerpt) ? cms_nhomc_highlight_keyword($raw_excerpt) : '';
 ?>
 
 <article id="post-<?php the_ID(); ?>" <?php post_class('search-post-card'); ?>>
@@ -67,7 +65,7 @@ $highlighted_excerpt = is_string($raw_excerpt) ? cms_nhomc_highlight_keyword($ra
             <div class="search-title-section">
                 <h2 class="search-post-title">
                     <a href="<?php the_permalink(); ?>">
-                        <?php echo wp_kses_post($highlighted_title); ?>
+                        <?php echo esc_html($title_to_display); ?>
                     </a>
                 </h2>
 
@@ -90,9 +88,9 @@ $highlighted_excerpt = is_string($raw_excerpt) ? cms_nhomc_highlight_keyword($ra
             </div>
         </div>
 
-        <!-- Đoạn tóm tắt Excerpt có highlight từ khóa -->
+        <!-- Đoạn tóm tắt Excerpt -->
         <div class="search-post-excerpt">
-            <p><?php echo wp_kses_post($highlighted_excerpt); ?></p>
+            <p><?php echo esc_html($raw_excerpt); ?></p>
         </div>
 
         <!-- Nút Xem chi tiết -->

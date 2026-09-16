@@ -229,8 +229,8 @@
 
                     // Info
                     html += '<div class="dropdown-post-info">';
-                        // Title with highlight
-                        html += '<h4 class="dropdown-post-title">' + p.highlighted_title + '</h4>';
+                        // Title
+                        html += '<h4 class="dropdown-post-title">' + escapeHtml(p.title) + '</h4>';
                         // Meta: Date & Category
                         html += '<div class="dropdown-post-meta">';
                             html += '<span class="meta-date">' + p.date.day + '/' + p.date.month + '/' + p.date.year + '</span>';
@@ -468,7 +468,7 @@
                             // Tiêu đề & Categories
                             html += '<div class="search-title-section">';
                                 html += '<h2 class="search-post-title">';
-                                    html += '<a href="' + escapeHtml(p.permalink) + '">' + p.highlighted_title + '</a>';
+                                    html += '<a href="' + escapeHtml(p.permalink) + '">' + escapeHtml(p.title) + '</a>';
                                 html += '</h2>';
                                 html += '<div class="search-post-categories">';
                                     html += '<span class="cat-label">Chuyên mục</span>';
@@ -488,7 +488,7 @@
 
                         // Excerpt
                         html += '<div class="search-post-excerpt">';
-                            html += '<p>' + p.highlighted_excerpt + '</p>';
+                            html += '<p>' + escapeHtml(p.excerpt) + '</p>';
                         html += '</div>';
 
                         // Read more

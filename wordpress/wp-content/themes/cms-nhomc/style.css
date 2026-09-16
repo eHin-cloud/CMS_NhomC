@@ -2731,3 +2731,16 @@ section#footer {
   pointer-events: none;
   transition: opacity 0.2s ease;
 }
+
+/* Tắt hiển thị highlight từ khóa trên trang Search Results */
+.search-results-page mark,
+.search-post-card mark,
+.search-post-title mark,
+.search-post-excerpt mark,
+.search-highlight {
+  background-color: transparent !important;
+  color: inherit !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
+  font-weight: inherit !important;
+}
