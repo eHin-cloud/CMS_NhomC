@@ -141,6 +141,172 @@ if ( ! function_exists( 'twentytwentyfive_register_block_bindings' ) ) :
 endif;
 add_action( 'init', 'twentytwentyfive_register_block_bindings' );
 
+if ( ! function_exists( 'twentytwentyfive_enqueue_custom_styles' ) ) :
+	/**
+	 * Enqueues custom CSS for the horizontal post list layout.
+	 *
+	 * @since Twenty Twenty-Five 1.0
+	 *
+	 * @return void
+	 */
+	function twentytwentyfive_enqueue_custom_styles() {
+		wp_enqueue_style(
+			'twentytwentyfive-custom-post-list',
+			get_template_directory_uri() . '/assets/css/custom-post-list.css',
+			array(),
+			wp_get_theme()->get( 'Version' )
+		);
+	}
+endif;
+add_action( 'wp_enqueue_scripts', 'twentytwentyfive_enqueue_custom_styles' );
+
+if ( ! function_exists( 'twentytwentyfive_tin_tuc_ngang_shortcode' ) ) :
+	/**
+	 * Shortcode [tin_tuc_ngang] - Renders posts in horizontal list layout.
+	 * Usage: [tin_tuc_ngang so_bai="4" danh_muc="tin-tuc"]
+	 *
+	 * @since Twenty Twenty-Five 1.0
+	 *
+	 * @param array $atts Shortcode attributes.
+	 * @return string HTML output.
+	 */
+	function twentytwentyfive_tin_tuc_ngang_shortcode( $atts ) {
+		$atts = shortcode_atts(
+			array(
+				'so_bai'    => 4,
+				'danh_muc'  => '',
+				'offset'    => 0,
+			),
+			$atts,
+			'tin_tuc_ngang'
+		);
+
+		$args = array(
+			'posts_per_page' => intval( $atts['so_bai'] ),
+			'offset'         => intval( $atts['offset'] ),
+			'post_status'    => 'publish',
+			'orderby'        => 'date',
+			'order'          => 'DESC',
+		);
+
+		if ( ! empty( $atts['danh_muc'] ) ) {
+			$args['category_name'] = sanitize_text_field( $atts['danh_muc'] );
+		}
+
+		$query = new WP_Query( $args );
+
+		if ( ! $query->have_posts() ) {
+			return '<p class="ttn-no-posts">' . esc_html__( 'Không có bài viết nào.', 'twentytwentyfive' ) . '</p>';
+		}
+
+		$months_vi = array(
+			1  => 'THÁNG 1',
+			2  => 'THÁNG 2',
+			3  => 'THÁNG 3',
+			4  => 'THÁNG 4',
+			5  => 'THÁNG 5',
+			6  => 'THÁNG 6',
+			7  => 'THÁNG 7',
+			8  => 'THÁNG 8',
+			9  => 'THÁNG 9',
+			10 => 'THÁNG 10',
+			11 => 'THÁNG 11',
+			12 => 'THÁNG 12',
+		);
+
+		$fallbacks = array(
+			get_template_directory_uri() . '/assets/images/tdc-tuyen-sinh.jpg',
+			get_template_directory_uri() . '/assets/images/tdc-toa-nha-xanh.jpg',
+			get_template_directory_uri() . '/assets/images/tdc-hoi-nghi-cntt.jpg',
+			get_template_directory_uri() . '/assets/images/tdc-tu-sach-dien-tu.jpg',
+		);
+
+		ob_start();
+		?>
+		<div class="ttn-post-list">
+			<?php
+			while ( $query->have_posts() ) :
+				$query->the_post();
+
+				$post_id    = get_the_ID();
+				$post_day   = get_the_date( 'd' );
+				$post_month = intval( get_the_date( 'n' ) );
+				$post_year  = get_the_date( 'Y' );
+				$month_label = isset( $months_vi[ $post_month ] ) ? $months_vi[ $post_month ] : 'THÁNG ' . $post_month;
+
+				$categories = get_the_category();
+				$cat_names  = array();
+				foreach ( $categories as $cat ) {
+					$cat_names[] = '<a href="' . esc_url( get_category_link( $cat->term_id ) ) . '">' . esc_html( $cat->name ) . '</a>';
+				}
+				$cat_output = ! empty( $cat_names ) ? implode( ', ', $cat_names ) : '<a href="#">Tin Tức</a>';
+
+				$thumb_url = '';
+				if ( has_post_thumbnail() ) {
+					$thumb_url = get_the_post_thumbnail_url( $post_id, 'large' );
+				} else {
+					$slug = get_post_field( 'post_name', $post_id );
+					$theme_dir = get_template_directory_uri();
+					if ( strpos( $slug, 'tuyen-sinh' ) !== false ) {
+						$thumb_url = $theme_dir . '/assets/images/tdc-tuyen-sinh.jpg';
+					} elseif ( strpos( $slug, 'thang-06' ) !== false || strpos( $slug, 'toa-nha' ) !== false ) {
+						$thumb_url = $theme_dir . '/assets/images/tdc-toa-nha-xanh.jpg';
+					} elseif ( strpos( $slug, 'kiem-dinh' ) !== false || strpos( $slug, 'thong-tin' ) !== false ) {
+						$thumb_url = $theme_dir . '/assets/images/tdc-hoi-nghi-cntt.jpg';
+					} elseif ( strpos( $slug, 'tu-sach' ) !== false || strpos( $slug, 'ho-chi-minh' ) !== false ) {
+						$thumb_url = $theme_dir . '/assets/images/tdc-tu-sach-dien-tu.jpg';
+					} else {
+						$idx = absint( $post_id ) % count( $fallbacks );
+						$thumb_url = $fallbacks[ $idx ];
+					}
+				}
+
+				$excerpt = ! empty( $post->post_excerpt ) ? $post->post_excerpt : '';
+				?>
+				<article class="ttn-post-item">
+					<div class="ttn-thumbnail">
+						<a class="ttn-thumbnail-link" href="<?php the_permalink(); ?>" aria-label="<?php the_title_attribute(); ?>">
+							<img src="<?php echo esc_url( $thumb_url ); ?>" alt="<?php the_title_attribute(); ?>" class="ttn-thumb-img" loading="lazy" />
+						</a>
+					</div>
+
+					<div class="ttn-content">
+						<div class="ttn-header-row">
+							<div class="ttn-date-badge">
+								<span class="ttn-day"><?php echo esc_html( $post_day ); ?></span>
+								<div class="ttn-date-meta">
+									<span class="ttn-month"><?php echo esc_html( $month_label ); ?></span>
+									<span class="ttn-year"><?php echo esc_html( $post_year ); ?></span>
+								</div>
+							</div>
+
+							<div class="ttn-heading-box">
+								<h2 class="ttn-title">
+									<a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
+								</h2>
+								<div class="ttn-categories">
+									<span class="ttn-cat-label">Categories</span>
+									<span class="ttn-cat-links"><?php echo wp_kses_post( $cat_output ); ?></span>
+								</div>
+							</div>
+						</div>
+
+						<?php if ( ! empty( $excerpt ) ) : ?>
+							<div class="ttn-excerpt">
+								<?php echo esc_html( $excerpt ); ?>
+							</div>
+						<?php endif; ?>
+					</div>
+				</article>
+			<?php endwhile; ?>
+			<?php wp_reset_postdata(); ?>
+		</div>
+		<?php
+		return ob_get_clean();
+	}
+endif;
+add_shortcode( 'tin_tuc_ngang', 'twentytwentyfive_tin_tuc_ngang_shortcode' );
+
 if ( ! function_exists( 'twentytwentyfive_format_binding' ) ) :
 	/**
 	 * Callback function for the post format name block binding source.
