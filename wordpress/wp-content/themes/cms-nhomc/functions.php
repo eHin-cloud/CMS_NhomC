@@ -410,3 +410,128 @@ function cms_nhomc_create_default_categories() {
 }
 add_action('after_setup_theme', 'cms_nhomc_create_default_categories');
 
+/**
+ * Render Widget: COMMENTS (Bình luận) - Module 12 (Anh Quý)
+ */
+function cms_nhomc_render_comments_widget($limit = 3, $title = 'Comments') {
+    $comments = get_comments(array(
+        'number'      => intval($limit) * 2,
+        'status'      => 'approve',
+        'post_status' => 'publish',
+        'type'        => 'comment',
+    ));
+
+    $display_items = array();
+    if (!empty($comments)) {
+        foreach ($comments as $comment) {
+            // Bỏ qua bình luận mặc định khởi tạo của WordPress
+            if (strpos($comment->comment_content, 'Xin chào, đây là một bình luận') !== false) {
+                continue;
+            }
+            $display_items[] = array(
+                'content' => wp_strip_all_tags($comment->comment_content),
+                'link'    => get_comment_link($comment),
+            );
+            if (count($display_items) >= $limit) {
+                break;
+            }
+        }
+    }
+
+    // Dữ liệu mẫu chuẩn y chang mẫu hình ảnh nếu chưa có bình luận
+    if (empty($display_items)) {
+        $sample_comments = array(
+            'Bài viết hay quá',
+            'Cảm ơn tác giả',
+            'Bài viết thật hữu ích',
+        );
+
+        $recent_posts = get_posts(array(
+            'numberposts' => 3,
+            'post_status' => 'publish',
+        ));
+
+        foreach ($sample_comments as $idx => $cmt_text) {
+            $link = isset($recent_posts[$idx]) ? get_permalink($recent_posts[$idx]->ID) : home_url('/');
+            $display_items[] = array(
+                'content' => $cmt_text,
+                'link'    => $link,
+            );
+        }
+    }
+    ?>
+    <div class="cms-sidebar-widget widget-comments-box">
+        <h3 class="widget-comments-title"><?php echo esc_html($title); ?></h3>
+        <div class="widget-comments-stripe"></div>
+        <ul class="widget-comments-list">
+            <?php foreach ($display_items as $item) : ?>
+                <li class="widget-comments-item">
+                    <a href="<?php echo esc_url($item['link']); ?>" class="widget-comments-link">
+                        <?php echo esc_html($item['content']); ?>
+                    </a>
+                </li>
+            <?php endforeach; ?>
+        </ul>
+    </div>
+    <?php
+}
+
+/**
+ * Shortcode hiển thị Widget Comments: [cms_comments]
+ */
+function cms_nhomc_comments_shortcode($atts) {
+    $atts = shortcode_atts(array(
+        'limit' => 3,
+        'title' => 'Comments',
+    ), $atts, 'cms_comments');
+
+    ob_start();
+    cms_nhomc_render_comments_widget($atts['limit'], $atts['title']);
+    return ob_get_clean();
+}
+add_shortcode('cms_comments', 'cms_nhomc_comments_shortcode');
+
+/**
+ * Tự động khởi tạo 3 bình luận mẫu chuẩn theo ảnh thiết kế (Module 12)
+ */
+function cms_nhomc_create_default_comments() {
+    $sample_texts = array(
+        'Bài viết hay quá',
+        'Cảm ơn tác giả',
+        'Bài viết thật hữu ích',
+    );
+
+    // Kiểm tra xem đã tồn tại bình luận chuẩn chưa
+    $existing = get_comments(array(
+        'search' => 'Bài viết hay quá',
+    ));
+    if (!empty($existing)) {
+        return;
+    }
+
+    $posts = get_posts(array(
+        'numberposts' => 3,
+        'post_status' => 'publish',
+        'orderby'     => 'date',
+        'order'       => 'DESC',
+    ));
+
+    if (empty($posts)) {
+        return;
+    }
+
+    $authors = array('Nguyễn Văn Nam', 'Trần Thị Mai', 'Lê Hoàng');
+    foreach ($sample_texts as $i => $text) {
+        $target_post = isset($posts[$i]) ? $posts[$i] : $posts[0];
+        wp_insert_comment(array(
+            'comment_post_ID'      => $target_post->ID,
+            'comment_author'       => isset($authors[$i]) ? $authors[$i] : 'Bạn đọc',
+            'comment_author_email' => 'reader' . ($i + 1) . '@example.com',
+            'comment_content'      => $text,
+            'comment_approved'     => 1,
+            'comment_date'         => current_time('mysql', false),
+            'comment_date_gmt'     => current_time('mysql', true),
+        ));
+    }
+}
+add_action('after_setup_theme', 'cms_nhomc_create_default_comments');

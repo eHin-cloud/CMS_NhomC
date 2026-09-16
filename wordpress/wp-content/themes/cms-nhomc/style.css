@@ -1437,4 +1437,57 @@ section#footer {
   }
 }
 
+/* ==========================================================================
+   MODULE 12: WIDGET COMMENTS THEO THIẾT KẾ MẪU (Anh Quý)
+   ========================================================================== */
+.widget-comments-box {
+  background: transparent;
+}
 
+/* Tiêu đề "Comments" */
+.widget-comments-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #333333;
+  margin: 0 0 6px 0;
+  line-height: 1.3;
+  text-transform: none;
+  font-family: inherit;
+  letter-spacing: normal;
+}
+
+/* Đường gạch ngang ngắn trang trí dưới tiêu đề */
+.widget-comments-stripe {
+  width: 45px;
+  height: 2px;
+  background-color: #999eab;
+  margin-bottom: 12px;
+}
+
+/* Danh sách bình luận */
+.widget-comments-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* Mỗi dòng bình luận */
+.widget-comments-item {
+  border-bottom: 1px solid #efefef;
+  padding: 7px 0;
+}
+
+/* Liên kết chữ bình luận */
+.widget-comments-link {
+  color: #488dc6;
+  font-size: 14px;
+  line-height: 1.5;
+  text-decoration: none;
+  display: block;
+  transition: color 0.15s ease;
+}
+
+.widget-comments-link:hover {
+  color: #1a68a5;
+  text-decoration: underline;
+}
