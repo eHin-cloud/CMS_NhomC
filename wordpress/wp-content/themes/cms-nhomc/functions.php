@@ -546,45 +546,165 @@ function cms_nhomc_tin_tuc_ngang_shortcode($atts) {
 add_shortcode('tin_tuc_ngang', 'cms_nhomc_tin_tuc_ngang_shortcode');
 
 /**
- * Render Widget: BÀI VIẾT MỚI (Recent Posts)
+ * Lấy danh sách Recent Posts chuẩn WordPress Core WP_Query
+ * Điều kiện lọc bắt buộc:
+ * - post_type = 'post'
+ * - post_status = 'publish' (chỉ lấy bài đã xuất bản, loại bỏ hoàn toàn draft, pending, trash)
+ * - orderby = 'date', order = 'DESC' (mới nhất xếp trước)
+ * - posts_per_page = 10 (mặc định 10 bài)
+ * - ignore_sticky_posts = 1 (tránh bài ghim làm sai lệch thứ tự thời gian)
+ *
+ * @param int $limit Số lượng bài viết cần lấy (mặc định: 10)
+ * @param array $extra_args Tham số mở rộng nếu cần
+ * @return WP_Query
  */
-function cms_nhomc_render_recent_posts_widget($limit = 5, $title = 'BÀI VIẾT MỚI') {
-    $args = array(
-        'posts_per_page'      => intval($limit),
+function cms_nhomc_get_recent_posts($limit = 10, $extra_args = array()) {
+    $default_args = array(
+        'post_type'           => 'post',
         'post_status'         => 'publish',
+        'posts_per_page'      => max(1, intval($limit)),
         'orderby'             => 'date',
         'order'               => 'DESC',
         'ignore_sticky_posts' => 1,
+        'no_found_rows'       => true,
     );
-    $query = new WP_Query($args);
 
-    if ($query->have_posts()) :
-    ?>
-        <div class="cms-sidebar-widget widget-recent-posts">
-            <h3 class="widget-title widget-title-recent"><?php echo esc_html($title); ?></h3>
-            <ul class="sidebar-post-list">
-                <?php while ($query->have_posts()) : $query->the_post(); 
-                    $thumb_url = cms_nhomc_get_post_thumbnail_url(get_the_ID());
-                ?>
-                    <li class="sidebar-post-item">
-                        <div class="sidebar-post-thumb">
-                            <a href="<?php the_permalink(); ?>">
-                                <img src="<?php echo esc_url($thumb_url); ?>" alt="<?php the_title_attribute(); ?>" loading="lazy" />
-                            </a>
-                        </div>
-                        <div class="sidebar-post-info">
-                            <h4 class="sidebar-post-title">
-                                <a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
-                            </h4>
-                            <span class="sidebar-post-date"><?php echo get_the_date('d/m/Y'); ?></span>
-                        </div>
-                    </li>
-                <?php endwhile; wp_reset_postdata(); ?>
-            </ul>
-        </div>
-    <?php
-    endif;
+    $args = wp_parse_args($extra_args, $default_args);
+    return new WP_Query($args);
 }
+
+/**
+ * Render Widget: BÀI VIẾT MỚI (Recent Posts) - Module chuẩn Senior WordPress Developer
+ * Hiển thị tối đa 10 bài viết mới nhất với đầy đủ:
+ * Thumbnail, Tiêu đề, Ngày đăng, Chuyên mục, Mô tả ngắn (Excerpt), Link tới trang Detail.
+ * Có Empty State và Error State.
+ */
+function cms_nhomc_render_recent_posts_widget($limit = 10, $title = 'BÀI VIẾT MỚI') {
+    $limit = !empty($limit) ? intval($limit) : 10;
+    $title = !empty($title) ? $title : __('BÀI VIẾT MỚI', 'cms-nhomc');
+
+    $query = cms_nhomc_get_recent_posts($limit);
+    ?>
+    <div class="widget-categories-card widget-recent-posts-card">
+        <h3 class="widget-cat-title widget-recent-title"><?php echo esc_html($title); ?></h3>
+        <div class="widget-cat-stripe widget-recent-stripe"></div>
+        <div class="widget-cat-body widget-recent-body">
+            <?php if ($query->have_posts()) : ?>
+                <ul class="sidebar-post-list recent-post-list">
+                    <?php while ($query->have_posts()) : $query->the_post(); 
+                        $post_id    = get_the_ID();
+                        $thumb_url  = cms_nhomc_get_post_thumbnail_url($post_id);
+                        $permalink  = get_permalink($post_id);
+                        $post_title = get_the_title($post_id);
+                        $post_date  = get_the_date('d/m/Y', $post_id);
+                        $categories = get_the_category($post_id);
+                        $primary_cat = !empty($categories) ? $categories[0] : null;
+                        $raw_excerpt = get_the_excerpt($post_id);
+                        $excerpt    = !empty($raw_excerpt) ? wp_trim_words(wp_strip_all_tags($raw_excerpt), 15, '...') : '';
+                    ?>
+                        <li class="sidebar-post-item recent-post-item">
+                            <div class="sidebar-post-thumb recent-post-thumb">
+                                <a href="<?php echo esc_url($permalink); ?>" aria-label="<?php echo esc_attr($post_title); ?>">
+                                    <img src="<?php echo esc_url($thumb_url); ?>" alt="<?php echo esc_attr($post_title); ?>" loading="lazy" />
+                                </a>
+                            </div>
+                            <div class="sidebar-post-info recent-post-info">
+                                <h4 class="sidebar-post-title recent-post-title">
+                                    <a href="<?php echo esc_url($permalink); ?>" title="<?php echo esc_attr($post_title); ?>">
+                                        <?php echo esc_html($post_title); ?>
+                                    </a>
+                                </h4>
+                                <div class="recent-post-meta">
+                                    <span class="recent-post-date"><i class="fa fa-calendar-o" aria-hidden="true"></i> <?php echo esc_html($post_date); ?></span>
+                                    <?php if ($primary_cat) : ?>
+                                        <span class="recent-post-sep">•</span>
+                                        <a href="<?php echo esc_url(get_category_link($primary_cat->term_id)); ?>" class="recent-post-category">
+                                            <?php echo esc_html($primary_cat->name); ?>
+                                        </a>
+                                    <?php endif; ?>
+                                </div>
+                                <?php if (!empty($excerpt)) : ?>
+                                    <div class="recent-post-excerpt">
+                                        <?php echo esc_html($excerpt); ?>
+                                    </div>
+                                <?php endif; ?>
+                            </div>
+                        </li>
+                    <?php endwhile; wp_reset_postdata(); ?>
+                </ul>
+            <?php else : ?>
+                <div class="recent-posts-empty-state">
+                    <div class="empty-icon"><i class="fa fa-newspaper-o" aria-hidden="true"></i></div>
+                    <p class="empty-text"><?php esc_html_e('Chưa có bài viết mới nào được đăng tải.', 'cms-nhomc'); ?></p>
+                </div>
+            <?php endif; ?>
+        </div>
+    </div>
+    <?php
+}
+
+/**
+ * Shortcode [cms_nhomc_recent_posts limit="10" title="BÀI VIẾT MỚI"]
+ */
+function cms_nhomc_recent_posts_shortcode($atts) {
+    $atts = shortcode_atts(array(
+        'limit' => 10,
+        'title' => 'BÀI VIẾT MỚI',
+    ), $atts, 'cms_nhomc_recent_posts');
+
+    ob_start();
+    cms_nhomc_render_recent_posts_widget(intval($atts['limit']), sanitize_text_field($atts['title']));
+    return ob_get_clean();
+}
+add_shortcode('cms_nhomc_recent_posts', 'cms_nhomc_recent_posts_shortcode');
+add_shortcode('recent_posts', 'cms_nhomc_recent_posts_shortcode');
+
+/**
+ * WordPress Core Widget Class: CMS_NhomC_Recent_Posts_Custom_Widget
+ */
+class CMS_NhomC_Recent_Posts_Custom_Widget extends WP_Widget {
+    public function __construct() {
+        parent::__construct(
+            'cms_nhomc_recent_posts_widget',
+            __('[CMS Nhóm C] Bài viết mới (Recent Posts)', 'cms-nhomc'),
+            array('description' => __('Hiển thị 10 bài viết mới nhất kèm hình ảnh và thông tin chi tiết.', 'cms-nhomc'))
+        );
+    }
+
+    public function widget($args, $instance) {
+        $title = !empty($instance['title']) ? $instance['title'] : 'BÀI VIẾT MỚI';
+        $limit = !empty($instance['limit']) ? intval($instance['limit']) : 10;
+        cms_nhomc_render_recent_posts_widget($limit, $title);
+    }
+
+    public function form($instance) {
+        $title = !empty($instance['title']) ? $instance['title'] : 'BÀI VIẾT MỚI';
+        $limit = !empty($instance['limit']) ? intval($instance['limit']) : 10;
+        ?>
+        <p>
+            <label for="<?php echo esc_attr($this->get_field_id('title')); ?>"><?php esc_html_e('Tiêu đề:', 'cms-nhomc'); ?></label>
+            <input class="widefat" id="<?php echo esc_attr($this->get_field_id('title')); ?>" name="<?php echo esc_attr($this->get_field_name('title')); ?>" type="text" value="<?php echo esc_attr($title); ?>" />
+        </p>
+        <p>
+            <label for="<?php echo esc_attr($this->get_field_id('limit')); ?>"><?php esc_html_e('Số lượng bài viết:', 'cms-nhomc'); ?></label>
+            <input class="tiny-text" id="<?php echo esc_attr($this->get_field_id('limit')); ?>" name="<?php echo esc_attr($this->get_field_name('limit')); ?>" type="number" step="1" min="1" max="30" value="<?php echo esc_attr($limit); ?>" size="3" />
+        </p>
+        <?php
+    }
+
+    public function update($new_instance, $old_instance) {
+        $instance = array();
+        $instance['title'] = (!empty($new_instance['title'])) ? sanitize_text_field($new_instance['title']) : '';
+        $instance['limit'] = (!empty($new_instance['limit'])) ? intval($new_instance['limit']) : 10;
+        return $instance;
+    }
+}
+
+function cms_nhomc_register_recent_posts_widget() {
+    register_widget('CMS_NhomC_Recent_Posts_Custom_Widget');
+}
+add_action('widgets_init', 'cms_nhomc_register_recent_posts_widget');
+
 
 /**
  * Render Widget: BÀI VIẾT NỔI BẬT (Featured Posts)

@@ -48,7 +48,7 @@ get_header();
             <?php 
             cms_nhomc_render_categories_widget();
             cms_nhomc_render_featured_posts_widget(5, 'BÀI VIẾT NỔI BẬT'); 
-            cms_nhomc_render_recent_posts_widget(5, 'BÀI VIẾT MỚI');
+            cms_nhomc_render_recent_posts_widget(10, 'BÀI VIẾT MỚI');
             cms_nhomc_render_comments_widget(3, 'Comments');
             ?>
         </aside>

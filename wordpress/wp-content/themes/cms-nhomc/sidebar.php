@@ -24,7 +24,7 @@ if (empty($sidebar_type)) {
 
     // 2. Hiển thị Bài viết mới hoặc Bài viết nổi bật
     if ($sidebar_type === 'recent') {
-        cms_nhomc_render_recent_posts_widget(5, 'BÀI VIẾT MỚI');
+        cms_nhomc_render_recent_posts_widget(10, 'BÀI VIẾT MỚI');
     } else {
         cms_nhomc_render_featured_posts_widget(5, 'BÀI VIẾT NỔI BẬT');
     }
