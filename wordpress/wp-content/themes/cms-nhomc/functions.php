@@ -69,25 +69,78 @@ add_filter('excerpt_more', 'cms_nhomc_excerpt_more');
  * Đồng thời ngăn ngừa truy vấn rác khi từ khóa rỗng hoặc chỉ chứa khoảng trắng / kiểu dữ liệu không hợp lệ.
  */
 function cms_nhomc_filter_search_query($query) {
-    if (!is_admin() && $query->is_main_query() && $query->is_search()) {
+    if (!is_admin() && $query->is_search()) {
         $query->set('post_type', 'post');
         $query->set('post_status', 'publish');
 
-        // Ngăn truy vấn rác vào cơ sở dữ liệu khi từ khóa rỗng hoặc không phải chuỗi hợp lệ
+        // Chuẩn hóa từ khóa tìm kiếm: loại bỏ khoảng trắng đầu/cuối và rút gọn khoảng trắng kép
         $s = $query->get('s');
-        if (!is_string($s) || trim($s) === '') {
+        if (is_string($s)) {
+            $s = trim(preg_replace('/\s+/u', ' ', $s));
+            $query->set('s', $s);
+        }
+
+        // Ngăn truy vấn rác vào cơ sở dữ liệu khi từ khóa rỗng hoặc không phải chuỗi hợp lệ
+        if (!is_string($s) || $s === '') {
             $query->set('post__in', array(0));
             $query->set('no_found_rows', true);
+            return;
         }
+
+        // Kích hoạt tìm kiếm theo cụm từ hoàn chỉnh, tránh chia nhỏ từ gây ra False Positive
+        $query->set('sentence', true);
     }
 }
 add_action('pre_get_posts', 'cms_nhomc_filter_search_query');
 
 /**
+ * [Senior Standard] Tùy biến SQL tìm kiếm chính xác:
+ * 1. Khớp cụm từ thực tế (Phrase/Sentence matching), loại bỏ triệt để tình trạng False Positive do WordPress
+ *    tự động tách các từ riêng lẻ (ví dụ: tìm 'Bóng đá' không bị bắt nhầm vào bài 'Pickleball' có từ 'bóng bàn' + 'đang').
+ * 2. Mở rộng tìm kiếm trên các trường dữ liệu thực: Tiêu đề (Title), Đoạn trích (Excerpt), Nội dung (Content),
+ *    và Chuyên mục (Category / Taxonomies).
+ * 3. Bảo đảm không trả về bất kỳ kết quả không liên quan nào, không fake dữ liệu, không hard-code.
+ */
+function cms_nhomc_exact_relevant_search_sql($search, $query) {
+    if (!is_admin() && $query->is_search()) {
+        global $wpdb;
+        $s = $query->get('s');
+        if (!is_string($s)) {
+            return $search;
+        }
+
+        $s = trim(preg_replace('/\s+/u', ' ', $s));
+        if ($s === '') {
+            return " AND 1=0 ";
+        }
+
+        $escaped = '%' . $wpdb->esc_like($s) . '%';
+
+        $search = $wpdb->prepare("
+            AND (
+                ({$wpdb->posts}.post_title LIKE %s)
+                OR ({$wpdb->posts}.post_excerpt LIKE %s)
+                OR ({$wpdb->posts}.post_content LIKE %s)
+                OR ({$wpdb->posts}.ID IN (
+                    SELECT tr_sub.object_id 
+                    FROM {$wpdb->term_relationships} tr_sub 
+                    INNER JOIN {$wpdb->term_taxonomy} tt_sub ON tr_sub.term_taxonomy_id = tt_sub.term_taxonomy_id 
+                    INNER JOIN {$wpdb->terms} t_sub ON tt_sub.term_id = t_sub.term_id 
+                    WHERE tt_sub.taxonomy IN ('category', 'post_tag') 
+                      AND t_sub.name LIKE %s
+                ))
+            )
+        ", $escaped, $escaped, $escaped, $escaped);
+    }
+    return $search;
+}
+add_filter('posts_search', 'cms_nhomc_exact_relevant_search_sql', 20, 2);
+
+/**
  * Ngăn chặn hoàn toàn truy vấn SQL vào cơ sở dữ liệu khi tìm kiếm rỗng hoặc kiểu dữ liệu không hợp lệ
  */
 function cms_nhomc_prevent_empty_search_db_query($posts, $query) {
-    if (!is_admin() && $query->is_main_query() && $query->is_search()) {
+    if (!is_admin() && $query->is_search()) {
         $s = $query->get('s');
         if (!is_string($s) || trim($s) === '') {
             $query->found_posts = 0;

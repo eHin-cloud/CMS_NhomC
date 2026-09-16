@@ -24,12 +24,16 @@ $highlighted_excerpt = is_string($raw_excerpt) ? cms_nhomc_highlight_keyword($ra
     <!-- Cột Trái: Ảnh Thumbnail bài viết -->
     <div class="search-post-thumb">
         <a href="<?php the_permalink(); ?>" title="<?php the_title_attribute(); ?>">
-            <?php if (has_post_thumbnail()) : ?>
-                <?php the_post_thumbnail('medium_large', array(
-                    'class'   => 'search-thumb-img',
-                    'alt'     => the_title_attribute(array('echo' => false)),
-                    'loading' => 'lazy',
-                )); ?>
+            <?php
+            $thumb_url = '';
+            if (has_post_thumbnail()) {
+                $thumb_url = get_the_post_thumbnail_url(get_the_ID(), 'medium_large');
+            } elseif (function_exists('cms_nhomc_get_post_thumbnail_url')) {
+                $thumb_url = cms_nhomc_get_post_thumbnail_url(get_the_ID());
+            }
+            ?>
+            <?php if (!empty($thumb_url)) : ?>
+                <img src="<?php echo esc_url($thumb_url); ?>" alt="<?php the_title_attribute(); ?>" class="search-thumb-img" loading="lazy" />
             <?php else : ?>
                 <div class="search-thumb-placeholder">
                     <div class="placeholder-icon">
