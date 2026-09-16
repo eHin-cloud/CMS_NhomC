@@ -320,4 +320,93 @@ function cms_nhomc_render_featured_posts_widget($limit = 5, $title = 'BÀI VIẾ
     endif;
 }
 
+/**
+ * Render Widget: CATEGORIES (Chuyên mục) - Module 9 (Anh Quý)
+ */
+function cms_nhomc_render_categories_widget($title = 'Categories') {
+    ?>
+    <div class="widget-categories-card">
+        <h3 class="widget-cat-title"><?php echo esc_html($title); ?></h3>
+        <div class="widget-cat-stripe"></div>
+        <div class="widget-cat-body">
+            <ul class="widget-cat-list">
+                <?php
+                // Lấy danh sách chuyên mục thực tế từ WordPress
+                $categories = get_categories(array(
+                    'orderby'    => 'name',
+                    'order'      => 'ASC',
+                    'hide_empty' => false,
+                ));
+
+                // Lọc bỏ danh mục mặc định Chưa phân loại nếu có các chuyên mục khác
+                $filtered_cats = array();
+                if (!empty($categories)) {
+                    foreach ($categories as $cat) {
+                        if ($cat->slug !== 'uncategorized' && $cat->slug !== 'chua-phan-loai') {
+                            $filtered_cats[] = $cat;
+                        }
+                    }
+                }
+
+                if (!empty($filtered_cats)) {
+                    foreach ($filtered_cats as $category) {
+                        echo '<li>';
+                        echo '<span class="cat-bullet"></span>';
+                        echo '<a href="' . esc_url(get_category_link($category->term_id)) . '">' . esc_html($category->name) . '</a>';
+                        echo '</li>';
+                    }
+                } else {
+                    // Dữ liệu mẫu hiển thị trực tiếp chuẩn y hệt hình ảnh thiết kế
+                    $sample_items = array(
+                        array('name' => '.Net Developer', 'link' => home_url('/category/net-developer/')),
+                        array('name' => 'Thực Tập Sinh Tester', 'link' => home_url('/category/thuc-tap-sinh-tester/')),
+                        array('name' => 'Trợ giảng lập trình - Part time', 'link' => home_url('/category/tro-giang-lap-trinh/')),
+                    );
+
+                    foreach ($sample_items as $item) {
+                        echo '<li>';
+                        echo '<span class="cat-bullet"></span>';
+                        echo '<a href="' . esc_url($item['link']) . '">' . esc_html($item['name']) . '</a>';
+                        echo '</li>';
+                    }
+                }
+                ?>
+            </ul>
+        </div>
+    </div>
+    <?php
+}
+
+/**
+ * Đăng ký Widget Area (Sidebar)
+ */
+function cms_nhomc_widgets_init() {
+    register_sidebar(array(
+        'name'          => __('Sidebar Chính', 'cms-nhomc'),
+        'id'            => 'main-sidebar',
+        'description'   => __('Khu vực thanh bên cho giao diện', 'cms-nhomc'),
+        'before_widget' => '<div id="%1$s" class="widget-categories-card %2$s">',
+        'after_widget'  => '</div></div>',
+        'before_title'  => '<h3 class="widget-cat-title">',
+        'after_title'   => '</h3><div class="widget-cat-stripe"></div><div class="widget-cat-body">',
+    ));
+}
+add_action('widgets_init', 'cms_nhomc_widgets_init');
+
+/**
+ * Tự động tạo sẵn 3 chuyên mục mẫu nếu chưa có trong Database
+ */
+function cms_nhomc_create_default_categories() {
+    $default_cats = array(
+        '.Net Developer',
+        'Thực Tập Sinh Tester',
+        'Trợ giảng lập trình - Part time'
+    );
+    foreach ($default_cats as $cat_name) {
+        if (!term_exists($cat_name, 'category')) {
+            wp_insert_term($cat_name, 'category');
+        }
+    }
+}
+add_action('after_setup_theme', 'cms_nhomc_create_default_categories');
 
