@@ -29,7 +29,12 @@ if (empty($sidebar_type)) {
         cms_nhomc_render_featured_posts_widget(5, 'BÀI VIẾT NỔI BẬT');
     }
 
-    // 3. Hỗ trợ thêm các widget khác nếu được kéo thả trong Admin
+    // 3. Module 12: Hiển thị widget Comments theo mẫu thiết kế (Anh Quý)
+    if (function_exists('cms_nhomc_render_comments_widget')) {
+        cms_nhomc_render_comments_widget(3, 'Comments');
+    }
+
+    // 4. Hỗ trợ thêm các widget khác nếu được kéo thả trong Admin
     if (is_active_sidebar('main-sidebar')) :
         dynamic_sidebar('main-sidebar');
     endif;
