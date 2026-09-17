@@ -2,7 +2,7 @@
 /**
  * Template hiển thị kết quả tìm kiếm (Search Results)
  * Thiết kế chuẩn theo mẫu Bootsnipp 35V6b (Bootstrap 4 Search Bar) & FIT-TDC
- * Cấu trúc 2 cột đồng bộ với toàn bộ hệ thống (index.php, archive.php, single.php)
+ * Cấu trúc 2 cột đồng bộ chuẩn thực tế với toàn bộ website (Trang chủ, Chuyên mục, Chi tiết)
  *
  * @package CMS_NhomC
  */
@@ -15,7 +15,7 @@ $clean_query = is_string($raw_query) ? trim($raw_query) : '';
 
 <div class="site-content cms-container-layout search-results-page">
 
-    <!-- Khối tiêu đề tìm kiếm trải rộng toàn trang bên trên 2 cột -->
+    <!-- Khối tiêu đề tìm kiếm chuẩn giao diện -->
     <header class="search-page-header">
         <h1 class="search-main-title">
             <span class="search-title-prefix">Search:</span> &ldquo;<?php echo esc_html(get_search_query()); ?>&rdquo;
@@ -73,7 +73,7 @@ $clean_query = is_string($raw_query) ? trim($raw_query) : '';
             ?>
 
             <?php if (have_posts()) : ?>
-                <!-- Danh sách bài viết đồng bộ thẻ bài viết cms-post-list -->
+                <!-- Danh sách bài viết đồng bộ chuẩn thẻ bài viết cms-post-list của Theme -->
                 <div class="cms-post-list search-results-list">
                     <?php
                     while (have_posts()) :

@@ -13,7 +13,6 @@
                 <circle cx="11" cy="11" r="7.5"></circle>
                 <line x1="21" y1="21" x2="16.5" y2="16.5"></line>
             </svg>
-            <i class="fa fa-search fas fa-search" aria-hidden="true"></i>
         </div>
         <!--end of col-->
         <div class="col search-input-col">
