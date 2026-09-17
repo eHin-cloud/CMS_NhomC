@@ -37,17 +37,10 @@ define( 'DB_CHARSET', 'utf8mb4' );
 /** The database collate type. Don't change this if in doubt. */
 define( 'DB_COLLATE', '' );
 
-/** Cấu hình Virtual Host URL hoặc Localhost tự động nhận diện */
+/** Cấu hình Virtual Host WordPressC.local */
 if ( ! defined( 'WP_HOME' ) ) {
-    $current_host = isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 'WordpressC.local';
-    $is_xampp_subfolder = isset($_SERVER['REQUEST_URI']) && strpos($_SERVER['REQUEST_URI'], '/CMS_NhomC/wordpress') !== false;
-    if ($is_xampp_subfolder) {
-        define( 'WP_HOME', 'http://' . $current_host . '/CMS_NhomC/wordpress' );
-        define( 'WP_SITEURL', 'http://' . $current_host . '/CMS_NhomC/wordpress' );
-    } else {
-        define( 'WP_HOME', 'http://' . $current_host );
-        define( 'WP_SITEURL', 'http://' . $current_host );
-    }
+    define( 'WP_HOME', 'http://WordpressC.local' );
+    define( 'WP_SITEURL', 'http://WordpressC.local' );
 }
 
 /**#@+
