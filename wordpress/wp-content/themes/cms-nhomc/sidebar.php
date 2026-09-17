@@ -34,9 +34,9 @@ if (empty($sidebar_type)) {
         cms_nhomc_render_comments_widget(3, 'Comments');
     }
 
-    // 4. Module 15: Hiển thị widget Last Posts (Bootsnipp xrKXW & Bài viết mới nhất) (Xuân Hòa)
+    // 4. Module 15: Hiển thị widget Last Posts - Latest News Timeline (Bootsnipp xrKXW) (Xuân Hòa)
     if (function_exists('cms_nhomc_render_last_posts_widget')) {
-        cms_nhomc_render_last_posts_widget(5, 'Latest News', 'all');
+        cms_nhomc_render_last_posts_widget(5, 'Latest News');
     }
 
     // 5. Hỗ trợ thêm các widget khác nếu được kéo thả trong Admin

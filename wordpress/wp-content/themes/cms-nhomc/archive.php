@@ -51,7 +51,7 @@ get_header();
             cms_nhomc_render_recent_posts_widget(10, 'BÀI VIẾT MỚI');
             cms_nhomc_render_comments_widget(3, 'Comments');
             if (function_exists('cms_nhomc_render_last_posts_widget')) {
-                cms_nhomc_render_last_posts_widget(5, 'Latest News', 'all');
+                cms_nhomc_render_last_posts_widget(5, 'Latest News');
             }
             ?>
         </aside>

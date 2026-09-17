@@ -3213,7 +3213,7 @@ section#footer {
 }
 
 /* ====================================================
-   (15) LAST POSTS - BOOTSNIPP xrKXW & BÀI VIẾT MỚI NHẤT
+   (15) LAST POSTS - BOOTSNIPP xrKXW (LATEST NEWS TIMELINE)
    https://bootsnipp.com/snippets/xrKXW
    ==================================================== */
 .cms-module-15-last-posts-wrapper {
@@ -3221,53 +3221,7 @@ section#footer {
   width: 100%;
 }
 
-/* 1. Khối Hộp Danh sách "Bài viết mới nhất" (Nền xanh ngọc nhạt theo mẫu) */
-.cms-last-posts-box {
-  background-color: #d1e1dc;
-  border-radius: 4px;
-  padding: 24px 26px;
-  margin-bottom: 25px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
-}
-
-.last-posts-box-title {
-  font-size: 17.5px;
-  font-weight: 700;
-  color: #1e293b;
-  margin: 0 0 16px 0;
-  letter-spacing: -0.2px;
-}
-
-.last-posts-box-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.last-posts-box-item {
-  margin-bottom: 12px;
-  line-height: 1.5;
-}
-
-.last-posts-box-item:last-child {
-  margin-bottom: 0;
-}
-
-.last-posts-box-link {
-  color: #1e3a5f;
-  text-decoration: underline;
-  font-size: 14px;
-  line-height: 1.5;
-  transition: color 0.15s ease;
-  display: inline;
-}
-
-.last-posts-box-link:hover {
-  color: #007b5e;
-  text-decoration: underline;
-}
-
-/* 2. Khối Vertical Timeline chuẩn Bootsnipp xrKXW */
+/* Khối Vertical Timeline chuẩn Bootsnipp xrKXW */
 .cms-last-posts-timeline-container {
   background: #ffffff;
   border: 1px solid #e5e7eb;
