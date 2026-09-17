@@ -1,15 +1,16 @@
 services:
-  # Dịch vụ Database MariaDB (tương thích hoàn toàn với bản dump cms_nhomc.sql)
+  # Dịch vụ Database MySQL 8.0 chuẩn FIT-TDC
   db:
-    image: mariadb:10.6
+    image: mysql:8.0
     container_name: wordpressc_db
     restart: always
+    command: --default-authentication-plugin=mysql_native_password --skip-name-resolve
     environment:
       MYSQL_ROOT_PASSWORD: rootpassword
       MYSQL_DATABASE: cms_nhomc
     volumes:
       - db_data:/var/lib/mysql
-      - ./db/wordpress_huynhvanvinhem.sql:/docker-entrypoint-initdb.d/01_cms_nhomc.sql:ro
+      - ./db/cms_nhomc.sql:/docker-entrypoint-initdb.d/01_cms_nhomc.sql:ro
     ports:
       - "3308:3306"
     networks:
@@ -53,7 +54,7 @@ services:
 
 volumes:
   db_data:
-    name: wordpressc_mariadb_data
+    name: wordpressc_fittdc_db_data
 
 networks:
   wordpressc_network:
