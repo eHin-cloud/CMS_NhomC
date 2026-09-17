@@ -1031,3 +1031,172 @@ function cms_nhomc_comment_callback($comment, $args, $depth) {
     <?php
 }
 
+/* ==========================================================================
+   MODULE 15: LAST POSTS - BOOTSNIPP xrKXW & BÀI VIẾT MỚI NHẤT (XUÂN HÒA)
+   - Layout 1: Khối nền kem/xanh nhạt hiển thị danh sách bài viết mới nhất
+   - Layout 2: Vertical Timeline chuẩn mẫu Bootsnipp xrKXW
+   ========================================================================== */
+
+/**
+ * Hàm lấy danh sách bài viết mới nhất cho Module 15
+ *
+ * @param int $limit Số lượng bài viết
+ * @return WP_Query
+ */
+function cms_nhomc_get_last_posts_query($limit = 5) {
+    return new WP_Query(array(
+        'post_type'           => 'post',
+        'post_status'         => 'publish',
+        'posts_per_page'      => max(1, intval($limit)),
+        'orderby'             => 'date',
+        'order'               => 'DESC',
+        'ignore_sticky_posts' => 1,
+        'no_found_rows'       => true,
+    ));
+}
+
+/**
+ * Render Widget / Component: Module 15 Last Posts (Chỉ hiển thị Latest News Timeline theo mẫu Bootsnipp xrKXW)
+ *
+ * @param int $limit Số lượng bài viết
+ * @param string $title Tiêu đề khối Timeline (mặc định: Latest News)
+ */
+function cms_nhomc_render_last_posts_widget($limit = 5, $title = 'Latest News') {
+    $limit = !empty($limit) ? intval($limit) : 5;
+    $title = !empty($title) ? $title : 'Latest News';
+
+    $query = cms_nhomc_get_last_posts_query($limit);
+    $has_posts = $query->have_posts();
+
+    // Dữ liệu mẫu hiển thị khi chưa có bài viết trên site
+    $sample_timeline_posts = array(
+        array(
+            'title'   => 'New Web Design',
+            'date'    => '21 March, 2014',
+            'excerpt' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque scelerisque diam non nisi semper, et elementum lorem ornare. Maecenas placerat facilisis mollis. Duis sagittis ligula in sodales vehicula....',
+            'link'    => home_url('/'),
+        ),
+        array(
+            'title'   => '21 000 Job Seekers',
+            'date'    => '4 March, 2014',
+            'excerpt' => 'Curabitur purus sem, malesuada eu luctus eget, suscipit sed turpis. Nam pellentesque felis vitae justo accumsan, sed semper nisi sollicitudin...',
+            'link'    => home_url('/'),
+        ),
+        array(
+            'title'   => 'Awesome Employers',
+            'date'    => '1 April, 2014',
+            'excerpt' => 'Fusce ullamcorper ligula sit amet quam accumsan aliquet. Sed nulla odio, tincidunt vitae nunc vitae, mollis pharetra velit. Sed nec tempor nibh...',
+            'link'    => home_url('/'),
+        ),
+    );
+    ?>
+    <div class="cms-module-15-last-posts-wrapper">
+        <!-- Khối Vertical Timeline chuẩn mẫu Bootsnipp xrKXW -->
+        <div class="cms-last-posts-timeline-container">
+            <h4 class="timeline-main-title"><?php echo esc_html($title); ?></h4>
+            <ul class="timeline">
+                <?php if ($has_posts) : 
+                    while ($query->have_posts()) : $query->the_post(); 
+                        $post_date = get_the_date('j F, Y'); // định dạng chuẩn: 21 March, 2014
+                        $excerpt_raw = get_the_excerpt();
+                        $excerpt = !empty($excerpt_raw) ? wp_trim_words(wp_strip_all_tags($excerpt_raw), 25, '...') : wp_trim_words(wp_strip_all_tags(get_the_content()), 25, '...');
+                    ?>
+                        <li class="timeline-item">
+                            <div class="timeline-header">
+                                <a href="<?php the_permalink(); ?>" class="timeline-post-title" title="<?php the_title_attribute(); ?>">
+                                    <?php the_title(); ?>
+                                </a>
+                                <span class="float-right timeline-post-date"><?php echo esc_html($post_date); ?></span>
+                            </div>
+                            <p class="timeline-post-excerpt"><?php echo esc_html($excerpt); ?></p>
+                        </li>
+                    <?php endwhile; wp_reset_postdata(); 
+                else : 
+                    foreach ($sample_timeline_posts as $item) : ?>
+                        <li class="timeline-item">
+                            <div class="timeline-header">
+                                <a href="<?php echo esc_url($item['link']); ?>" class="timeline-post-title">
+                                    <?php echo esc_html($item['title']); ?>
+                                </a>
+                                <span class="float-right timeline-post-date"><?php echo esc_html($item['date']); ?></span>
+                            </div>
+                            <p class="timeline-post-excerpt"><?php echo esc_html($item['excerpt']); ?></p>
+                        </li>
+                    <?php endforeach; 
+                endif; ?>
+            </ul>
+        </div>
+    </div>
+    <?php
+}
+
+/**
+ * Shortcode hiển thị Module 15: [last_posts] hoặc [cms_last_posts]
+ * Ví dụ sử dụng:
+ * [last_posts limit="5" title="Latest News" layout="all"]
+ * [last_posts limit="4" layout="timeline"]
+ * [last_posts limit="5" layout="box"]
+ */
+function cms_nhomc_last_posts_shortcode($atts) {
+    $atts = shortcode_atts(array(
+        'limit' => 5,
+        'title' => 'Latest News',
+    ), $atts, 'last_posts');
+
+    ob_start();
+    cms_nhomc_render_last_posts_widget(intval($atts['limit']), sanitize_text_field($atts['title']));
+    return ob_get_clean();
+}
+add_shortcode('last_posts', 'cms_nhomc_last_posts_shortcode');
+add_shortcode('cms_last_posts', 'cms_nhomc_last_posts_shortcode');
+add_shortcode('cms_nhomc_last_posts', 'cms_nhomc_last_posts_shortcode');
+
+/**
+ * WordPress Core Widget Class: CMS_NhomC_Last_Posts_Widget (Module 15)
+ */
+class CMS_NhomC_Last_Posts_Widget extends WP_Widget {
+    public function __construct() {
+        parent::__construct(
+            'cms_nhomc_last_posts_widget',
+            __('[CMS Nhóm C] (15) Latest News Timeline', 'cms-nhomc'),
+            array('description' => __('Hiển thị bài viết mới nhất dạng Vertical Timeline chuẩn Bootsnipp xrKXW (Xuân Hòa)', 'cms-nhomc'))
+        );
+    }
+
+    public function widget($args, $instance) {
+        $title = !empty($instance['title']) ? $instance['title'] : 'Latest News';
+        $limit = !empty($instance['limit']) ? intval($instance['limit']) : 5;
+
+        echo isset($args['before_widget']) ? $args['before_widget'] : '';
+        cms_nhomc_render_last_posts_widget($limit, $title);
+        echo isset($args['after_widget']) ? $args['after_widget'] : '';
+    }
+
+    public function form($instance) {
+        $title = !empty($instance['title']) ? $instance['title'] : 'Latest News';
+        $limit = !empty($instance['limit']) ? intval($instance['limit']) : 5;
+        ?>
+        <p>
+            <label for="<?php echo esc_attr($this->get_field_id('title')); ?>"><?php esc_html_e('Tiêu đề Timeline:', 'cms-nhomc'); ?></label>
+            <input class="widefat" id="<?php echo esc_attr($this->get_field_id('title')); ?>" name="<?php echo esc_attr($this->get_field_name('title')); ?>" type="text" value="<?php echo esc_attr($title); ?>" />
+        </p>
+        <p>
+            <label for="<?php echo esc_attr($this->get_field_id('limit')); ?>"><?php esc_html_e('Số lượng bài viết:', 'cms-nhomc'); ?></label>
+            <input class="tiny-text" id="<?php echo esc_attr($this->get_field_id('limit')); ?>" name="<?php echo esc_attr($this->get_field_name('limit')); ?>" type="number" step="1" min="1" max="20" value="<?php echo esc_attr($limit); ?>" size="3" />
+        </p>
+        <?php
+    }
+
+    public function update($new_instance, $old_instance) {
+        $instance = array();
+        $instance['title'] = (!empty($new_instance['title'])) ? sanitize_text_field($new_instance['title']) : '';
+        $instance['limit'] = (!empty($new_instance['limit'])) ? intval($new_instance['limit']) : 5;
+        return $instance;
+    }
+}
+
+function cms_nhomc_register_last_posts_widget() {
+    register_widget('CMS_NhomC_Last_Posts_Widget');
+}
+add_action('widgets_init', 'cms_nhomc_register_last_posts_widget');
+
