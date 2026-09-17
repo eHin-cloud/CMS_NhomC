@@ -3099,3 +3099,116 @@ section#footer {
   }
 }
 
+/* ====================================================
+   (7) PREV - NEXT POST THEO MẪU FIT-TDC (http://fit.tdc.edu.vn)
+   ==================================================== */
+.tdc-post-nav {
+  margin: 35px 0 40px 0;
+  width: 100%;
+}
+
+.tdc-post-nav-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.tdc-post-nav-item {
+  display: flex;
+  align-items: center;
+  padding: 16px 0;
+  border-top: 1px solid #e5e7eb;
+  transition: background-color 0.15s ease;
+}
+
+/* Khối hiển thị ngày/tháng/năm phong cách phân số đặc trưng của TDC */
+.tdc-nav-date {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  margin-right: 28px;
+  color: #333333;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  user-select: none;
+}
+
+.tdc-day-month {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  text-align: center;
+}
+
+.tdc-day {
+  font-size: 13px;
+  line-height: 1.1;
+  color: #444444;
+  font-weight: 400;
+  padding-bottom: 2px;
+}
+
+.tdc-divider {
+  display: block;
+  width: 18px;
+  height: 1px;
+  background-color: #666666;
+  margin: 1.5px 0;
+}
+
+.tdc-month {
+  font-size: 13px;
+  line-height: 1.1;
+  color: #444444;
+  font-weight: 400;
+  padding-top: 2px;
+}
+
+.tdc-year {
+  font-size: 13px;
+  line-height: 1;
+  margin-left: 5px;
+  color: #444444;
+  font-weight: 400;
+  align-self: center;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+/* Tiêu đề bài viết kế tiếp / trước */
+.tdc-nav-title-wrap {
+  flex: 1;
+  min-width: 0;
+}
+
+.tdc-nav-link {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-size: 16.5px;
+  font-weight: 400;
+  color: #2b2b2b;
+  text-decoration: none;
+  line-height: 1.5;
+  display: inline-block;
+  transition: color 0.15s ease;
+}
+
+.tdc-nav-link:hover {
+  color: #007b5e;
+  text-decoration: underline;
+}
+
+@media (max-width: 640px) {
+  .tdc-nav-date {
+    margin-right: 18px;
+  }
+
+  .tdc-nav-link {
+    font-size: 15px;
+  }
+
+  .tdc-post-nav-item {
+    padding: 12px 0;
+  }
+}
+
