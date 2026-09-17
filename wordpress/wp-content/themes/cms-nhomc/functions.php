@@ -1023,7 +1023,6 @@ function cms_nhomc_comment_callback($comment, $args, $depth) {
     <?php
 }
 
-<<<<<<< HEAD
 /* ==========================================================================
    MODULE 15: LAST POSTS - BOOTSNIPP xrKXW & BÀI VIẾT MỚI NHẤT (XUÂN HÒA)
    - Layout 1: Khối nền kem/xanh nhạt hiển thị danh sách bài viết mới nhất
