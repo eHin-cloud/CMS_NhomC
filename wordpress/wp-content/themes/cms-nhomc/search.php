@@ -1,69 +1,57 @@
 <?php
 /**
- * The template for displaying search results pages
- * Module: (5) Search result (Mẫu tham khảo: http://fit.tdc.edu.vn/tin-tuc)
- * [Ponytail Standard] Tinh gọn, tối đa hóa hàm native WordPress, không over-engineering
+ * Template hiển thị kết quả tìm kiếm (Search Results)
+ * Thiết kế chuẩn theo mẫu Bootsnipp 35V6b (Bootstrap 4 Search Bar) & FIT-TDC
  *
  * @package CMS_NhomC
  */
 
 get_header();
 
-$raw_query = get_search_query(false);
+$raw_query   = get_search_query(false);
 $clean_query = is_string($raw_query) ? trim($raw_query) : '';
 ?>
 
 <main class="site-content search-results-page">
     <div class="search-page-container">
 
-        <?php if ($clean_query === '') : ?>
-            <!-- Trường hợp tìm kiếm rỗng / chỉ có khoảng trắng -->
-            <div class="search-no-results">
-                <div class="no-results-icon">
-                    <svg viewBox="0 0 24 24" width="56" height="56" fill="none" stroke="#9ca3af" stroke-width="1.5">
-                        <circle cx="11" cy="11" r="8"/>
-                        <line x1="21" y1="21" x2="16.65" y2="16.65"/>
-                    </svg>
-                </div>
-                <h2><?php esc_html_e('Bạn chưa nhập từ khóa tìm kiếm!', 'cms-nhomc'); ?></h2>
-                <p><?php printf(esc_html__('Vui lòng nhập từ khóa về %s vào ô bên dưới.', 'cms-nhomc'), '<strong>' . esc_html__('Thể thao, Khoa học, Tin tức, Lịch học', 'cms-nhomc') . '</strong>'); ?></p>
+        <!-- Khối tiêu đề tìm kiếm -->
+        <header class="search-page-header text-center">
+            <h1 class="search-main-title">
+                <span class="search-title-prefix">Search:</span> &ldquo;<?php echo esc_html(get_search_query()); ?>&rdquo;
+            </h1>
 
-                <div class="search-retry-box">
-                    <form role="search" method="get" class="search-retry-form" action="<?php echo esc_url(home_url('/')); ?>">
-                        <input type="search" name="s" class="search-retry-input" placeholder="<?php esc_attr_e('Ví dụ: Bóng đá, AI, Tuyển sinh...', 'cms-nhomc'); ?>" required autofocus />
-                        <button type="submit" class="search-retry-btn"><?php esc_html_e('Tìm kiếm', 'cms-nhomc'); ?></button>
-                    </form>
-                </div>
+            <?php if (empty($clean_query)) : ?>
+                <p class="search-notice-text">
+                    <?php esc_html_e('Vui lòng nhập chủ đề hoặc từ khóa vào ô bên dưới để tìm kiếm.', 'cms-nhomc'); ?>
+                </p>
+            <?php elseif (!have_posts()) : ?>
+                <p class="search-notice-text">
+                    We could not find any results for your search. You can give it another try through the search form below.
+                </p>
+            <?php else : 
+                global $wp_query;
+                $total = isset($wp_query->found_posts) ? (int) $wp_query->found_posts : 0;
+            ?>
+                <p class="search-notice-text search-found-text">
+                    <?php printf(esc_html__('Tìm thấy %s bài viết phù hợp với từ khóa của bạn.', 'cms-nhomc'), '<strong>' . number_format_i18n($total) . '</strong>'); ?>
+                </p>
+            <?php endif; ?>
+        </header>
+
+        <!-- Khối ô tìm kiếm mẫu Bootsnipp 35V6b với nền màu kem nhạt -->
+        <section class="search-box-section" aria-label="Khu vực tìm kiếm">
+            <div class="search-box-inner">
+                <?php get_search_form(); ?>
             </div>
+        </section>
 
-        <?php else : 
+        <?php if (!empty($clean_query)) : 
             $typo_suggestion = null;
             if (class_exists('CMS_NhomC_Vietnamese_Search')) {
                 $typo_suggestion = CMS_NhomC_Vietnamese_Search::get_instance()->detect_typo_and_suggest($clean_query);
             }
         ?>
-
-            <!-- Thanh thông tin kết quả tìm kiếm -->
-            <header class="search-header-bar">
-                <h1 class="search-title">
-                    <?php esc_html_e('Kết quả tìm kiếm cho:', 'cms-nhomc'); ?> <span class="search-keyword">&ldquo;<?php echo esc_html($clean_query); ?>&rdquo;</span>
-                </h1>
-                <p class="search-count">
-                    <?php
-                    global $wp_query;
-                    $total = isset($wp_query->found_posts) ? (int) $wp_query->found_posts : 0;
-                    if ($total > 0) {
-                        printf(
-                            /* translators: %s: number of results */
-                            esc_html(_n('Tìm thấy %s bài viết phù hợp', 'Tìm thấy %s bài viết phù hợp', $total, 'cms-nhomc')),
-                            '<strong>' . number_format_i18n($total) . '</strong>'
-                        );
-                    } else {
-                        esc_html_e('Không tìm thấy bài viết nào phù hợp', 'cms-nhomc');
-                    }
-                    ?>
-                </p>
-            </header>
 
             <!-- Banner gợi ý sửa lỗi chính tả từ từ điển Viet74K (Fuzzy matching) -->
             <?php if ($typo_suggestion && !empty($typo_suggestion['suggested'])) : ?>
@@ -83,7 +71,6 @@ $clean_query = is_string($raw_query) ? trim($raw_query) : '';
                     <?php
                     while (have_posts()) :
                         the_post();
-                        // Sử dụng template part theo chuẩn WordPress VIP & Ponytail DRY
                         get_template_part('template-parts/content', 'search');
                     endwhile;
                     ?>
@@ -116,21 +103,6 @@ $clean_query = is_string($raw_query) ? trim($raw_query) : '';
                     </div>
                     <h2><?php esc_html_e('Rất tiếc, không tìm thấy bài viết phù hợp!', 'cms-nhomc'); ?></h2>
                     <p><?php printf(esc_html__('Hãy thử tìm kiếm với các từ khóa phổ biến: %s.', 'cms-nhomc'), '<strong>' . esc_html__('Thể thao, Khoa học, Tin tức, Lịch học', 'cms-nhomc') . '</strong>'); ?></p>
-
-                    <div class="search-retry-box">
-                        <form role="search" method="get" class="search-retry-form" action="<?php echo esc_url(home_url('/')); ?>">
-                            <div class="search-input-wrapper">
-                                <span class="search-icon-inside" aria-hidden="true">
-                                    <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                        <circle cx="11" cy="11" r="8"></circle>
-                                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                                    </svg>
-                                </span>
-                                <input type="search" name="s" class="search-retry-input" placeholder="<?php esc_attr_e('Nhập từ khóa khác...', 'cms-nhomc'); ?>" value="<?php echo esc_attr($clean_query); ?>" required />
-                            </div>
-                            <button type="submit" class="search-retry-btn"><?php esc_html_e('Tìm kiếm lại', 'cms-nhomc'); ?></button>
-                        </form>
-                    </div>
 
                     <div class="search-retry-suggestions">
                         <p><strong><?php esc_html_e('Gợi ý tìm kiếm:', 'cms-nhomc'); ?></strong></p>
