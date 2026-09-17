@@ -1973,7 +1973,10 @@ section#footer {
    (5) SEARCH RESULT - GIAO DIỆN KẾT QUẢ TÌM KIẾM FIT-TDC
    ==================================================== */
 .search-results-page {
-  width: 100%;
+  max-width: 1140px;
+  margin: 40px auto 60px;
+  padding: 0 20px;
+  min-height: 55vh;
 }
 
 .search-header-bar {
