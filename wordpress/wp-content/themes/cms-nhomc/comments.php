@@ -13,9 +13,39 @@ if (post_password_required()) {
 
 <div id="comments" class="cms-comments-section">
 
+    <!-- 1. Danh sách bình luận (Task 14: Bootsnipp gNVj0) -->
+    <?php if (have_comments()) : ?>
+        <div class="cms-comments-list-wrapper">
+            <h4 class="cms-comments-title">
+                <i class="fa fa-comments-o"></i> (<?php echo get_comments_number(); ?>) Comments
+            </h4>
+
+            <ol class="cms-comment-list">
+                <?php
+                wp_list_comments(array(
+                    'style'       => 'ol',
+                    'short_ping'  => true,
+                    'avatar_size' => 50,
+                    'callback'    => 'cms_nhomc_comment_callback',
+                ));
+                ?>
+            </ol>
+
+            <?php if (get_comment_pages_count() > 1 && get_option('page_comments')) : ?>
+                <nav class="cms-comment-navigation" role="navigation">
+                    <div class="nav-previous"><?php previous_comments_link(__('&larr; Bình luận cũ hơn', 'cms-nhomc')); ?></div>
+                    <div class="nav-next"><?php next_comments_link(__('Bình luận mới hơn &rarr;', 'cms-nhomc')); ?></div>
+                </nav>
+            <?php endif; ?>
+        </div>
+    <?php elseif (!comments_open() && post_type_supports(get_post_type(), 'comments')) : ?>
+        <p class="cms-no-comments">Chức năng bình luận cho bài viết này tạm thời bị khóa.</p>
+    <?php endif; ?>
+
+    <!-- 2. Form gửi bình luận (Task 8: Bootsnipp rNEdR) -->
     <?php if (comments_open()) : ?>
         <!-- Post Form Begins (Bootsnipp rNEdR) -->
-        <section class="card cms-post-form-card" id="respond">
+        <section class="card cms-post-form-card mt-4" id="respond">
             <div class="card-header d-flex justify-content-between align-items-center">
                 <ul class="nav nav-tabs card-header-tabs" id="myTab" role="tablist">
                     <li class="nav-item">
@@ -65,36 +95,6 @@ if (post_password_required()) {
             </div>
         </section>
         <!-- Post Form Ends -->
-    <?php endif; ?>
-
-    <!-- Danh sách bình luận -->
-    <?php if (have_comments()) : ?>
-        <div class="cms-comments-list-wrapper">
-            <h4 class="cms-comments-title">
-                <i class="fa fa-comments-o"></i> Bình luận
-                <span class="cms-badge-count"><?php echo get_comments_number(); ?></span>
-            </h4>
-
-            <ol class="cms-comment-list">
-                <?php
-                wp_list_comments(array(
-                    'style'       => 'ol',
-                    'short_ping'  => true,
-                    'avatar_size' => 48,
-                    'callback'    => 'cms_nhomc_comment_callback',
-                ));
-                ?>
-            </ol>
-
-            <?php if (get_comment_pages_count() > 1 && get_option('page_comments')) : ?>
-                <nav class="cms-comment-navigation" role="navigation">
-                    <div class="nav-previous"><?php previous_comments_link(__('&larr; Bình luận cũ hơn', 'cms-nhomc')); ?></div>
-                    <div class="nav-next"><?php next_comments_link(__('Bình luận mới hơn &rarr;', 'cms-nhomc')); ?></div>
-                </nav>
-            <?php endif; ?>
-        </div>
-    <?php elseif (!comments_open() && post_type_supports(get_post_type(), 'comments')) : ?>
-        <p class="cms-no-comments">Chức năng bình luận cho bài viết này tạm thời bị khóa.</p>
     <?php endif; ?>
 
 </div>
