@@ -34,7 +34,12 @@ if (empty($sidebar_type)) {
         cms_nhomc_render_comments_widget(3, 'Comments');
     }
 
-    // 4. Hỗ trợ thêm các widget khác nếu được kéo thả trong Admin
+    // 4. Module 15: Hiển thị widget Last Posts (Bootsnipp xrKXW & Bài viết mới nhất) (Xuân Hòa)
+    if (function_exists('cms_nhomc_render_last_posts_widget')) {
+        cms_nhomc_render_last_posts_widget(5, 'Latest News', 'all');
+    }
+
+    // 5. Hỗ trợ thêm các widget khác nếu được kéo thả trong Admin
     if (is_active_sidebar('main-sidebar')) :
         dynamic_sidebar('main-sidebar');
     endif;

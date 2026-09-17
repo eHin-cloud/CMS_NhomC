@@ -177,6 +177,7 @@ get_header();
             <?php cms_nhomc_render_categories_widget(); ?>
             <?php cms_nhomc_render_recent_posts_widget(10, 'BÀI VIẾT MỚI'); ?>
             <?php cms_nhomc_render_comments_widget(3, 'Comments'); ?>
+            <?php if (function_exists('cms_nhomc_render_last_posts_widget')) { cms_nhomc_render_last_posts_widget(5, 'Latest News', 'all'); } ?>
         </aside>
     </div>
 </div>

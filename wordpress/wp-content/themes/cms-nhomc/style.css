@@ -3212,3 +3212,189 @@ section#footer {
   }
 }
 
+/* ====================================================
+   (15) LAST POSTS - BOOTSNIPP xrKXW & BÀI VIẾT MỚI NHẤT
+   https://bootsnipp.com/snippets/xrKXW
+   ==================================================== */
+.cms-module-15-last-posts-wrapper {
+  margin-bottom: 30px;
+  width: 100%;
+}
+
+/* 1. Khối Hộp Danh sách "Bài viết mới nhất" (Nền xanh ngọc nhạt theo mẫu) */
+.cms-last-posts-box {
+  background-color: #d1e1dc;
+  border-radius: 4px;
+  padding: 24px 26px;
+  margin-bottom: 25px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.last-posts-box-title {
+  font-size: 17.5px;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0 0 16px 0;
+  letter-spacing: -0.2px;
+}
+
+.last-posts-box-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.last-posts-box-item {
+  margin-bottom: 12px;
+  line-height: 1.5;
+}
+
+.last-posts-box-item:last-child {
+  margin-bottom: 0;
+}
+
+.last-posts-box-link {
+  color: #1e3a5f;
+  text-decoration: underline;
+  font-size: 14px;
+  line-height: 1.5;
+  transition: color 0.15s ease;
+  display: inline;
+}
+
+.last-posts-box-link:hover {
+  color: #007b5e;
+  text-decoration: underline;
+}
+
+/* 2. Khối Vertical Timeline chuẩn Bootsnipp xrKXW */
+.cms-last-posts-timeline-container {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  padding: 26px 24px;
+  margin-bottom: 25px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+}
+
+.timeline-main-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: #111827;
+  margin: 0 0 24px 0;
+  letter-spacing: -0.3px;
+}
+
+ul.timeline {
+  list-style-type: none;
+  position: relative;
+  padding-left: 0;
+  margin: 0;
+}
+
+ul.timeline:before {
+  content: ' ';
+  background: #d4d9df;
+  display: inline-block;
+  position: absolute;
+  left: 29px;
+  width: 2px;
+  height: 100%;
+  z-index: 10;
+}
+
+ul.timeline > li {
+  margin: 22px 0;
+  padding-left: 54px;
+  position: relative;
+}
+
+ul.timeline > li:first-child {
+  margin-top: 5px;
+}
+
+ul.timeline > li:last-child {
+  margin-bottom: 5px;
+}
+
+ul.timeline > li:before {
+  content: ' ';
+  background: #ffffff;
+  display: inline-block;
+  position: absolute;
+  border-radius: 50%;
+  border: 3px solid #22c0e8;
+  left: 20px;
+  top: 3px;
+  width: 20px;
+  height: 20px;
+  z-index: 20;
+  box-sizing: border-box;
+}
+
+.timeline-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 6px;
+  flex-wrap: wrap;
+}
+
+.timeline-post-title {
+  color: #007bff;
+  font-size: 15.5px;
+  font-weight: 500;
+  text-decoration: none;
+  line-height: 1.4;
+  flex: 1;
+  min-width: 140px;
+  transition: color 0.15s ease;
+}
+
+.timeline-post-title:hover {
+  color: #0056b3;
+  text-decoration: underline;
+}
+
+.timeline-post-date {
+  color: #007bff;
+  font-size: 13.5px;
+  white-space: nowrap;
+  font-weight: 400;
+}
+
+.timeline-post-excerpt {
+  font-size: 13.5px;
+  color: #4b5563;
+  line-height: 1.55;
+  margin: 0;
+}
+
+@media (max-width: 640px) {
+  .cms-last-posts-timeline-container {
+    padding: 20px 16px;
+  }
+
+  ul.timeline:before {
+    left: 19px;
+  }
+
+  ul.timeline > li {
+    padding-left: 42px;
+  }
+
+  ul.timeline > li:before {
+    left: 10px;
+  }
+
+  .timeline-header {
+    flex-direction: column;
+    gap: 3px;
+  }
+
+  .timeline-post-date {
+    font-size: 12.5px;
+  }
+}
+
