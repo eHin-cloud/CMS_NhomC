@@ -1652,208 +1652,154 @@ section#footer {
   text-decoration: underline;
 }
 
-/* 2. Comments List (Social Post / Comment Card Styling) */
+/* 2. Comments List - Bootsnipp gNVj0 Specification */
 .cms-comments-list-wrapper {
-  margin-top: 32px;
+  margin-top: 30px;
+  margin-bottom: 30px;
 }
 
 .cms-comments-title {
-  font-size: 17px;
+  font-size: 18px;
   font-weight: 700;
-  color: #0f172a;
-  margin-bottom: 18px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.cms-comments-title i {
-  color: #007bff;
-}
-
-.cms-badge-count {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  background-color: #e2e8f0;
-  color: #334155;
-  font-size: 12px;
-  font-weight: 600;
-  border-radius: 12px;
-  padding: 2px 9px;
+  color: #333333;
+  margin-bottom: 20px;
 }
 
 .cms-comment-list,
-.cms-comment-list .children {
-  list-style: none;
-  padding: 0;
-  margin: 0;
+.cms-comment-list ol,
+.cms-comment-list ul {
+  list-style: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
 }
 
 .cms-comment-item {
-  margin-bottom: 16px;
+  list-style: none !important;
+  margin-bottom: 20px;
 }
 
-.cms-comment-list .children {
-  margin-left: 36px;
-  padding-left: 14px;
-  border-left: 2px solid #e2e8f0;
+/* Base Bootstrap media object & Bootsnipp gNVj0 CSS */
+.comment-box {
+  margin-top: 25px !important;
+  display: flex !important;
+  align-items: flex-start !important;
 }
 
-.cms-comment-card {
-  background-color: #ffffff;
-  border: 1px solid #e2e8f0;
-  border-radius: 6px;
-  padding: 14px 16px;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+.cms-comment-list > .cms-comment-item:first-child > .comment-box {
+  margin-top: 0 !important;
 }
 
-.cms-comment-card:hover {
-  border-color: #cbd5e1;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
-}
-
-.cms-comment-header {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.cms-comment-avatar {
-  flex: 0 0 44px;
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  overflow: hidden;
-  background-color: #f1f5f9;
-}
-
-.cms-comment-avatar img,
-.cms-comment-avatar .avatar {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 50%;
+/* Avatar nhỏ gọn (38x38px) */
+.comment-box img,
+.comment-box img.user-photo {
+  width: 38px !important;
+  height: 38px !important;
+  border-radius: 4px;
   display: block;
 }
 
-.cms-comment-meta {
-  flex: 1;
-  min-width: 0;
+.comment-box .media-left {
+  padding-right: 12px !important;
+  width: 50px !important;
+  flex-shrink: 0 !important;
 }
 
-.cms-comment-author {
-  font-size: 14.5px;
-  font-weight: 600;
-  color: #1e293b;
-  margin: 0 0 2px 0;
-  line-height: 1.3;
+.comment-box .media-body {
+  flex-grow: 1 !important;
+  min-width: 0 !important;
 }
 
-.cms-comment-author a {
-  color: #1e293b;
-  text-decoration: none;
+/* Tên ở ngay bên phải avatar, thẳng hàng ngang */
+.comment-box .media-heading {
+  background-color: #f5f5f5 !important;
+  border: 1px solid #ddd !important;
+  padding: 6px 12px !important;
+  min-height: 38px !important;
+  display: flex !important;
+  align-items: center !important;
+  position: relative !important;
+  margin: 0 0 -1px 0 !important;
+  font-size: 14.5px !important;
+  font-weight: 600 !important;
+  color: #333333 !important;
+  line-height: 1.4 !important;
 }
 
-.cms-comment-author a:hover {
-  color: #007bff;
+/* Mũi tên tam giác căn chính giữa avatar và tiêu đề */
+.comment-box .media-heading:before {
+  content: "" !important;
+  width: 10px !important;
+  height: 10px !important;
+  background-color: #f5f5f5 !important;
+  border: 1px solid #ddd !important;
+  border-width: 1px 0 0 1px !important;
+  -webkit-transform: rotate(-45deg) !important;
+  transform: rotate(-45deg) !important;
+  position: absolute !important;
+  top: 13px !important;
+  left: -5px !important;
 }
 
-.cms-comment-date {
+/* Nội dung bình luận nằm ngay ở dưới tên */
+.comment-box .media-body p {
+  background-color: #ffffff !important;
+  border: 1px solid #ddd !important;
+  padding: 10px 12px !important;
+  margin: 0 !important;
+  font-size: 13.5px !important;
+  line-height: 1.5 !important;
+  color: #333333 !important;
+}
+
+.comment-box .media-body .media p {
+  margin-bottom: 0 !important;
+}
+
+/* Ẩn nút Reply để bố cục gọn đẹp như mẫu, chỉ hiện khi hover */
+.comment-box .media-body .comment-reply-wrap {
+  text-align: right;
+  margin-top: 2px;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.comment-box:hover .media-body .comment-reply-wrap {
+  opacity: 1;
+}
+
+.comment-box .media-body .comment-reply-link {
   font-size: 12px;
-  color: #64748b;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-
-.cms-comment-exact-date {
-  color: #94a3b8;
-  margin-left: 4px;
-}
-
-.cms-comment-admin-actions .comment-edit-link {
-  font-size: 12px;
-  color: #64748b;
-  text-decoration: none;
-  padding: 3px 8px;
-  border-radius: 3px;
-  background-color: #f1f5f9;
-  border: 1px solid #e2e8f0;
-}
-
-.cms-comment-admin-actions .comment-edit-link:hover {
-  color: #007bff;
-  border-color: #cbd5e1;
-}
-
-.cms-comment-body {
-  margin-top: 10px;
-  padding-left: 56px;
-}
-
-.cms-comment-moderation-notice {
-  font-size: 12.5px;
-  color: #d97706;
-  background: #fef3c7;
-  padding: 4px 8px;
-  border-radius: 4px;
-  margin-bottom: 6px;
-}
-
-.cms-comment-text {
-  font-size: 14px;
-  line-height: 1.55;
-  color: #334155;
-}
-
-.cms-comment-text p {
-  margin-bottom: 6px;
-}
-
-.cms-comment-text p:last-child {
-  margin-bottom: 0;
-}
-
-.cms-comment-footer {
-  margin-top: 8px;
-  padding-left: 56px;
-}
-
-.cms-reply-btn a.comment-reply-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  font-size: 12.5px;
-  font-weight: 500;
-  color: #007bff;
+  color: #999;
   text-decoration: none;
   padding: 2px 6px;
-  border-radius: 3px;
-  transition: color 0.15s ease;
 }
 
-.cms-reply-btn a.comment-reply-link:hover {
-  color: #0056b3;
+.comment-box .media-body .comment-reply-link:hover {
+  color: #007bff;
   text-decoration: underline;
+}
+
+/* Thụt lề comment phân cấp con: 50px bằng đúng cột avatar */
+.cms-comment-list .children {
+  list-style: none !important;
+  padding: 0 !important;
+  margin: 0 0 0 50px !important;
+}
+
+.cms-comment-list .children .comment-box {
+  margin-top: 18px !important;
 }
 
 .cms-comment-navigation {
   display: flex;
   justify-content: space-between;
-  margin-top: 18px;
+  margin-top: 20px;
   font-size: 13.5px;
 }
 
 .cms-comment-navigation a {
   color: #007bff;
   text-decoration: none;
-  font-weight: 500;
-}
-
-.cms-comment-navigation a:hover {
-  text-decoration: underline;
 }
 
 .cms-no-comments {
@@ -1868,13 +1814,31 @@ section#footer {
     flex-direction: column;
     gap: 10px;
   }
-  .cms-comment-body,
-  .cms-comment-footer {
-    padding-left: 0;
+  .comment-box .media-left {
+    width: 48px !important;
+    padding-right: 8px !important;
+  }
+  .comment-box img,
+  .comment-box img.user-photo {
+    width: 40px !important;
+    height: 40px !important;
+  }
+  .comment-box .media-heading {
+    padding: 6px 10px !important;
+    font-size: 14px !important;
+  }
+  .comment-box .media-heading:before {
+    top: 9px !important;
+    left: -5px !important;
+    width: 10px !important;
+    height: 10px !important;
+  }
+  .comment-box .media-body p {
+    padding: 8px 10px !important;
+    font-size: 13px !important;
   }
   .cms-comment-list .children {
-    margin-left: 16px;
-    padding-left: 10px;
+    margin-left: 20px !important;
   }
 }
 
