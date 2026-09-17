@@ -10,7 +10,7 @@ services:
       MYSQL_DATABASE: cms_nhomc
     volumes:
       - db_data:/var/lib/mysql
-      - ./db/cms_nhomc.sql:/docker-entrypoint-initdb.d/01_cms_nhomc.sql:ro
+      - ./db/wordpress_huynhvanvinhem.sql:/docker-entrypoint-initdb.d/01_cms_nhomc.sql:ro
     ports:
       - "3308:3306"
     networks:
