@@ -53,7 +53,7 @@ services:
 
 volumes:
   db_data:
-    name: wordpressc_db_data
+    name: wordpressc_mariadb_data
 
 networks:
   wordpressc_network:
