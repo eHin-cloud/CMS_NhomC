@@ -10,6 +10,9 @@ get_header();
 
 $raw_query   = get_search_query(false);
 $clean_query = is_string($raw_query) ? trim($raw_query) : '';
+if (mb_strlen($clean_query, 'UTF-8') > 100) {
+    $clean_query = mb_substr($clean_query, 0, 100, 'UTF-8');
+}
 ?>
 
 <main class="site-content search-results-page">
@@ -22,7 +25,11 @@ $clean_query = is_string($raw_query) ? trim($raw_query) : '';
                     <span class="search-title-prefix">Search:</span> &ldquo;<?php echo esc_html($clean_query); ?>&rdquo;
                 </h1>
 
-                <?php if (!have_posts()) : ?>
+                <?php if (mb_strlen($clean_query, 'UTF-8') < 2) : ?>
+                    <p class="search-notice-text search-warning-text">
+                        <?php esc_html_e('Từ khóa tìm kiếm quá ngắn (tối thiểu 2 ký tự). Vui lòng nhập từ khóa cụ thể hơn từ 2 đến 100 ký tự.', 'cms-nhomc'); ?>
+                    </p>
+                <?php elseif (!have_posts()) : ?>
                     <p class="search-notice-text">
                         We could not find any results for your search. You can give it another try through the search form below.
                     </p>

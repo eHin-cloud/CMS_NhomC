@@ -40,7 +40,7 @@
                             <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                         </svg>
                     </span>
-                    <input type="search" id="headerSearchInput" name="s" placeholder="<?php esc_attr_e('Search...', 'cms-nhomc'); ?>" value="<?php echo esc_attr($header_clean); ?>" autocomplete="off" />
+                    <input type="search" id="headerSearchInput" name="s" placeholder="<?php esc_attr_e('Search...', 'cms-nhomc'); ?>" value="<?php echo esc_attr($header_clean); ?>" minlength="2" maxlength="100" required title="<?php esc_attr_e('Vui lòng nhập từ khóa từ 2 đến 100 ký tự', 'cms-nhomc'); ?>" autocomplete="off" />
                 </div>
                 <button type="submit"><?php esc_html_e('Submit', 'cms-nhomc'); ?></button>
             </form>
@@ -146,12 +146,43 @@ document.addEventListener('DOMContentLoaded', function() {
     var headerSearchInput = document.getElementById('headerSearchInput');
     var headerSearchForm = document.getElementById('headerSearchForm');
 
+    if (headerSearchForm && headerSearchInput) {
+        headerSearchForm.addEventListener('submit', function(e) {
+            var val = headerSearchInput.value.trim();
+            if (val.length < 2) {
+                e.preventDefault();
+                headerSearchInput.focus();
+                headerSearchInput.setCustomValidity('<?php echo esc_js(__('Vui lòng nhập từ khóa tối thiểu 2 ký tự.', 'cms-nhomc')); ?>');
+                headerSearchInput.reportValidity();
+                return false;
+            }
+            if (val.length > 100) {
+                val = val.substring(0, 100);
+            }
+            headerSearchInput.value = val;
+            headerSearchInput.setCustomValidity('');
+        });
+
+        headerSearchInput.addEventListener('input', function() {
+            this.setCustomValidity('');
+        });
+    }
+
     if (focusSearchBtn) {
         focusSearchBtn.addEventListener('click', function(e) {
             var q = headerSearchInput ? headerSearchInput.value.trim() : '';
-            if (q !== '') {
+            if (q.length >= 2) {
                 e.preventDefault();
-                headerSearchForm.submit();
+                if (headerSearchForm) {
+                    headerSearchForm.requestSubmit ? headerSearchForm.requestSubmit() : headerSearchForm.submit();
+                }
+            } else if (q.length > 0) {
+                e.preventDefault();
+                if (headerSearchInput) {
+                    headerSearchInput.focus();
+                    headerSearchInput.setCustomValidity('<?php echo esc_js(__('Vui lòng nhập từ khóa tối thiểu 2 ký tự.', 'cms-nhomc')); ?>');
+                    headerSearchInput.reportValidity();
+                }
             } else {
                 // Nếu chưa nhập từ khóa, điều hướng đến trang tìm kiếm trống
                 e.preventDefault();

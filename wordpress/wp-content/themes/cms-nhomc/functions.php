@@ -101,11 +101,15 @@ function cms_nhomc_filter_search_query($query) {
         $s = $query->get('s');
         if (is_string($s)) {
             $s = trim(preg_replace('/\s+/u', ' ', $s));
+            // Giới hạn độ dài tối đa 100 ký tự
+            if (mb_strlen($s, 'UTF-8') > 100) {
+                $s = mb_substr($s, 0, 100, 'UTF-8');
+            }
             $query->set('s', $s);
         }
 
-        // Ngăn truy vấn rác vào cơ sở dữ liệu khi từ khóa rỗng hoặc không phải chuỗi hợp lệ
-        if (!is_string($s) || $s === '') {
+        // Giới hạn độ dài tối thiểu: ngăn truy vấn rác khi từ khóa rỗng hoặc dưới 2 ký tự
+        if (!is_string($s) || $s === '' || mb_strlen($s, 'UTF-8') < 2) {
             $query->set('post__in', array(0));
             $query->set('no_found_rows', true);
             return;

@@ -18,13 +18,17 @@
         <div class="col search-input-col">
             <?php
             $raw_s = get_search_query(false);
-            $form_val = (have_posts() && is_string($raw_s) && trim($raw_s) !== '') ? trim($raw_s) : '';
+            $form_val = (is_string($raw_s) && trim($raw_s) !== '') ? trim($raw_s) : '';
             ?>
             <input class="form-control form-control-lg form-control-borderless search-input" 
                    type="search" 
                    name="s" 
                    placeholder="Search topics or keywords" 
                    value="<?php echo esc_attr($form_val); ?>" 
+                   minlength="2" 
+                   maxlength="100" 
+                   required 
+                   title="Vui lòng nhập từ khóa từ 2 đến 100 ký tự" 
                    autocomplete="off" 
                    aria-label="Search topics or keywords" />
         </div>
@@ -35,4 +39,32 @@
         <!--end of col-->
     </div>
 </form>
+<script>
+(function() {
+    var form = document.querySelector('.bootsnipp-search-form');
+    if (!form) return;
+    var input = form.querySelector('.search-input');
+    if (!input) return;
+
+    form.addEventListener('submit', function(e) {
+        var val = input.value.trim();
+        if (val.length < 2) {
+            e.preventDefault();
+            input.focus();
+            input.setCustomValidity('Vui lòng nhập từ khóa tối thiểu 2 ký tự.');
+            input.reportValidity();
+            return false;
+        }
+        if (val.length > 100) {
+            val = val.substring(0, 100);
+        }
+        input.value = val;
+        input.setCustomValidity('');
+    });
+
+    input.addEventListener('input', function() {
+        this.setCustomValidity('');
+    });
+})();
+</script>
 
