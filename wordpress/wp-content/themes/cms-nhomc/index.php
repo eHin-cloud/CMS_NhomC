@@ -1,6 +1,6 @@
 <?php
 /**
- * Main template file
+ * Main template file (Content)
  *
  * @package CMS_NhomC
  */
@@ -8,32 +8,48 @@
 get_header();
 ?>
 
-<main class="site-content">
-    <div class="content-card">
-        <h1>Chào mừng bạn đến với Website của Nhóm C (Group C)</h1>
-        <p>Header phía trên được tùy biến chuẩn theo mẫu thiết kế giao diện cho đồ án CMS.</p>
-    </div>
+<div class="site-content cms-container-layout cms-home-container-layout">
+    <!-- Hàng 3 cột theo sơ đồ Hình 1: Archive (Trái) | Content (Giữa) | Comments (Phải) -->
+    <div class="cms-layout-grid cms-home-grid">
+        <!-- Cột trái: Archive (Module 11) -->
+        <aside class="cms-sidebar-column cms-home-sidebar-left" aria-label="Lưu trữ">
+            <?php cms_nhomc_render_archive_widget('Archive'); ?>
+        </aside>
 
-    <?php if (have_posts()) : ?>
-        <div class="posts-list">
-            <?php while (have_posts()) : the_post(); ?>
-                <article id="post-<?php the_ID(); ?>" <?php post_class('content-card'); ?>>
-                    <h2><a href="<?php the_permalink(); ?>" style="text-decoration: none; color: #1f2937;"><?php the_title(); ?></a></h2>
-                    <div class="post-meta" style="font-size: 13px; color: #6b7280; margin: 8px 0 16px;">
-                        Đăng ngày <?php echo get_the_date(); ?> | Tác giả: <?php the_author(); ?>
-                    </div>
-                    <div class="post-excerpt">
-                        <?php the_excerpt(); ?>
-                    </div>
-                </article>
-            <?php endwhile; ?>
-        </div>
-    <?php else : ?>
-        <div class="content-card">
-            <p>Chưa có bài viết nào được đăng tải. Bạn có thể vào trang quản trị để thêm bài viết mới.</p>
-        </div>
-    <?php endif; ?>
-</main>
+        <!-- Cột giữa: Content (Module 2) - Danh sách bài viết -->
+        <main class="cms-main-column cms-home-main-column">
+            <?php if (have_posts()) : ?>
+                <div class="cms-post-list">
+                    <?php
+                    while (have_posts()) :
+                        the_post();
+                        cms_nhomc_render_post_card(get_the_ID());
+                    endwhile;
+                    ?>
+                </div>
+
+                <div class="cms-pagination">
+                    <?php
+                    the_posts_pagination(array(
+                        'mid_size'  => 2,
+                        'prev_text' => __('&laquo; Trước', 'cms-nhomc'),
+                        'next_text' => __('Sau &raquo;', 'cms-nhomc'),
+                    ));
+                    ?>
+                </div>
+            <?php else : ?>
+                <div class="content-card">
+                    <p>Chưa có bài viết nào được đăng tải. Bạn có thể vào trang quản trị để thêm bài viết mới.</p>
+                </div>
+            <?php endif; ?>
+        </main>
+
+        <!-- Cột phải: Comments (Module 12) chuẩn theo Hình 2 -->
+        <aside class="cms-sidebar-column cms-home-sidebar-right" aria-label="Bình luận">
+            <?php cms_nhomc_render_comments_widget(3, 'Comments'); ?>
+        </aside>
+    </div>
+</div>
 
 <?php
 get_footer();

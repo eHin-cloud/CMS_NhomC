@@ -192,6 +192,32 @@
 </section>
 <!-- ./Footer -->
 
+<!-- Nút Cuộn lên đầu trang (Back to Top) tối ưu trải nghiệm trên di động -->
+<button type="button" id="backToTopBtn" class="back-to-top" aria-label="Cuộn lên đầu trang" title="Lên đầu trang">
+    <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="18 15 12 9 6 15"></polyline>
+    </svg>
+</button>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var backToTopBtn = document.getElementById('backToTopBtn');
+    if (backToTopBtn) {
+        window.addEventListener('scroll', function() {
+            if (window.scrollY > 280) {
+                backToTopBtn.classList.add('visible');
+            } else {
+                backToTopBtn.classList.remove('visible');
+            }
+        }, { passive: true });
+
+        backToTopBtn.addEventListener('click', function() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    }
+});
+</script>
+
 <?php wp_footer(); ?>
 </body>
 </html>
