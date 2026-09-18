@@ -1702,6 +1702,174 @@ section#footer {
   top: 75px;
 }
 
+/* ====================================================
+   Layout trang chủ (Homepage) theo sơ đồ Hình 1:
+   3 Cột: Archive (Trái) - Content (Giữa) - Comments (Phải)
+   ==================================================== */
+.cms-container-layout.cms-home-container-layout {
+  max-width: 1360px !important;
+}
+
+.cms-layout-grid.cms-home-grid,
+.cms-home-grid {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: flex-start !important;
+  gap: 28px !important;
+  width: 100% !important;
+}
+
+/* Cột trái: Archive (Module 11) */
+.cms-sidebar-column.cms-home-sidebar-left,
+.cms-home-sidebar-left {
+  flex: 0 0 240px !important;
+  width: 240px !important;
+  max-width: 240px !important;
+  position: sticky !important;
+  top: 75px !important;
+}
+
+/* Cột giữa: Content (Module 2) */
+.cms-main-column.cms-home-main-column,
+.cms-home-main-column {
+  flex: 1 1 0% !important;
+  min-width: 0 !important;
+}
+
+/* Cột phải: Comments (Module 12) */
+.cms-sidebar-column.cms-home-sidebar-right,
+.cms-home-sidebar-right {
+  flex: 0 0 260px !important;
+  width: 260px !important;
+  max-width: 260px !important;
+  position: sticky !important;
+  top: 75px !important;
+}
+
+/* Tối ưu thẻ bài viết (post card) khi hiển thị trong bố cục 3 cột để không bị vỡ/bóp méo */
+.cms-home-grid .cms-post-card {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: stretch !important;
+  min-height: 180px !important;
+  margin-bottom: 24px !important;
+}
+
+.cms-home-grid .cms-post-thumb {
+  flex: 0 0 230px !important;
+  width: 230px !important;
+  min-height: 160px !important;
+  max-height: 210px !important;
+}
+
+.cms-home-grid .cms-post-body {
+  flex: 1 !important;
+  padding: 18px 22px !important;
+  min-width: 0 !important;
+}
+
+.cms-home-grid .cms-post-header {
+  gap: 14px !important;
+}
+
+.cms-home-grid .cms-date-day {
+  font-size: 34px !important;
+  letter-spacing: -1px !important;
+}
+
+.cms-home-grid .cms-post-title {
+  font-size: 16px !important;
+  line-height: 1.4 !important;
+}
+
+.cms-home-grid .cms-post-meta {
+  margin-top: 6px !important;
+}
+
+@media (max-width: 1200px) {
+  .cms-home-grid .cms-post-thumb {
+    flex: 0 0 190px !important;
+    width: 190px !important;
+  }
+  .cms-home-grid .cms-home-sidebar-left {
+    flex: 0 0 220px !important;
+    width: 220px !important;
+    max-width: 220px !important;
+  }
+  .cms-home-grid .cms-home-sidebar-right {
+    flex: 0 0 240px !important;
+    width: 240px !important;
+    max-width: 240px !important;
+  }
+}
+
+@media (max-width: 1060px) {
+  .cms-home-grid .cms-post-card {
+    flex-direction: column !important;
+  }
+  .cms-home-grid .cms-post-thumb {
+    flex: none !important;
+    width: 100% !important;
+    height: 190px !important;
+    max-height: 190px !important;
+  }
+}
+
+/* ====================================================
+   Layout trang chi tiết bài viết (Single Detail) theo wireframe:
+   3 Cột: Categories (Trái) - Detail (Giữa) - Recent Post (Phải)
+   ==================================================== */
+.cms-single-grid {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 28px;
+  width: 100%;
+}
+
+/* Cột trái: Categories (Module 9) */
+.cms-single-sidebar-left {
+  flex: 0 0 270px;
+  width: 270px;
+  position: sticky;
+  top: 75px;
+}
+
+/* Cột giữa: Detail (Module 6) */
+.cms-single-main-column {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Cột phải: Recent post (Module 10) */
+.cms-single-sidebar-right {
+  flex: 0 0 300px;
+  width: 300px;
+  position: sticky;
+  top: 75px;
+}
+
+/* Khối điều hướng bài trước / kế tiếp (Module 7) bên dưới full width */
+.cms-single-bottom-nav {
+  width: 100%;
+  margin-top: 32px;
+  background: #ffffff;
+  padding: 24px 32px;
+  border-radius: 6px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+  border: 1px solid #eef2f6;
+}
+
+.cms-single-bottom-nav .tdc-post-nav {
+  margin: 0;
+}
+
+/* Khối bình luận (Module 8) bên dưới full width */
+.cms-single-bottom-comments {
+  width: 100%;
+  margin-top: 24px;
+}
+
 .cms-sidebar {
   display: flex;
   flex-direction: column;
@@ -1814,9 +1982,59 @@ section#footer {
 /* Responsive cho layout 2 cột Archive, Content, Detail & Sidebar */
 @media (max-width: 991px) {
   .cms-main-layout,
-  .cms-layout-grid {
+  .cms-layout-grid,
+  .cms-single-grid,
+  .cms-home-grid {
     flex-direction: column !important;
     gap: 28px;
+  }
+
+  .cms-home-sidebar-left,
+  .cms-home-sidebar-right {
+    flex: none !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    position: static !important;
+  }
+
+  .cms-home-main-column {
+    order: 1;
+  }
+
+  .cms-home-sidebar-left {
+    order: 2;
+  }
+
+  .cms-home-sidebar-right {
+    order: 3;
+  }
+
+  .cms-single-sidebar-left,
+  .cms-single-sidebar-right {
+    flex: none !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    position: static !important;
+  }
+
+  .cms-single-sidebar-left {
+    order: 2;
+  }
+
+  .cms-single-main-column {
+    order: 1;
+  }
+
+  .cms-single-sidebar-right {
+    order: 3;
+  }
+
+  .cms-single-bottom-nav {
+    padding: 18px 20px;
+  }
+
+  .cms-main-column {
+    order: 1;
   }
 
   .cms-sidebar-column {
@@ -1826,6 +2044,7 @@ section#footer {
     position: static !important;
     border-top: 1px solid #e2e8f0;
     padding-top: 26px;
+    order: 2;
   }
 
   .cms-sidebar {
@@ -2504,24 +2723,24 @@ section#footer {
   background: transparent;
 }
 
-/* Tiêu đề "Comments" */
+/* Tiêu đề "Comments" chuẩn theo Hình 2 */
 .widget-comments-title {
-  font-size: 16px;
-  font-weight: 600;
-  color: #333333;
-  margin: 0 0 6px 0;
+  font-size: 18px;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0 0 8px 0;
   line-height: 1.3;
   text-transform: none;
   font-family: inherit;
   letter-spacing: normal;
 }
 
-/* Đường gạch ngang ngắn trang trí dưới tiêu đề */
+/* Đường gạch ngang ngắn trang trí dưới tiêu đề chuẩn theo Hình 2 */
 .widget-comments-stripe {
-  width: 45px;
+  width: 44px;
   height: 2px;
-  background-color: #999eab;
-  margin-bottom: 12px;
+  background-color: #8c98a4;
+  margin-bottom: 14px;
 }
 
 /* Danh sách bình luận */
@@ -2533,22 +2752,22 @@ section#footer {
 
 /* Mỗi dòng bình luận */
 .widget-comments-item {
-  border-bottom: 1px solid #efefef;
-  padding: 7px 0;
+  border-bottom: 1px solid #f1f5f9;
+  padding: 10px 0;
 }
 
-/* Liên kết chữ bình luận */
+/* Liên kết chữ bình luận chuẩn màu xanh Hình 2 */
 .widget-comments-link {
-  color: #488dc6;
-  font-size: 14px;
-  line-height: 1.5;
+  color: #2563eb;
+  font-size: 15px;
+  line-height: 1.45;
   text-decoration: none;
   display: block;
   transition: color 0.15s ease;
 }
 
 .widget-comments-link:hover {
-  color: #1a68a5;
+  color: #1d4ed8;
   text-decoration: underline;
 }
 
