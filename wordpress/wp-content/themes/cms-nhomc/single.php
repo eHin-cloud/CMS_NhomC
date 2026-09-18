@@ -12,7 +12,7 @@ get_header();
     <!-- Hàng 3 cột theo sơ đồ: Categories (Trái) | Detail (Giữa) | Recent Post (Phải) -->
     <div class="cms-single-grid">
         
-        <!-- Cột trái: Categories (Module 9) -->
+        <!-- Cột trái: CHỈ CÓ MÌNH Categories (Module 9) -->
         <aside class="cms-single-sidebar-left" aria-label="Chuyên mục">
             <?php cms_nhomc_render_categories_widget(); ?>
         </aside>
@@ -116,10 +116,9 @@ get_header();
             <?php endwhile; ?>
         </main>
 
-        <!-- Cột phải: Recent post (Module 10) -->
+        <!-- Cột phải: CHỈ CÓ MÌNH Recent post (Module 10) -->
         <aside class="cms-single-sidebar-right" aria-label="Bài viết mới">
             <?php cms_nhomc_render_recent_posts_widget(10, 'BÀI VIẾT MỚI'); ?>
-            <?php if (function_exists('cms_nhomc_render_last_posts_widget')) { cms_nhomc_render_last_posts_widget(5, 'Latest News'); } ?>
         </aside>
     </div>
 

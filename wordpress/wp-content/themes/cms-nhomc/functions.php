@@ -56,8 +56,8 @@ function cms_nhomc_scripts() {
     // Nạp Font Awesome 4.7.0 cho các icon Footer và điều hướng
     wp_enqueue_style('font-awesome', 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css', array(), '4.7.0');
 
-    // Nạp style.css của Theme
-    wp_enqueue_style('cms-nhomc-style', get_stylesheet_uri(), array('font-awesome'), '1.3.0');
+    // Nạp style.css của Theme (sử dụng filemtime để tự động xóa cache trình duyệt khi sửa css)
+    wp_enqueue_style('cms-nhomc-style', get_stylesheet_uri(), array('font-awesome'), filemtime(get_stylesheet_directory() . '/style.css'));
 
     // Nạp JavaScript Smart Search & Autocomplete
     wp_enqueue_script('cms-nhomc-smart-search', get_template_directory_uri() . '/assets/js/smart-search.js', array(), '1.0.0', true);
@@ -897,6 +897,50 @@ function cms_nhomc_render_categories_widget($title = 'Categories') {
                         echo '<li>';
                         echo '<span class="cat-bullet"></span>';
                         echo '<a href="' . esc_url($item['link']) . '">' . esc_html($item['name']) . '</a>';
+                        echo '</li>';
+                    }
+                }
+                ?>
+            </ul>
+        </div>
+    </div>
+    <?php
+}
+
+/**
+ * Render Widget: ARCHIVE (Lưu trữ theo tháng) - Module 11
+ */
+function cms_nhomc_render_archive_widget($title = 'Archive') {
+    ?>
+    <div class="widget-categories-card widget-archives-card">
+        <h3 class="widget-cat-title widget-archive-title"><?php echo esc_html($title); ?></h3>
+        <div class="widget-cat-stripe"></div>
+        <div class="widget-cat-body">
+            <ul class="widget-cat-list">
+                <?php
+                $archives = wp_get_archives(array(
+                    'type'            => 'monthly',
+                    'format'          => 'custom',
+                    'before'          => '<li><span class="cat-bullet"></span>',
+                    'after'           => '</li>',
+                    'show_post_count' => false,
+                    'echo'            => 0,
+                ));
+
+                if (!empty($archives)) {
+                    echo $archives;
+                } else {
+                    $sample_months = array(
+                        'Tháng 7 2026',
+                        'Tháng 6 2026',
+                        'Tháng 4 2026',
+                        'Tháng 3 2026',
+                        'Tháng 2 2026',
+                    );
+                    foreach ($sample_months as $month) {
+                        echo '<li>';
+                        echo '<span class="cat-bullet"></span>';
+                        echo '<a href="#">' . esc_html($month) . '</a>';
                         echo '</li>';
                     }
                 }
