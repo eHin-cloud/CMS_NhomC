@@ -999,11 +999,16 @@ function cms_nhomc_comment_callback($comment, $args, $depth) {
     // Avatar bóng người màu xám chuẩn theo ảnh mẫu Bootsnipp gNVj0
     $avatar_url = 'https://ssl.gstatic.com/accounts/ui/avatar_2x.png';
 
-    // Kiểm tra quyền Sửa/Xóa: CHỈ cho phép chính chủ tài khoản đã viết bình luận đó (không cho phép sửa bình luận của user khác)
+    // Phân quyền:
+    // - Sửa: CHỈ chính chủ tác giả mới được sửa bình luận của mình (Admin không được sửa bài của người khác)
+    // - Xóa: Chính chủ tác giả HOẶC Admin/Quản trị viên có quyền xóa bình luận (kể cả của người khác)
     $current_user_id = get_current_user_id();
-    $can_edit_or_delete = is_user_logged_in() && (
-        (int)$comment->user_id > 0 && (int)$comment->user_id === (int)$current_user_id
-    );
+    $is_logged_in    = is_user_logged_in();
+    $is_author       = $is_logged_in && ((int)$comment->user_id > 0 && (int)$comment->user_id === (int)$current_user_id);
+    $is_admin        = $is_logged_in && (current_user_can('moderate_comments') || current_user_can('administrator'));
+
+    $can_edit   = $is_author;
+    $can_delete = $is_author || $is_admin;
     ?>
     <li <?php comment_class('cms-comment-item'); ?> id="comment-<?php echo $comment_id; ?>">
         <div class="media comment-box" id="div-comment-<?php echo $comment_id; ?>">
@@ -1024,7 +1029,7 @@ function cms_nhomc_comment_callback($comment, $args, $depth) {
                         <?php comment_text(); ?>
                     </div>
 
-                    <?php if ($can_edit_or_delete) : ?>
+                    <?php if ($can_edit) : ?>
                         <div class="cms-comment-edit-form" id="cms-comment-edit-form-<?php echo $comment_id; ?>" style="display: none;">
                             <textarea class="form-control cms-comment-edit-textarea" id="cms-comment-textarea-<?php echo $comment_id; ?>" rows="3"><?php echo esc_textarea(get_comment_text($comment_id)); ?></textarea>
                             <div class="cms-comment-edit-buttons">
@@ -1036,10 +1041,13 @@ function cms_nhomc_comment_callback($comment, $args, $depth) {
                 </div>
 
                 <div class="comment-reply-wrap">
-                    <?php if ($can_edit_or_delete) : ?>
+                    <?php if ($can_edit) : ?>
                         <button type="button" class="cms-comment-action-btn cms-comment-edit-btn" data-comment-id="<?php echo $comment_id; ?>" title="<?php esc_attr_e('Chỉnh sửa bình luận', 'cms-nhomc'); ?>">
                             <i class="fa fa-pencil"></i> Sửa
                         </button>
+                    <?php endif; ?>
+
+                    <?php if ($can_delete) : ?>
                         <button type="button" class="cms-comment-action-btn cms-comment-delete-btn" data-comment-id="<?php echo $comment_id; ?>" data-nonce="<?php echo wp_create_nonce('cms_delete_comment_' . $comment_id); ?>" title="<?php esc_attr_e('Xóa bình luận', 'cms-nhomc'); ?>">
                             <i class="fa fa-trash"></i> Xóa
                         </button>
@@ -1313,12 +1321,14 @@ function cms_nhomc_ajax_delete_comment() {
     }
 
     $current_user_id = get_current_user_id();
-    $can_delete = is_user_logged_in() && (
-        (int)$comment->user_id > 0 && (int)$comment->user_id === (int)$current_user_id
-    );
+    $is_logged_in    = is_user_logged_in();
+    $is_author       = $is_logged_in && ((int)$comment->user_id > 0 && (int)$comment->user_id === (int)$current_user_id);
+    $is_admin        = $is_logged_in && (current_user_can('moderate_comments') || current_user_can('administrator'));
+
+    $can_delete = $is_author || $is_admin;
 
     if (!$can_delete) {
-        wp_send_json_error(array('message' => 'Bạn chỉ có quyền xóa bình luận do chính mình viết!'));
+        wp_send_json_error(array('message' => 'Bạn không có quyền xóa bình luận này!'));
     }
 
     $post_id = $comment->comment_post_ID;
