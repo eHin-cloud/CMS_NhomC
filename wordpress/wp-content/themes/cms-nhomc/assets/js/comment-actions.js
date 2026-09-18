@@ -10,6 +10,130 @@
         ajaxUrl: '/wp-admin/admin-ajax.php'
     };
 
+    // Biến lưu trạng thái xóa bình luận
+    var pendingCommentId = null;
+    var pendingNonce = null;
+    var pendingDeleteBtn = null;
+
+    /**
+     * Tạo hoặc lấy modal xác nhận xóa ở giữa màn hình
+     */
+    function getOrCreateDeleteModal() {
+        var modal = document.getElementById('cms-delete-confirm-modal');
+        if (modal) return modal;
+
+        modal = document.createElement('div');
+        modal.id = 'cms-delete-confirm-modal';
+        modal.className = 'cms-modal-backdrop';
+        modal.innerHTML = 
+            '<div class="cms-modal-dialog">' +
+                '<div class="cms-modal-icon"><i class="fa fa-exclamation-triangle"></i></div>' +
+                '<h5 class="cms-modal-title">Xác nhận xóa bình luận</h5>' +
+                '<div class="cms-modal-body">' +
+                    '<p>Bạn có chắc chắn muốn xóa bình luận này không?<br>Thao tác này không thể hoàn tác.</p>' +
+                '</div>' +
+                '<div class="cms-modal-footer">' +
+                    '<button type="button" class="btn btn-secondary cms-modal-btn-cancel">Hủy</button>' +
+                    '<button type="button" class="btn btn-danger cms-modal-btn-confirm"><i class="fa fa-trash"></i> Xóa vĩnh viễn</button>' +
+                '</div>' +
+            '</div>';
+
+        document.body.appendChild(modal);
+
+        // Đóng modal khi bấm Hủy hoặc bấm ra ngoài màn che
+        modal.querySelector('.cms-modal-btn-cancel').addEventListener('click', function() {
+            closeDeleteModal();
+        });
+
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) {
+                closeDeleteModal();
+            }
+        });
+
+        // Xử lý khi bấm nút "Xóa vĩnh viễn" trong modal
+        modal.querySelector('.cms-modal-btn-confirm').addEventListener('click', function() {
+            if (!pendingCommentId || !pendingNonce) return;
+
+            var confirmBtn = this;
+            var originalBtnHtml = confirmBtn.innerHTML;
+            confirmBtn.disabled = true;
+            confirmBtn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Đang xóa...';
+
+            var commentItem = document.getElementById('comment-' + pendingCommentId);
+
+            var formData = new FormData();
+            formData.append('action', 'cms_nhomc_delete_comment');
+            formData.append('comment_id', pendingCommentId);
+            formData.append('nonce', pendingNonce);
+
+            fetch(config.ajaxUrl, {
+                method: 'POST',
+                body: formData
+            })
+            .then(function(res) { return res.json(); })
+            .then(function(response) {
+                confirmBtn.disabled = false;
+                confirmBtn.innerHTML = originalBtnHtml;
+                closeDeleteModal();
+
+                if (response && response.success) {
+                    // Cập nhật số lượng bình luận ở tiêu đề
+                    var titleEl = document.querySelector('.cms-comments-title');
+                    if (titleEl && response.data && response.data.count_label) {
+                        titleEl.innerHTML = '<i class="fa fa-comments-o"></i> ' + response.data.count_label;
+                    }
+
+                    // Hiệu ứng mờ dần và xóa khỏi DOM
+                    if (commentItem) {
+                        commentItem.style.transition = 'all 0.3s ease';
+                        commentItem.style.opacity = '0';
+                        commentItem.style.transform = 'scale(0.95)';
+                        setTimeout(function() {
+                            commentItem.remove();
+                        }, 300);
+                    }
+                } else {
+                    alert((response && response.data && response.data.message) || 'Có lỗi xảy ra khi xóa bình luận.');
+                }
+            })
+            .catch(function(err) {
+                confirmBtn.disabled = false;
+                confirmBtn.innerHTML = originalBtnHtml;
+                closeDeleteModal();
+                console.error('Lỗi xóa bình luận:', err);
+                alert('Không thể kết nối tới máy chủ. Vui lòng thử lại!');
+            });
+        });
+
+        return modal;
+    }
+
+    function openDeleteModal(commentId, nonce, deleteBtn) {
+        pendingCommentId = commentId;
+        pendingNonce = nonce;
+        pendingDeleteBtn = deleteBtn;
+
+        var modal = getOrCreateDeleteModal();
+        modal.style.display = 'flex';
+        // Buộc trình duyệt reflow để chạy transition CSS mượt mà
+        void modal.offsetWidth;
+        modal.classList.add('active');
+    }
+
+    function closeDeleteModal() {
+        var modal = document.getElementById('cms-delete-confirm-modal');
+        if (modal) {
+            modal.classList.remove('active');
+            setTimeout(function() {
+                modal.style.display = 'none';
+            }, 200);
+        }
+        pendingCommentId = null;
+        pendingNonce = null;
+        pendingDeleteBtn = null;
+    }
+
     document.addEventListener('DOMContentLoaded', function() {
         var commentsSection = document.getElementById('comments');
         if (!commentsSection) return;
@@ -109,60 +233,15 @@
                 return;
             }
 
-            // 4. NÚT XÓA BÌNH LUẬN
+            // 4. NÚT XÓA BÌNH LUẬN -> MỞ MODAL XÁC NHẬN Ở GIỮA MÀN HÌNH
             var deleteBtn = e.target.closest('.cms-comment-delete-btn');
             if (deleteBtn) {
                 e.preventDefault();
                 var commentId = deleteBtn.getAttribute('data-comment-id');
                 var nonce = deleteBtn.getAttribute('data-nonce');
 
-                if (!confirm('Bạn có chắc chắn muốn xóa bình luận này? Thao tác này không thể hoàn tác.')) {
-                    return;
-                }
-
-                var commentItem = document.getElementById('comment-' + commentId);
-                deleteBtn.disabled = true;
-                deleteBtn.innerHTML = '<i class="fa fa-spinner fa-spin"></i>';
-
-                var formData = new FormData();
-                formData.append('action', 'cms_nhomc_delete_comment');
-                formData.append('comment_id', commentId);
-                formData.append('nonce', nonce);
-
-                fetch(config.ajaxUrl, {
-                    method: 'POST',
-                    body: formData
-                })
-                .then(function(res) { return res.json(); })
-                .then(function(response) {
-                    if (response && response.success) {
-                        // Cập nhật số lượng bình luận ở tiêu đề
-                        var titleEl = document.querySelector('.cms-comments-title');
-                        if (titleEl && response.data && response.data.count_label) {
-                            titleEl.innerHTML = '<i class="fa fa-comments-o"></i> ' + response.data.count_label;
-                        }
-
-                        // Hiệu ứng mờ dần và xóa phần tử khỏi DOM
-                        if (commentItem) {
-                            commentItem.style.transition = 'all 0.3s ease';
-                            commentItem.style.opacity = '0';
-                            commentItem.style.transform = 'scale(0.95)';
-                            setTimeout(function() {
-                                commentItem.remove();
-                            }, 300);
-                        }
-                    } else {
-                        deleteBtn.disabled = false;
-                        deleteBtn.innerHTML = '<i class="fa fa-trash"></i> Xóa';
-                        alert((response && response.data && response.data.message) || 'Có lỗi xảy ra khi xóa bình luận.');
-                    }
-                })
-                .catch(function(err) {
-                    deleteBtn.disabled = false;
-                    deleteBtn.innerHTML = '<i class="fa fa-trash"></i> Xóa';
-                    console.error('Lỗi xóa bình luận:', err);
-                    alert('Không thể kết nối tới máy chủ. Vui lòng thử lại!');
-                });
+                // Mở modal xác nhận giữa màn hình thay cho popup confirm() mặc định của trình duyệt
+                openDeleteModal(commentId, nonce, deleteBtn);
                 return;
             }
 
