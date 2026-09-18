@@ -28,7 +28,7 @@
                 Home
             </a>
 
-            <form role="search" method="get" class="nav-search-form" id="headerSearchForm" action="<?php echo esc_url(home_url('/')); ?>">
+            <form role="search" method="get" class="nav-search-form" id="headerSearchForm" action="<?php echo esc_url(home_url('/')); ?>" novalidate>
                 <?php
                 $header_query = get_search_query(false);
                 $header_clean = is_string($header_query) ? $header_query : '';
@@ -40,9 +40,10 @@
                             <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                         </svg>
                     </span>
-                    <input type="search" id="headerSearchInput" name="s" placeholder="<?php esc_attr_e('Search...', 'cms-nhomc'); ?>" value="<?php echo esc_attr($header_clean); ?>" autocomplete="off" />
+                    <input type="search" id="headerSearchInput" name="s" placeholder="<?php esc_attr_e('Search...', 'cms-nhomc'); ?>" value="<?php echo esc_attr($header_clean); ?>" autocomplete="off" maxlength="100" />
                 </div>
                 <button type="submit"><?php esc_html_e('Submit', 'cms-nhomc'); ?></button>
+                <div id="headerSearchError" class="header-search-error" style="display: none;"></div>
             </form>
         </div>
 
@@ -130,7 +131,7 @@
     </div>
     <ul>
         <li><a href="<?php echo esc_url(home_url('/')); ?>">Trang chủ (Home)</a></li>
-        <li><a href="<?php echo esc_url(home_url('/?s=')); ?>">Tìm kiếm (Search)</a></li>
+        <li><a href="<?php echo esc_url(home_url('/?s=abc')); ?>">Tìm kiếm (Search)</a></li>
         <li><a href="<?php echo esc_url(home_url('/category/the-thao/')); ?>">Thể thao</a></li>
         <li><a href="<?php echo esc_url(home_url('/category/khoa-hoc/')); ?>">Khoa học</a></li>
         <li><a href="<?php echo esc_url(home_url('/category/tin-tuc/')); ?>">Tin tức</a></li>
@@ -141,21 +142,86 @@
 <script>
 // Xử lý sự kiện JavaScript cho Header
 document.addEventListener('DOMContentLoaded', function() {
-    // 1. Chuyển hướng sang trang tìm kiếm khi click nút Search
-    var focusSearchBtn = document.getElementById('focusSearchBtn');
+    // Xử lý tìm kiếm và bắt lỗi trên Header
+    var focusSearchBtn    = document.getElementById('focusSearchBtn');
     var headerSearchInput = document.getElementById('headerSearchInput');
-    var headerSearchForm = document.getElementById('headerSearchForm');
+    var headerSearchForm  = document.getElementById('headerSearchForm');
+    var headerSearchError = document.getElementById('headerSearchError');
 
+    function showHeaderError(msg) {
+        if (!headerSearchError) return;
+        headerSearchError.textContent = msg;
+        headerSearchError.style.display = 'flex';
+        if (headerSearchForm) {
+            headerSearchForm.classList.add('has-error', 'shake-error');
+            setTimeout(function() {
+                headerSearchForm.classList.remove('shake-error');
+            }, 500);
+        }
+    }
+
+    function clearHeaderError() {
+        if (headerSearchError) {
+            headerSearchError.style.display = 'none';
+        }
+        if (headerSearchForm) {
+            headerSearchForm.classList.remove('has-error');
+        }
+    }
+
+    function validateHeaderTerm(term) {
+        if (!term || term.trim() === '') {
+            return 'Vui lòng nhập từ khóa tìm kiếm.';
+        }
+        var clean = term.trim();
+        if (clean.length < 2) {
+            return 'Từ khóa phải có ít nhất 2 ký tự.';
+        }
+        if (clean.length > 100) {
+            return 'Từ khóa không được vượt quá 100 ký tự.';
+        }
+        if (!/[a-zA-Z0-9\u00C0-\u024F\u1EA0-\u1EF9]/i.test(clean)) {
+            return 'Từ khóa chỉ chứa ký tự đặc biệt không hợp lệ.';
+        }
+        return null;
+    }
+
+    if (headerSearchInput) {
+        headerSearchInput.addEventListener('input', function() {
+            clearHeaderError();
+        });
+    }
+
+    if (headerSearchForm) {
+        headerSearchForm.addEventListener('submit', function(e) {
+            var val = headerSearchInput ? headerSearchInput.value : '';
+            var err = validateHeaderTerm(val);
+            if (err) {
+                e.preventDefault();
+                showHeaderError(err);
+                if (headerSearchInput) headerSearchInput.focus();
+            }
+        });
+    }
+
+    // 1. Chuyển hướng sang trang tìm kiếm khi click nút Search
     if (focusSearchBtn) {
         focusSearchBtn.addEventListener('click', function(e) {
             var q = headerSearchInput ? headerSearchInput.value.trim() : '';
             if (q !== '') {
-                e.preventDefault();
-                headerSearchForm.submit();
+                var err = validateHeaderTerm(q);
+                if (err) {
+                    e.preventDefault();
+                    showHeaderError(err);
+                    if (headerSearchInput) headerSearchInput.focus();
+                } else {
+                    e.preventDefault();
+                    headerSearchForm.submit();
+                }
             } else {
-                // Nếu chưa nhập từ khóa, điều hướng đến trang tìm kiếm trống
+                // Nếu chưa nhập từ khóa, điều hướng đến trang tìm kiếm mẫu abc
                 e.preventDefault();
-                window.location.href = this.getAttribute('href') || '<?php echo esc_js(home_url('/?s=')); ?>';
+                window.location.href = this.getAttribute('href') || '<?php echo esc_js(home_url('/?s=abc')); ?>';
             }
         });
     }

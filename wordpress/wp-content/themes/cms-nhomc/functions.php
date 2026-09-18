@@ -88,9 +88,71 @@ function cms_nhomc_excerpt_more($more) {
 add_filter('excerpt_more', 'cms_nhomc_excerpt_more');
 
 /**
+ * [Senior Standard] Kiểm tra và bắt toàn bộ lỗi của từ khóa tìm kiếm
+ * Trả về thông tin lỗi chi tiết (code, title, message, type) hoặc null nếu hợp lệ.
+ * 
+ * Các trường hợp bắt lỗi:
+ * 1. empty: Để trống hoặc chỉ chứa khoảng trắng
+ * 2. too_short: Dưới 2 ký tự (tối thiểu 2 ký tự)
+ * 3. too_long: Vượt quá 100 ký tự (giới hạn tối đa 100 ký tự)
+ * 4. invalid_chars: Chỉ chứa ký tự đặc biệt, không có chữ cái hoặc chữ số hợp lệ
+ */
+function cms_nhomc_get_search_error($query_str = null) {
+    if (!isset($_GET['s'])) {
+        return null;
+    }
+
+    if ($query_str === null) {
+        $raw = get_search_query(false);
+        $query_str = is_string($raw) ? $raw : '';
+    }
+
+    // Làm sạch HTML / XSS / Script trước khi kiểm tra
+    $clean = wp_strip_all_tags($query_str);
+    $trimmed = trim(preg_replace('/\s+/u', ' ', $clean));
+
+    // 1. Kiểm tra để trống hoặc chỉ có khoảng trắng (trạng thái mở trang tìm kiếm ban đầu)
+    if ($trimmed === '') {
+        return null;
+    }
+
+    // 2. Kiểm tra độ dài tối thiểu (dưới 2 ký tự)
+    if (mb_strlen($trimmed, 'UTF-8') < 2) {
+        return array(
+            'code'    => 'too_short',
+            'title'   => __('Từ khóa quá ngắn', 'cms-nhomc'),
+            'message' => __('Từ khóa tìm kiếm phải có từ 2 ký tự trở lên. Vui lòng nhập từ khóa dài hơn.', 'cms-nhomc'),
+            'type'    => 'warning',
+        );
+    }
+
+    // 3. Kiểm tra độ dài tối đa (trên 100 ký tự)
+    if (mb_strlen($trimmed, 'UTF-8') > 100) {
+        return array(
+            'code'    => 'too_long',
+            'title'   => __('Từ khóa vượt quá giới hạn', 'cms-nhomc'),
+            'message' => sprintf(__('Từ khóa tìm kiếm không được vượt quá 100 ký tự (hiện có %d ký tự). Vui lòng rút gọn từ khóa.', 'cms-nhomc'), mb_strlen($trimmed, 'UTF-8')),
+            'type'    => 'error',
+        );
+    }
+
+    // 4. Kiểm tra chỉ chứa ký tự đặc biệt (không có bất kỳ chữ cái hay chữ số Unicode nào)
+    if (!preg_match('/[\p{L}\p{N}]/u', $trimmed)) {
+        return array(
+            'code'    => 'invalid_chars',
+            'title'   => __('Từ khóa không hợp lệ', 'cms-nhomc'),
+            'message' => __('Từ khóa chỉ chứa ký tự đặc biệt. Vui lòng nhập từ khóa có chứa ít nhất một chữ cái hoặc số.', 'cms-nhomc'),
+            'type'    => 'error',
+        );
+    }
+
+    return null;
+}
+
+/**
  * [Ponytail Standard] Giới hạn phạm vi tìm kiếm chỉ trên bài viết (post)
  * Loại bỏ page / attachments thừa, tối ưu tốc độ truy vấn database.
- * Đồng thời ngăn ngừa truy vấn rác khi từ khóa rỗng hoặc chỉ chứa khoảng trắng / kiểu dữ liệu không hợp lệ.
+ * Đồng thời ngăn ngừa truy vấn rác khi từ khóa rỗng, quá ngắn, quá dài hoặc không hợp lệ.
  */
 function cms_nhomc_filter_search_query($query) {
     if (!is_admin() && $query->is_search()) {
@@ -100,15 +162,21 @@ function cms_nhomc_filter_search_query($query) {
         // Chuẩn hóa từ khóa tìm kiếm: loại bỏ khoảng trắng đầu/cuối và rút gọn khoảng trắng kép
         $s = $query->get('s');
         if (is_string($s)) {
+            $s = wp_strip_all_tags($s);
             $s = trim(preg_replace('/\s+/u', ' ', $s));
-            $query->set('s', $s);
         }
 
-        // Ngăn truy vấn rác vào cơ sở dữ liệu khi từ khóa rỗng hoặc không phải chuỗi hợp lệ
-        if (!is_string($s) || $s === '') {
+        // Bắt lỗi toàn diện: nếu từ khóa không hợp lệ, chặn truy vấn database ngay lập tức
+        $err = cms_nhomc_get_search_error($s);
+        if ($err !== null) {
             $query->set('post__in', array(0));
             $query->set('no_found_rows', true);
             return;
+        }
+
+        if (is_string($s) && mb_strlen($s, 'UTF-8') > 100) {
+            $s = mb_substr($s, 0, 100, 'UTF-8');
+            $query->set('s', $s);
         }
 
         // Kích hoạt tìm kiếm theo cụm từ hoàn chỉnh, tránh chia nhỏ từ gây ra False Positive

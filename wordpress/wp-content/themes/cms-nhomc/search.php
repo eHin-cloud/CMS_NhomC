@@ -8,38 +8,54 @@
 
 get_header();
 
-$raw_query   = get_search_query(false);
-$clean_query = is_string($raw_query) ? trim($raw_query) : '';
+$raw_query    = isset($_GET['s']) ? wp_unslash($_GET['s']) : get_search_query(false);
+$clean_query  = is_string($raw_query) ? trim(preg_replace('/\s+/u', ' ', wp_strip_all_tags($raw_query))) : '';
+$search_error = function_exists('cms_nhomc_get_search_error') ? cms_nhomc_get_search_error($clean_query) : null;
+
+// Từ khóa hiển thị mặc định theo ảnh mẫu nếu trống
+$display_term = !empty($clean_query) ? $clean_query : 'abc';
 ?>
 
 <main class="site-content search-results-page">
     <div class="search-page-container">
 
-        <!-- Khối tiêu đề tìm kiếm chuẩn mẫu Bootsnipp 35V6b -->
+        <!-- Khối tiêu đề tìm kiếm chuẩn 100% theo mẫu Bootsnipp 35V6b -->
         <header class="search-page-header text-center">
-            <?php if (!empty($clean_query)) : ?>
+            <?php if ($search_error) : ?>
                 <h1 class="search-main-title">
-                    <span class="search-title-prefix">Search:</span> &ldquo;<?php echo esc_html($clean_query); ?>&rdquo;
+                    <span class="search-title-prefix">Search:</span> &quot;<?php echo esc_html($clean_query); ?>&quot;
                 </h1>
+                <div class="search-alert-card search-alert-<?php echo esc_attr($search_error['type']); ?>" role="alert">
+                    <div class="search-alert-icon" aria-hidden="true">
+                        <?php if ($search_error['type'] === 'error') : ?>
+                            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>
+                        <?php else : ?>
+                            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+                        <?php endif; ?>
+                    </div>
+                    <div class="search-alert-body">
+                        <strong class="search-alert-title"><?php echo esc_html($search_error['title']); ?>:</strong>
+                        <span class="search-alert-message"><?php echo esc_html($search_error['message']); ?></span>
+                    </div>
+                </div>
 
-                <?php if (!have_posts()) : ?>
-                    <p class="search-notice-text">
-                        We could not find any results for your search. You can give it another try through the search form below.
-                    </p>
-                <?php else : 
-                    global $wp_query;
-                    $total = isset($wp_query->found_posts) ? (int) $wp_query->found_posts : 0;
-                ?>
-                    <p class="search-notice-text search-found-text">
-                        <?php printf(esc_html__('Tìm thấy %s bài viết phù hợp với từ khóa của bạn.', 'cms-nhomc'), '<strong>' . number_format_i18n($total) . '</strong>'); ?>
-                    </p>
-                <?php endif; ?>
-            <?php else : ?>
+            <?php elseif (!have_posts() || empty($clean_query)) : ?>
                 <h1 class="search-main-title">
-                    <span class="search-title-prefix">Search</span>
+                    <span class="search-title-prefix">Search:</span> &quot;<?php echo esc_html($display_term); ?>&quot;
                 </h1>
                 <p class="search-notice-text">
-                    Nhập từ khóa vào ô tìm kiếm bên dưới để tìm bài viết bạn quan tâm.
+                    We could not find any results for your search. You can give it another try through the search form below.
+                </p>
+
+            <?php else : 
+                global $wp_query;
+                $total = isset($wp_query->found_posts) ? (int) $wp_query->found_posts : 0;
+            ?>
+                <h1 class="search-main-title">
+                    <span class="search-title-prefix">Search:</span> &quot;<?php echo esc_html($clean_query); ?>&quot;
+                </h1>
+                <p class="search-notice-text search-found-text">
+                    <?php printf(esc_html__('Tìm thấy %s bài viết phù hợp với từ khóa của bạn.', 'cms-nhomc'), '<strong>' . number_format_i18n($total) . '</strong>'); ?>
                 </p>
             <?php endif; ?>
         </header>
@@ -52,7 +68,7 @@ $clean_query = is_string($raw_query) ? trim($raw_query) : '';
         </section>
 
         <!-- Danh sách kết quả nếu có bài viết -->
-        <?php if (!empty($clean_query) && have_posts()) : ?>
+        <?php if (!$search_error && !empty($clean_query) && have_posts()) : ?>
             <section class="search-results-list" aria-label="<?php esc_attr_e('Danh sách kết quả tìm kiếm', 'cms-nhomc'); ?>">
                 <?php
                 while (have_posts()) :
