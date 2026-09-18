@@ -37,12 +37,10 @@ define( 'DB_CHARSET', 'utf8mb4' );
 /** The database collate type. Don't change this if in doubt. */
 define( 'DB_COLLATE', '' );
 
-/** Cấu hình tự động tương thích cả localhost và Virtual Host WordpressC.local (chạy trực tiếp không cần sửa file hosts) */
+/** Cấu hình Virtual Host wordpressc.local */
 if ( ! defined( 'WP_HOME' ) ) {
-    $current_host = isset( $_SERVER['HTTP_HOST'] ) ? $_SERVER['HTTP_HOST'] : 'localhost';
-    $protocol = ( ! empty( $_SERVER['HTTPS'] ) && $_SERVER['HTTPS'] !== 'off' ) ? 'https://' : 'http://';
-    define( 'WP_HOME', $protocol . $current_host );
-    define( 'WP_SITEURL', $protocol . $current_host );
+    define( 'WP_HOME', 'http://wordpressc.local' );
+    define( 'WP_SITEURL', 'http://wordpressc.local' );
 }
 
 /**#@+

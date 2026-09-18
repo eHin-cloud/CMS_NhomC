@@ -57,14 +57,13 @@ if %errorlevel% neq 0 (
 echo.
 echo ===================================================================
 echo [THÀNH CÔNG] Môi trường WordPress Docker đã chạy sẵn sàng!
-echo - Website:       http://localhost
-echo - Virtual Host:  http://WordpressC.local (nếu có dùng file hosts)
-echo - Quản trị:      http://localhost/wp-admin
+echo - Website:       http://wordpressc.local
+echo - Quản trị:      http://wordpressc.local/wp-admin
 echo - PhpMyAdmin:    http://localhost:8081
 echo ===================================================================
 echo.
-echo Đang mở trình duyệt đến http://localhost ...
-start http://localhost
+echo Đang mở trình duyệt đến http://wordpressc.local ...
+start http://wordpressc.local
 echo.
 pause
 goto MENU
