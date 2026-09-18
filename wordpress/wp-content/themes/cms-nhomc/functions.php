@@ -35,6 +35,17 @@ function cms_nhomc_setup() {
         'primary-menu' => __('Menu Chính (Header)', 'cms-nhomc'),
         'mobile-menu'  => __('Menu Di Động (3 Chấm)', 'cms-nhomc'),
     ));
+
+    // Luôn tắt kiểm duyệt bình luận thủ công để hiển thị ngay lập tức
+    if (get_option('comment_moderation') != 0) {
+        update_option('comment_moderation', 0);
+    }
+    if (get_option('comment_previously_approved') != 0) {
+        update_option('comment_previously_approved', 0);
+    }
+    if (get_option('comment_whitelist') != 0) {
+        update_option('comment_whitelist', 0);
+    }
 }
 add_action('after_setup_theme', 'cms_nhomc_setup');
 
@@ -1020,10 +1031,6 @@ function cms_nhomc_comment_callback($comment, $args, $depth) {
             <div class="media-body">
                 <h4 class="media-heading"><?php comment_author(); ?></h4>
 
-                <?php if ($comment->comment_approved == '0') : ?>
-                    <p class="cms-comment-moderation-notice"><em>Bình luận của bạn đang chờ quản trị viên phê duyệt.</em></p>
-                <?php endif; ?>
-
                 <div class="cms-comment-content-wrap" id="cms-comment-wrap-<?php echo $comment_id; ?>">
                     <div class="cms-comment-text" id="cms-comment-text-<?php echo $comment_id; ?>">
                         <?php comment_text(); ?>
@@ -1242,6 +1249,19 @@ if (!function_exists('my_custom_comments')) {
         return cms_nhomc_comment_callback($comment, $args, $depth);
     }
 }
+
+/**
+ * ==========================================================================
+ * TỰ ĐỘNG DUYỆT 100% BÌNH LUẬN (KHÔNG CẦN QUẢN TRỊ VIÊN DUYỆT THỦ CÔNG)
+ * ==========================================================================
+ */
+add_filter('pre_comment_approved', function($approved, $commentdata) {
+    return 1;
+}, 999, 2);
+
+add_action('comment_post', function($comment_id) {
+    wp_set_comment_status($comment_id, 'approve');
+}, 999);
 
 /**
  * ==========================================================================
