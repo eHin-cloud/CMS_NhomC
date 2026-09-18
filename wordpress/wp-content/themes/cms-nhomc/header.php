@@ -140,11 +140,17 @@
 <script>
 // Xử lý sự kiện JavaScript cho Header
 document.addEventListener('DOMContentLoaded', function() {
-    // 1. Focus ô tìm kiếm khi click nút Search
+    // 1. Focus và bật/tắt ô tìm kiếm khi click nút Search
     var focusSearchBtn = document.getElementById('focusSearchBtn');
     var headerSearchInput = document.getElementById('headerSearchInput');
+    var headerSearchForm = document.getElementById('headerSearchForm');
+
     if (focusSearchBtn && headerSearchInput) {
-        focusSearchBtn.addEventListener('click', function() {
+        focusSearchBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            if (headerSearchForm) {
+                headerSearchForm.classList.toggle('is-active');
+            }
             headerSearchInput.focus();
             headerSearchInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
         });
@@ -159,6 +165,9 @@ document.addEventListener('DOMContentLoaded', function() {
         toggleMenuBtn.addEventListener('click', function(e) {
             e.stopPropagation();
             mobileDrawer.classList.toggle('open');
+            if (headerSearchForm) {
+                headerSearchForm.classList.remove('is-active');
+            }
         });
     }
 
@@ -176,16 +185,22 @@ document.addEventListener('DOMContentLoaded', function() {
         accountBtn.addEventListener('click', function(e) {
             e.stopPropagation();
             accountMenu.classList.toggle('show');
+            if (headerSearchForm) {
+                headerSearchForm.classList.remove('is-active');
+            }
         });
     }
 
-    // Đóng drawer và dropdown khi click ra ngoài
+    // Đóng drawer, search form và dropdown khi click ra ngoài
     document.addEventListener('click', function(e) {
         if (mobileDrawer && !mobileDrawer.contains(e.target) && e.target !== toggleMenuBtn) {
             mobileDrawer.classList.remove('open');
         }
         if (accountMenu && !accountMenu.contains(e.target) && e.target !== accountBtn) {
             accountMenu.classList.remove('show');
+        }
+        if (headerSearchForm && !headerSearchForm.contains(e.target) && e.target !== focusSearchBtn && !focusSearchBtn.contains(e.target)) {
+            headerSearchForm.classList.remove('is-active');
         }
     });
 });
