@@ -4163,68 +4163,12 @@ ul.timeline>li:before {
 }
 
 /* ====================================================
-   BỐ CỤC CHUẨN WIREFRAME TRANG TÌM KIẾM (13 | 5 | 14 & 15)
+   (15) VỊ TRÍ MODULE 15 - LAST POSTS (THEO WIREFRAME ĐỀ BÀI)
    ==================================================== */
-.search-results-page {
-  max-width: 1240px;
-  margin: 30px auto 60px;
-  padding: 0 20px;
-  min-height: 60vh;
-}
-
-.search-layout-3col {
-  display: flex;
-  gap: 28px;
-  align-items: flex-start;
-  margin: 30px 0 40px 0;
+.cms-module-15-section {
   width: 100%;
-}
-
-.search-sidebar-col-13 {
-  flex: 0 0 260px;
-  width: 260px;
-}
-
-.search-main-col-5 {
-  flex: 1;
-  min-width: 0;
-}
-
-.search-sidebar-col-14 {
-  flex: 0 0 280px;
-  width: 280px;
-}
-
-/* Khối Module 15: Last Posts (Timeline) ở vị trí số 15 theo Wireframe */
-.search-bottom-module-15 {
-  width: 100%;
-  margin-top: 35px;
+  margin-top: 40px;
   margin-bottom: 30px;
   border-top: 1px solid #e5e7eb;
-  padding-top: 30px;
-}
-
-@media (max-width: 1100px) {
-  .search-layout-3col {
-    flex-wrap: wrap;
-  }
-  .search-sidebar-col-13,
-  .search-sidebar-col-14 {
-    flex: 1 1 280px;
-    width: auto;
-  }
-  .search-main-col-5 {
-    flex: 1 1 100%;
-    order: -1;
-  }
-}
-
-@media (max-width: 768px) {
-  .search-layout-3col {
-    flex-direction: column;
-  }
-  .search-sidebar-col-13,
-  .search-sidebar-col-14 {
-    width: 100%;
-  }
+  padding-top: 35px;
 }
