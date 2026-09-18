@@ -74,7 +74,7 @@ function cms_nhomc_scripts() {
             wp_enqueue_script('comment-reply');
         }
         // Nạp script xử lý Sửa/Xóa bình luận cho tài khoản đã đăng nhập
-        wp_enqueue_script('cms-nhomc-comment-actions', get_template_directory_uri() . '/assets/js/comment-actions.js', array(), '1.0.0', true);
+        wp_enqueue_script('cms-nhomc-comment-actions', get_template_directory_uri() . '/assets/js/comment-actions.js', array(), filemtime(get_template_directory() . '/assets/js/comment-actions.js'), true);
         wp_localize_script('cms-nhomc-comment-actions', 'cmsNhomcComment', array(
             'ajaxUrl' => admin_url('admin-ajax.php'),
         ));
@@ -1107,7 +1107,7 @@ function cms_nhomc_comment_callback($comment, $args, $depth) {
                             <textarea class="form-control cms-comment-edit-textarea" id="cms-comment-textarea-<?php echo $comment_id; ?>" rows="3"><?php echo esc_textarea(get_comment_text($comment_id)); ?></textarea>
                             <div class="cms-comment-edit-buttons">
                                 <button type="button" class="btn btn-sm btn-secondary cms-btn-cancel-edit" data-comment-id="<?php echo $comment_id; ?>">Hủy</button>
-                                <button type="button" class="btn btn-sm btn-primary cms-btn-save-edit" data-comment-id="<?php echo $comment_id; ?>" data-nonce="<?php echo wp_create_nonce('cms_edit_comment_' . $comment_id); ?>">Lưu thay đổi</button>
+                                <button type="button" class="btn btn-sm btn-primary cms-btn-save-edit" data-comment-id="<?php echo $comment_id; ?>" data-nonce="<?php echo wp_create_nonce('cms_edit_comment_' . $comment_id); ?>" data-version-hash="<?php echo md5(trim($comment->comment_content)); ?>">Lưu thay đổi</button>
                             </div>
                         </div>
                     <?php endif; ?>
@@ -1115,7 +1115,7 @@ function cms_nhomc_comment_callback($comment, $args, $depth) {
 
                 <div class="comment-reply-wrap">
                     <?php if ($can_edit) : ?>
-                        <button type="button" class="cms-comment-action-btn cms-comment-edit-btn" data-comment-id="<?php echo $comment_id; ?>" title="<?php esc_attr_e('Chỉnh sửa bình luận', 'cms-nhomc'); ?>">
+                        <button type="button" class="cms-comment-action-btn cms-comment-edit-btn" data-comment-id="<?php echo $comment_id; ?>" data-nonce="<?php echo wp_create_nonce('cms_edit_comment_' . $comment_id); ?>" title="<?php esc_attr_e('Chỉnh sửa bình luận', 'cms-nhomc'); ?>">
                             <i class="fa fa-pencil"></i> Sửa
                         </button>
                     <?php endif; ?>
@@ -1330,19 +1330,42 @@ add_action('comment_post', function($comment_id) {
 }, 999);
 
 /**
+ * Xử lý khi người dùng gửi trả lời vào một bình luận đã bị xóa trước đó:
+ * Thay thế câu báo mặc định của WP core thành "Bình luận này đã bị xóa bởi tác giả hoặc quản trị viên."
+ */
+add_action('comment_reply_to_unapproved_comment', function($comment_post_id, $comment_parent) {
+    $parent = get_comment($comment_parent);
+    if (!$parent || 'trash' === $parent->comment_approved) {
+        wp_die(
+            '<p>Bình luận bạn đang trả lời đã bị xóa bởi tác giả hoặc quản trị viên.</p>',
+            'Bình luận đã bị xóa',
+            array('response' => 403, 'back_link' => true)
+        );
+    }
+}, 1, 2);
+
+add_filter('gettext', function($translation, $text, $domain) {
+    if ('Sorry, replies to unapproved comments are not allowed.' === $text || 'Sorry, you cannot reply to a comment that is not approved.' === $text) {
+        return 'Bình luận bạn đang trả lời đã bị xóa bởi tác giả hoặc quản trị viên.';
+    }
+    return $translation;
+}, 20, 3);
+
+/**
  * ==========================================================================
  * AJAX HANDLERS: SỬA VÀ XÓA BÌNH LUẬN (DÀNH CHO NGƯỜI DÙNG ĐÃ LOGIN)
  * ==========================================================================
  */
 
 /**
- * AJAX: Chỉnh sửa nội dung bình luận
+ * AJAX: Chỉnh sửa nội dung bình luận (Bên lưu sau sẽ báo lỗi xung đột)
  */
 add_action('wp_ajax_cms_nhomc_edit_comment', 'cms_nhomc_ajax_edit_comment');
 function cms_nhomc_ajax_edit_comment() {
-    $comment_id = isset($_POST['comment_id']) ? intval($_POST['comment_id']) : 0;
-    $content    = isset($_POST['content']) ? trim($_POST['content']) : '';
-    $nonce      = isset($_POST['nonce']) ? sanitize_text_field($_POST['nonce']) : '';
+    $comment_id   = isset($_POST['comment_id']) ? intval($_POST['comment_id']) : 0;
+    $content      = isset($_POST['content']) ? trim($_POST['content']) : '';
+    $nonce        = isset($_POST['nonce']) ? sanitize_text_field($_POST['nonce']) : '';
+    $version_hash = isset($_POST['version_hash']) ? sanitize_text_field($_POST['version_hash']) : '';
 
     if (!$comment_id || empty($content)) {
         wp_send_json_error(array('message' => 'Dữ liệu không hợp lệ hoặc nội dung trống.'));
@@ -1366,6 +1389,14 @@ function cms_nhomc_ajax_edit_comment() {
         wp_send_json_error(array('message' => 'Bạn chỉ có quyền chỉnh sửa bình luận do chính mình viết!'));
     }
 
+    // NẾU NỘI DUNG ĐÃ BỊ THAY ĐỔI BỞI PHIÊN KHÁC TRƯỚC ĐÓ -> BÁO LỖI CHẶN LƯU
+    $current_db_hash = md5(trim($comment->comment_content));
+    if (!empty($version_hash) && $version_hash !== $current_db_hash) {
+        wp_send_json_error(array(
+            'message' => 'Lỗi: Bình luận này đã được chỉnh sửa trước đó bởi một phiên khác! Thao tác lưu bị từ chối để tránh ghi đè mất dữ liệu. Vui lòng tải lại trang để xem nội dung mới nhất.'
+        ));
+    }
+
     $updated = wp_update_comment(array(
         'comment_ID'      => $comment_id,
         'comment_content' => wp_kses_post($content),
@@ -1375,13 +1406,14 @@ function cms_nhomc_ajax_edit_comment() {
         wp_send_json_error(array('message' => 'Không thể cập nhật bình luận.'));
     }
 
-    $updated_comment = get_comment($comment_id);
+    $updated_comment   = get_comment($comment_id);
     $formatted_content = apply_filters('comment_text', $updated_comment->comment_content, $updated_comment);
 
     wp_send_json_success(array(
-        'message'     => 'Cập nhật bình luận thành công!',
-        'content'     => $formatted_content,
-        'raw_content' => $updated_comment->comment_content,
+        'message'          => 'Cập nhật bình luận thành công!',
+        'content'          => $formatted_content,
+        'raw_content'      => $updated_comment->comment_content,
+        'new_version_hash' => md5(trim($updated_comment->comment_content)),
     ));
 }
 

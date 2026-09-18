@@ -20,11 +20,11 @@
             <div class="col-xs-12 col-sm-4 col-md-4">
                 <h5>Quick links</h5>
                 <ul class="list-unstyled quick-links">
-                    <li><a href="<?php echo esc_url(home_url('/')); ?>"><i class="fa fa-angle-double-right"></i>Home</a></li>
-                    <li><a href="<?php echo esc_url(home_url('/about/')); ?>"><i class="fa fa-angle-double-right"></i>About</a></li>
-                    <li><a href="<?php echo esc_url(home_url('/faq/')); ?>"><i class="fa fa-angle-double-right"></i>FAQ</a></li>
-                    <li><a href="<?php echo esc_url(home_url('/get-started/')); ?>"><i class="fa fa-angle-double-right"></i>Get Started</a></li>
-                    <li><a href="<?php echo esc_url(home_url('/videos/')); ?>"><i class="fa fa-angle-double-right"></i>Videos</a></li>
+                    <li><a href="javascript:void(0);"><i class="fa fa-angle-double-right"></i>Home</a></li>
+                    <li><a href="javascript:void(0);"><i class="fa fa-angle-double-right"></i>About</a></li>
+                    <li><a href="javascript:void(0);"><i class="fa fa-angle-double-right"></i>FAQ</a></li>
+                    <li><a href="javascript:void(0);"><i class="fa fa-angle-double-right"></i>Get Started</a></li>
+                    <li><a href="javascript:void(0);"><i class="fa fa-angle-double-right"></i>Videos</a></li>
                 </ul>
             </div>
 
@@ -32,11 +32,11 @@
             <div class="col-xs-12 col-sm-4 col-md-4">
                 <h5>Quick links</h5>
                 <ul class="list-unstyled quick-links">
-                    <li><a href="<?php echo esc_url(home_url('/')); ?>"><i class="fa fa-angle-double-right"></i>Home</a></li>
-                    <li><a href="<?php echo esc_url(home_url('/about/')); ?>"><i class="fa fa-angle-double-right"></i>About</a></li>
-                    <li><a href="<?php echo esc_url(home_url('/faq/')); ?>"><i class="fa fa-angle-double-right"></i>FAQ</a></li>
-                    <li><a href="<?php echo esc_url(home_url('/get-started/')); ?>"><i class="fa fa-angle-double-right"></i>Get Started</a></li>
-                    <li><a href="<?php echo esc_url(home_url('/videos/')); ?>"><i class="fa fa-angle-double-right"></i>Videos</a></li>
+                    <li><a href="javascript:void(0);"><i class="fa fa-angle-double-right"></i>Home</a></li>
+                    <li><a href="javascript:void(0);"><i class="fa fa-angle-double-right"></i>About</a></li>
+                    <li><a href="javascript:void(0);"><i class="fa fa-angle-double-right"></i>FAQ</a></li>
+                    <li><a href="javascript:void(0);"><i class="fa fa-angle-double-right"></i>Get Started</a></li>
+                    <li><a href="javascript:void(0);"><i class="fa fa-angle-double-right"></i>Videos</a></li>
                 </ul>
             </div>
 
@@ -44,11 +44,11 @@
             <div class="col-xs-12 col-sm-4 col-md-4">
                 <h5>Quick links</h5>
                 <ul class="list-unstyled quick-links">
-                    <li><a href="<?php echo esc_url(home_url('/')); ?>"><i class="fa fa-angle-double-right"></i>Home</a></li>
-                    <li><a href="<?php echo esc_url(home_url('/about/')); ?>"><i class="fa fa-angle-double-right"></i>About</a></li>
-                    <li><a href="<?php echo esc_url(home_url('/faq/')); ?>"><i class="fa fa-angle-double-right"></i>FAQ</a></li>
-                    <li><a href="<?php echo esc_url(home_url('/get-started/')); ?>"><i class="fa fa-angle-double-right"></i>Get Started</a></li>
-                    <li><a href="<?php echo esc_url(home_url('/imprint/')); ?>"><i class="fa fa-angle-double-right"></i>Imprint</a></li>
+                    <li><a href="javascript:void(0);"><i class="fa fa-angle-double-right"></i>Home</a></li>
+                    <li><a href="javascript:void(0);"><i class="fa fa-angle-double-right"></i>About</a></li>
+                    <li><a href="javascript:void(0);"><i class="fa fa-angle-double-right"></i>FAQ</a></li>
+                    <li><a href="javascript:void(0);"><i class="fa fa-angle-double-right"></i>Get Started</a></li>
+                    <li><a href="javascript:void(0);"><i class="fa fa-angle-double-right"></i>Imprint</a></li>
                 </ul>
             </div>
         </div>
