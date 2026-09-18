@@ -941,9 +941,9 @@ function cms_nhomc_create_default_categories() {
 add_action('after_setup_theme', 'cms_nhomc_create_default_categories');
 
 /**
- * Render Widget: COMMENTS (Bình luận) - Module 12 (Anh Quý)
+ * Render Widget: COMMENTS (Bình luận) - Module 14 (Hien/14-comments)
  */
-function cms_nhomc_render_comments_widget($limit = 3, $title = 'Comments') {
+function cms_nhomc_render_comments_widget($limit = 5, $title = 'Comments') {
     $comments = get_comments(array(
         'number'      => intval($limit) * 2,
         'status'      => 'approve',
@@ -958,9 +958,13 @@ function cms_nhomc_render_comments_widget($limit = 3, $title = 'Comments') {
             if (strpos($comment->comment_content, 'Xin chào, đây là một bình luận') !== false) {
                 continue;
             }
+            $post_title = get_the_title($comment->comment_post_ID);
             $display_items[] = array(
+                'author'  => get_comment_author($comment),
+                'date'    => get_comment_date('d/m/Y', $comment),
                 'content' => wp_strip_all_tags($comment->comment_content),
                 'link'    => get_comment_link($comment),
+                'post'    => !empty($post_title) ? $post_title : '',
             );
             if (count($display_items) >= $limit) {
                 break;
@@ -971,21 +975,27 @@ function cms_nhomc_render_comments_widget($limit = 3, $title = 'Comments') {
     // Dữ liệu mẫu chuẩn y chang mẫu hình ảnh nếu chưa có bình luận
     if (empty($display_items)) {
         $sample_comments = array(
-            'Bài viết hay quá',
-            'Cảm ơn tác giả',
-            'Bài viết thật hữu ích',
+            array('author' => 'Thành Viên', 'content' => 'Bài viết hay quá, rất hữu ích!', 'date' => date('d/m/Y')),
+            array('author' => 'Độc Giả', 'content' => 'Cảm ơn tác giả đã chia sẻ nội dung này.', 'date' => date('d/m/Y')),
+            array('author' => 'Khách', 'content' => 'Trình bày chi tiết, dễ hiểu và chuyên nghiệp.', 'date' => date('d/m/Y')),
+            array('author' => 'Sinh Viên', 'content' => 'Nội dung bài viết rất thực tế và chất lượng.', 'date' => date('d/m/Y')),
+            array('author' => 'Admin', 'content' => 'Chào mừng bạn đến với hệ thống CMS Nhóm C!', 'date' => date('d/m/Y')),
         );
 
         $recent_posts = get_posts(array(
-            'numberposts' => 3,
+            'numberposts' => 5,
             'post_status' => 'publish',
         ));
 
-        foreach ($sample_comments as $idx => $cmt_text) {
+        foreach ($sample_comments as $idx => $cmt) {
+            if ($idx >= $limit) break;
             $link = isset($recent_posts[$idx]) ? get_permalink($recent_posts[$idx]->ID) : home_url('/');
             $display_items[] = array(
-                'content' => $cmt_text,
+                'author'  => $cmt['author'],
+                'date'    => $cmt['date'],
+                'content' => $cmt['content'],
                 'link'    => $link,
+                'post'    => '',
             );
         }
     }
@@ -997,7 +1007,19 @@ function cms_nhomc_render_comments_widget($limit = 3, $title = 'Comments') {
             <?php foreach ($display_items as $item) : ?>
                 <li class="widget-comments-item">
                     <a href="<?php echo esc_url($item['link']); ?>" class="widget-comments-link">
-                        <?php echo esc_html($item['content']); ?>
+                        <span class="widget-comment-content"><?php echo esc_html($item['content']); ?></span>
+                        <?php if (!empty($item['author'])) : ?>
+                            <span class="widget-comment-meta">
+                                <span class="widget-comment-author">
+                                    <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                                    <?php echo esc_html($item['author']); ?>
+                                </span>
+                                <?php if (!empty($item['date'])) : ?>
+                                    <span class="widget-comment-dot">&bull;</span>
+                                    <span class="widget-comment-date"><?php echo esc_html($item['date']); ?></span>
+                                <?php endif; ?>
+                            </span>
+                        <?php endif; ?>
                     </a>
                 </li>
             <?php endforeach; ?>
