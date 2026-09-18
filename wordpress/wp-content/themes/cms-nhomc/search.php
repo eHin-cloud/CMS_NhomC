@@ -17,20 +17,29 @@ $clean_query = is_string($raw_query) ? trim($raw_query) : '';
 
         <!-- Khối tiêu đề tìm kiếm chuẩn mẫu Bootsnipp 35V6b -->
         <header class="search-page-header text-center">
-            <h1 class="search-main-title">
-                <span class="search-title-prefix">Search:</span> &ldquo;<?php echo esc_html(get_search_query()); ?>&rdquo;
-            </h1>
+            <?php if (!empty($clean_query)) : ?>
+                <h1 class="search-main-title">
+                    <span class="search-title-prefix">Search:</span> &ldquo;<?php echo esc_html($clean_query); ?>&rdquo;
+                </h1>
 
-            <?php if (empty($clean_query) || !have_posts()) : ?>
+                <?php if (!have_posts()) : ?>
+                    <p class="search-notice-text">
+                        We could not find any results for your search. You can give it another try through the search form below.
+                    </p>
+                <?php else : 
+                    global $wp_query;
+                    $total = isset($wp_query->found_posts) ? (int) $wp_query->found_posts : 0;
+                ?>
+                    <p class="search-notice-text search-found-text">
+                        <?php printf(esc_html__('Tìm thấy %s bài viết phù hợp với từ khóa của bạn.', 'cms-nhomc'), '<strong>' . number_format_i18n($total) . '</strong>'); ?>
+                    </p>
+                <?php endif; ?>
+            <?php else : ?>
+                <h1 class="search-main-title">
+                    <span class="search-title-prefix">Search</span>
+                </h1>
                 <p class="search-notice-text">
-                    We could not find any results for your search. You can give it another try through the search form below.
-                </p>
-            <?php else : 
-                global $wp_query;
-                $total = isset($wp_query->found_posts) ? (int) $wp_query->found_posts : 0;
-            ?>
-                <p class="search-notice-text search-found-text">
-                    <?php printf(esc_html__('Tìm thấy %s bài viết phù hợp với từ khóa của bạn.', 'cms-nhomc'), '<strong>' . number_format_i18n($total) . '</strong>'); ?>
+                    Nhập từ khóa vào ô tìm kiếm bên dưới để tìm bài viết bạn quan tâm.
                 </p>
             <?php endif; ?>
         </header>

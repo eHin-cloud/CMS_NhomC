@@ -16,11 +16,15 @@
         </div>
         <!--end of col-->
         <div class="col search-input-col">
+            <?php
+            $raw_s = get_search_query(false);
+            $form_val = (have_posts() && is_string($raw_s) && trim($raw_s) !== '') ? trim($raw_s) : '';
+            ?>
             <input class="form-control form-control-lg form-control-borderless search-input" 
                    type="search" 
                    name="s" 
                    placeholder="Search topics or keywords" 
-                   value="<?php echo esc_attr(get_search_query()); ?>" 
+                   value="<?php echo esc_attr($form_val); ?>" 
                    autocomplete="off" 
                    aria-label="Search topics or keywords" />
         </div>
