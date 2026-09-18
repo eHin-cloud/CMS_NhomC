@@ -4447,3 +4447,169 @@ ul.timeline>li:before {
   border-top: 1px solid #e5e7eb;
   padding-top: 35px;
 }
+
+/* ====================================================
+   BỐ CỤC TRANG TÌM KIẾM (MODULE 5 & HÀNG NGANG: LATEST NEWS + COMMENTS)
+   ==================================================== */
+.search-results-page {
+  max-width: 1240px;
+  margin: 30px auto 60px;
+  padding: 0 20px;
+  min-height: 60vh;
+}
+
+/* Hàng ngang phía dưới: Latest News & Module 14 Comments đặt ngang hàng nhau */
+.search-bottom-row-dual {
+  display: flex;
+  gap: 32px;
+  align-items: flex-start;
+  margin-top: 40px;
+  margin-bottom: 30px;
+  border-top: 1px solid #e5e7eb;
+  padding-top: 35px;
+  width: 100%;
+}
+
+.search-bottom-row-dual .cms-module-15-section {
+  flex: 1;
+  min-width: 0;
+  margin-top: 0;
+  border-top: none;
+  padding-top: 0;
+}
+
+/* Thu nhỏ ô Module 14 Comments */
+.search-bottom-row-dual .cms-module-14-comments-section {
+  flex: 0 0 280px;
+  width: 280px;
+  max-width: 280px;
+  min-width: 0;
+}
+
+/* Tùy biến kiểu dáng Widget Comments tại Module 14 nhỏ gọn, tinh tế */
+.cms-module-14-comments-section .widget-comments-box,
+.cms-sidebar .widget-comments-box {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 14px 16px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.cms-module-14-comments-section .widget-comments-title,
+.cms-sidebar .widget-comments-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: #1f2937;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin: 0 0 6px 0;
+}
+
+.cms-module-14-comments-section .widget-comments-stripe,
+.cms-sidebar .widget-comments-stripe {
+  width: 32px;
+  height: 2px;
+  background: #2563eb;
+  border-radius: 2px;
+  margin-bottom: 10px;
+}
+
+.cms-module-14-comments-section .widget-comments-list,
+.cms-sidebar .widget-comments-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.cms-module-14-comments-section .widget-comments-item,
+.cms-sidebar .widget-comments-item {
+  border-bottom: 1px dashed #e5e7eb;
+  padding-bottom: 8px;
+  padding-top: 2px;
+}
+
+.cms-module-14-comments-section .widget-comments-item:last-child,
+.cms-sidebar .widget-comments-item:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.cms-module-14-comments-section .widget-comments-link,
+.cms-sidebar .widget-comments-link {
+  text-decoration: none;
+  color: #374151;
+  display: block;
+  transition: all 0.2s ease;
+}
+
+.cms-module-14-comments-section .widget-comments-link:hover,
+.cms-sidebar .widget-comments-link:hover {
+  color: #2563eb;
+  text-decoration: none;
+}
+
+.widget-comment-content {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 13px;
+  line-height: 1.4;
+  color: #374151;
+  font-weight: 500;
+}
+
+.cms-module-14-comments-section .widget-comments-link:hover .widget-comment-content,
+.cms-sidebar .widget-comments-link:hover .widget-comment-content {
+  color: #2563eb;
+}
+
+.widget-comment-meta {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11.5px;
+  color: #9ca3af;
+  margin-top: 3px;
+}
+
+.widget-comment-author {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+.widget-comment-author svg {
+  color: #9ca3af;
+  width: 11px;
+  height: 11px;
+}
+
+.widget-comment-dot {
+  color: #d1d5db;
+}
+
+.widget-comment-date {
+  color: #9ca3af;
+  font-size: 11px;
+}
+
+/* Responsive cho layout hàng ngang Latest News & Comments */
+@media (max-width: 992px) {
+  .search-bottom-row-dual {
+    flex-direction: column;
+    gap: 25px;
+  }
+  .search-bottom-row-dual .cms-module-15-section,
+  .search-bottom-row-dual .cms-module-14-comments-section {
+    width: 100%;
+    flex: 1 1 100%;
+  }
+}

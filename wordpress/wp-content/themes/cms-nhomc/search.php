@@ -74,7 +74,7 @@ $search_error = function_exists('cms_nhomc_get_search_error') ? cms_nhomc_get_se
 
         <!-- Danh sách kết quả nếu có bài viết (Module 5 Search result) -->
         <?php if (!$search_error && !empty($clean_query) && have_posts()) : ?>
-            <section class="search-results-list" aria-label="<?php esc_attr_e('Danh sách kết quả tìm kiếm', 'cms-nhomc'); ?>">
+            <section class="search-results-list" id="module-5-search-results" aria-label="<?php esc_attr_e('Danh sách kết quả tìm kiếm', 'cms-nhomc'); ?>">
                 <?php
                 while (have_posts()) :
                     the_post();
@@ -97,14 +97,36 @@ $search_error = function_exists('cms_nhomc_get_search_error') ? cms_nhomc_get_se
                     </nav>
                 <?php endif; ?>
             </section>
+        <?php elseif (!empty($clean_query) && !have_posts()) : ?>
+            <div class="search-empty-state-box text-center" style="padding: 40px 20px; background: #fff; border: 1px solid #e5e7eb; border-radius: 6px; margin: 30px 0;">
+                <p style="color: #6b7280; font-size: 15px; margin: 0;">
+                    <?php esc_html_e('Không có bài viết nào phù hợp với kết quả tìm kiếm.', 'cms-nhomc'); ?>
+                </p>
+            </div>
+        <?php else : ?>
+            <div class="search-empty-state-box text-center" style="padding: 40px 20px; background: #fff; border: 1px solid #e5e7eb; border-radius: 6px; margin: 30px 0;">
+                <p style="color: #6b7280; font-size: 15px; margin: 0;">
+                    <?php esc_html_e('Vui lòng nhập từ khóa vào ô tìm kiếm phía trên để xem kết quả.', 'cms-nhomc'); ?>
+                </p>
+            </div>
         <?php endif; ?>
 
-        <!-- Module 15: Last Posts - Latest News Timeline (Bootsnipp xrKXW) (Xuân Hòa) -->
-        <?php if (function_exists('cms_nhomc_render_last_posts_widget')) : ?>
+        <!-- Hàng ngang: Latest News & Module 14 Comments đặt ngang hàng nhau -->
+        <div class="search-bottom-row-dual">
+            <!-- Cột Latest News (Module 15 Timeline) -->
             <section class="cms-module-15-section" id="module-15-last-posts" aria-label="<?php esc_attr_e('Bài viết mới nhất - Module 15', 'cms-nhomc'); ?>">
-                <?php cms_nhomc_render_last_posts_widget(5, 'Latest News'); ?>
+                <?php if (function_exists('cms_nhomc_render_last_posts_widget')) : ?>
+                    <?php cms_nhomc_render_last_posts_widget(5, 'Latest News'); ?>
+                <?php endif; ?>
             </section>
-        <?php endif; ?>
+
+            <!-- Cột Module 14 Comments (Hien/14-comments) đặt ngang hàng -->
+            <section class="cms-module-14-comments-section" id="module-14-comments" aria-label="<?php esc_attr_e('Bình luận - Module 14', 'cms-nhomc'); ?>">
+                <?php if (function_exists('cms_nhomc_render_comments_widget')) : ?>
+                    <?php cms_nhomc_render_comments_widget(4, 'COMMENTS'); ?>
+                <?php endif; ?>
+            </section>
+        </div>
 
     </div>
 </main>
