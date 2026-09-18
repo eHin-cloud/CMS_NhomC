@@ -4191,36 +4191,16 @@ ul.timeline>li:before {
   width: 100%;
 }
 
-/* Cột 13 bên trái: Categories & Module 13 (Mỗi dòng 1 bài viết rớt dòng responsive) */
-.search-sidebar-col-13 {
-  flex: 0 0 270px;
-  width: 270px;
-  min-width: 0;
-}
-
-.search-sidebar-col-13 .sidebar-post-list {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.search-sidebar-col-13 .sidebar-post-item {
-  width: 100%;
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
-}
-
 /* Cột giữa: Kết quả tìm kiếm (Module 5 Search result) */
 .search-main-col-5 {
   flex: 1;
   min-width: 0;
 }
 
-/* Cột 14 bên phải: Vị trí 14 - Module Comments (Hien/14-comments) & Bài viết mới */
+/* Cột 14 bên phải: Vị trí 14 - Module Comments (Hien/14-comments) */
 .search-sidebar-col-14 {
-  flex: 0 0 280px;
-  width: 280px;
+  flex: 0 0 300px;
+  width: 300px;
   min-width: 0;
 }
 
@@ -4333,27 +4313,11 @@ ul.timeline>li:before {
   color: #9ca3af;
 }
 
-/* Responsive cho layout 3 cột */
-@media (max-width: 1100px) {
-  .search-layout-3col {
-    flex-wrap: wrap;
-  }
-  .search-main-col-5 {
-    flex: 1 1 100%;
-    order: -1;
-  }
-  .search-sidebar-col-13,
-  .search-sidebar-col-14 {
-    flex: 1 1 calc(50% - 14px);
-    width: auto;
-  }
-}
-
-@media (max-width: 768px) {
+/* Responsive cho layout tìm kiếm có Module 14 */
+@media (max-width: 992px) {
   .search-layout-3col {
     flex-direction: column;
   }
-  .search-sidebar-col-13,
   .search-sidebar-col-14 {
     width: 100%;
     flex: 1 1 100%;

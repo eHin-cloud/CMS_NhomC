@@ -72,20 +72,8 @@ $search_error = function_exists('cms_nhomc_get_search_error') ? cms_nhomc_get_se
             </div>
         </section>
 
-        <!-- Bố cục 3 cột chuẩn Wireframe: Cột 13 | Search result (5) | Cột 14 (Comments) -->
+        <!-- Bố cục trang tìm kiếm: Kết quả tìm kiếm (5) & Vị trí 14 (Module Comments của Hiền) -->
         <div class="search-layout-3col">
-            <!-- Cột 13 (Sidebar trái: Module 13 - Bài viết hiển thị rớt dòng mỗi dòng 1 bài & Chuyên mục) -->
-            <aside class="search-sidebar-col-13" id="module-13-sidebar" aria-label="<?php esc_attr_e('Sidebar trái (Module 13)', 'cms-nhomc'); ?>">
-                <?php
-                if (function_exists('cms_nhomc_render_categories_widget')) {
-                    cms_nhomc_render_categories_widget();
-                }
-                if (function_exists('cms_nhomc_render_featured_posts_widget')) {
-                    cms_nhomc_render_featured_posts_widget(5, 'BÀI VIẾT NỔI BẬT');
-                }
-                ?>
-            </aside>
-
             <!-- Cột giữa: Kết quả tìm kiếm (Module 5 Search result) -->
             <div class="search-main-col-5" id="module-5-search-results">
                 <?php if (!$search_error && !empty($clean_query) && have_posts()) : ?>
@@ -127,16 +115,11 @@ $search_error = function_exists('cms_nhomc_get_search_error') ? cms_nhomc_get_se
                 <?php endif; ?>
             </div>
 
-            <!-- Cột 14 (Sidebar phải: Vị trí 14 - Module Comments của Hiền & Bài viết mới) -->
-            <aside class="search-sidebar-col-14" id="module-14-comments" aria-label="<?php esc_attr_e('Sidebar phải (Module 14 Comments)', 'cms-nhomc'); ?>">
+            <!-- Cột 14 (Sidebar phải: Vị trí 14 - Duy nhất Module Comments của Hiền) -->
+            <aside class="search-sidebar-col-14" id="module-14-comments" aria-label="<?php esc_attr_e('Module 14 Comments', 'cms-nhomc'); ?>">
                 <?php
-                // Module 14: Hiển thị Widget Comments (Bình luận)
                 if (function_exists('cms_nhomc_render_comments_widget')) {
                     cms_nhomc_render_comments_widget(5, 'COMMENTS');
-                }
-                // Hỗ trợ thêm Widget Bài viết mới
-                if (function_exists('cms_nhomc_render_recent_posts_widget')) {
-                    cms_nhomc_render_recent_posts_widget(5, 'BÀI VIẾT MỚI');
                 }
                 ?>
             </aside>
