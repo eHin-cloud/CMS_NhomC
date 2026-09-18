@@ -122,80 +122,131 @@
     </div>
 </header>
 
+<!-- Lớp phủ mờ (Backdrop overlay) cho Drawer & Search trên Mobile -->
+<div class="mobile-backdrop" id="mobileBackdrop"></div>
+
 <!-- Drawer menu phụ cho nút 3 chấm / màn hình nhỏ -->
 <div class="mobile-drawer" id="mobileDrawer">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 10px;">
-        <strong style="font-size: 16px;">Menu Điều Hướng</strong>
-        <button type="button" id="closeDrawerBtn" style="border: none; background: none; font-size: 20px; cursor: pointer;">&times;</button>
+    <div class="drawer-header">
+        <strong class="drawer-brand">Menu Điều Hướng</strong>
+        <button type="button" id="closeDrawerBtn" class="drawer-close-btn" aria-label="Đóng Menu">&times;</button>
     </div>
-    <ul>
-        <li><a href="<?php echo esc_url(home_url('/')); ?>">Trang chủ (Home)</a></li>
-        <li><a href="<?php echo esc_url(home_url('/?s=')); ?>">Tìm kiếm (Search)</a></li>
-        <li><a href="<?php echo esc_url(home_url('/category/the-thao/')); ?>">Thể thao</a></li>
-        <li><a href="<?php echo esc_url(home_url('/category/khoa-hoc/')); ?>">Khoa học</a></li>
-        <li><a href="<?php echo esc_url(home_url('/category/tin-tuc/')); ?>">Tin tức</a></li>
-        <li><a href="<?php echo esc_url(admin_url()); ?>">Quản trị Admin</a></li>
+    <ul class="drawer-nav-list">
+        <li><a href="<?php echo esc_url(home_url('/')); ?>"><i class="fa fa-home"></i> Trang chủ</a></li>
+        <li><a href="<?php echo esc_url(home_url('/?s=')); ?>"><i class="fa fa-search"></i> Tìm kiếm (Search)</a></li>
+        <li><a href="<?php echo esc_url(home_url('/category/the-thao/')); ?>"><i class="fa fa-futbol-o"></i> Thể thao</a></li>
+        <li><a href="<?php echo esc_url(home_url('/category/khoa-hoc/')); ?>"><i class="fa fa-flask"></i> Khoa học</a></li>
+        <li><a href="<?php echo esc_url(home_url('/category/tin-tuc/')); ?>"><i class="fa fa-newspaper-o"></i> Tin tức</a></li>
+        <li class="drawer-divider"></li>
+        <li><a href="<?php echo esc_url(admin_url()); ?>"><i class="fa fa-cog"></i> Quản trị Admin</a></li>
     </ul>
 </div>
 
 <script>
 // Xử lý sự kiện JavaScript cho Header
 document.addEventListener('DOMContentLoaded', function() {
-    // 1. Chuyển hướng sang trang tìm kiếm khi click nút Search
     var focusSearchBtn = document.getElementById('focusSearchBtn');
     var headerSearchInput = document.getElementById('headerSearchInput');
     var headerSearchForm = document.getElementById('headerSearchForm');
+    var toggleMenuBtn = document.getElementById('toggleMenuBtn');
+    var mobileDrawer = document.getElementById('mobileDrawer');
+    var closeDrawerBtn = document.getElementById('closeDrawerBtn');
+    var mobileBackdrop = document.getElementById('mobileBackdrop');
+    var accountBtn = document.getElementById('accountBtn');
+    var accountMenu = document.getElementById('accountMenu');
 
+    function closeAllMenus() {
+        if (mobileDrawer) mobileDrawer.classList.remove('open');
+        if (headerSearchForm) headerSearchForm.classList.remove('is-active');
+        if (accountMenu) accountMenu.classList.remove('show');
+        if (mobileBackdrop) mobileBackdrop.classList.remove('active');
+        document.body.classList.remove('drawer-open');
+    }
+
+    // 1. Focus và bật/tắt ô tìm kiếm khi click nút Search
     if (focusSearchBtn) {
         focusSearchBtn.addEventListener('click', function(e) {
-            var q = headerSearchInput ? headerSearchInput.value.trim() : '';
-            if (q !== '') {
+            if (window.innerWidth <= 768 && headerSearchForm) {
                 e.preventDefault();
-                headerSearchForm.submit();
+                e.stopPropagation();
+                var isOpen = headerSearchForm.classList.toggle('is-active');
+                if (isOpen) {
+                    if (mobileDrawer) mobileDrawer.classList.remove('open');
+                    if (accountMenu) accountMenu.classList.remove('show');
+                    if (mobileBackdrop) mobileBackdrop.classList.add('active');
+                    if (headerSearchInput) headerSearchInput.focus();
+                } else {
+                    if (mobileBackdrop) mobileBackdrop.classList.remove('active');
+                }
             } else {
-                // Nếu chưa nhập từ khóa, điều hướng đến trang tìm kiếm trống
-                e.preventDefault();
-                window.location.href = this.getAttribute('href') || '<?php echo esc_js(home_url('/?s=')); ?>';
+                var q = headerSearchInput ? headerSearchInput.value.trim() : '';
+                if (q !== '') {
+                    e.preventDefault();
+                    if (headerSearchForm) headerSearchForm.submit();
+                } else {
+                    e.preventDefault();
+                    window.location.href = this.getAttribute('href') || '<?php echo esc_js(home_url('/?s=')); ?>';
+                }
             }
         });
     }
 
     // 2. Đóng mở Menu 3 chấm (Drawer)
-    var toggleMenuBtn = document.getElementById('toggleMenuBtn');
-    var mobileDrawer = document.getElementById('mobileDrawer');
-    var closeDrawerBtn = document.getElementById('closeDrawerBtn');
-
     if (toggleMenuBtn && mobileDrawer) {
         toggleMenuBtn.addEventListener('click', function(e) {
             e.stopPropagation();
-            mobileDrawer.classList.toggle('open');
+            var isOpen = mobileDrawer.classList.toggle('open');
+            if (headerSearchForm) headerSearchForm.classList.remove('is-active');
+            if (accountMenu) accountMenu.classList.remove('show');
+            if (mobileBackdrop) {
+                if (isOpen) {
+                    mobileBackdrop.classList.add('active');
+                    document.body.classList.add('drawer-open');
+                } else {
+                    mobileBackdrop.classList.remove('active');
+                    document.body.classList.remove('drawer-open');
+                }
+            }
         });
     }
 
-    if (closeDrawerBtn && mobileDrawer) {
-        closeDrawerBtn.addEventListener('click', function() {
-            mobileDrawer.classList.remove('open');
+    if (closeDrawerBtn) {
+        closeDrawerBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            closeAllMenus();
         });
     }
 
     // 3. Dropdown Account
-    var accountBtn = document.getElementById('accountBtn');
-    var accountMenu = document.getElementById('accountMenu');
-
     if (accountBtn && accountMenu) {
         accountBtn.addEventListener('click', function(e) {
             e.stopPropagation();
             accountMenu.classList.toggle('show');
+            if (headerSearchForm) headerSearchForm.classList.remove('is-active');
+            if (mobileDrawer) mobileDrawer.classList.remove('open');
+            if (mobileBackdrop) mobileBackdrop.classList.remove('active');
         });
     }
 
-    // Đóng drawer và dropdown khi click ra ngoài
+    // Đóng khi click vào backdrop
+    if (mobileBackdrop) {
+        mobileBackdrop.addEventListener('click', function() {
+            closeAllMenus();
+        });
+    }
+
+    // Đóng khi click ra ngoài
     document.addEventListener('click', function(e) {
-        if (mobileDrawer && !mobileDrawer.contains(e.target) && e.target !== toggleMenuBtn) {
+        if (mobileDrawer && !mobileDrawer.contains(e.target) && e.target !== toggleMenuBtn && !toggleMenuBtn.contains(e.target)) {
             mobileDrawer.classList.remove('open');
+            if (mobileBackdrop) mobileBackdrop.classList.remove('active');
+            document.body.classList.remove('drawer-open');
         }
-        if (accountMenu && !accountMenu.contains(e.target) && e.target !== accountBtn) {
+        if (accountMenu && !accountMenu.contains(e.target) && e.target !== accountBtn && !accountBtn.contains(e.target)) {
             accountMenu.classList.remove('show');
+        }
+        if (headerSearchForm && !headerSearchForm.contains(e.target) && e.target !== focusSearchBtn && !focusSearchBtn.contains(e.target)) {
+            headerSearchForm.classList.remove('is-active');
         }
     });
 });
