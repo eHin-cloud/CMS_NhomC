@@ -4161,3 +4161,105 @@ ul.timeline>li:before {
     height: 42px;
   }
 }
+
+/* ====================================================
+   (6) LAYOUT 3 CỘT TRANG DETAIL THEO SƠ ĐỒ
+   [Categories(9)] | [Detail(6)] | [Recent Post(10)]
+   ==================================================== */
+
+/* Layout 3 cột cho trang Detail */
+.cms-detail-3col {
+  display: grid;
+  grid-template-columns: 220px 1fr 240px;
+  grid-template-areas: "sidebar-left main sidebar-right";
+  align-items: flex-start;
+  gap: 28px;
+  width: 100%;
+}
+
+/* Cột trái: Categories */
+.cms-sidebar-left {
+  grid-area: sidebar-left;
+  position: sticky;
+  top: 75px;
+}
+
+/* Cột giữa: Nội dung Detail */
+.cms-detail-3col .cms-main-column {
+  grid-area: main;
+  min-width: 0;
+}
+
+/* Cột phải: Recent Posts */
+.cms-sidebar-right {
+  grid-area: sidebar-right;
+  position: sticky;
+  top: 75px;
+}
+
+/* Full-width sections bên dưới 3 cột: Prev-Next & Comments */
+.cms-detail-fullwidth {
+  width: 100%;
+  margin-top: 0;
+}
+
+/* Prev-Next full-width */
+.tdc-post-nav.cms-detail-fullwidth {
+  margin: 24px 0 8px 0;
+  border-top: 2px solid #e5e7eb;
+  padding-top: 8px;
+}
+
+/* Comments area full-width */
+.cms-comments-area {
+  background: #ffffff;
+  border-radius: 6px;
+  border: 1px solid #eef2f6;
+  padding: 28px 32px;
+  margin-top: 16px;
+}
+
+/* ===== Responsive 3 cột → 1 cột ===== */
+
+/* Tablet: 3 cột → 2 cột (main + right sidebar) */
+@media (max-width: 1024px) {
+  .cms-detail-3col {
+    grid-template-columns: 1fr 220px;
+    grid-template-areas:
+      "main sidebar-right"
+      "sidebar-left sidebar-left";
+  }
+
+  .cms-sidebar-left {
+    position: static;
+    border-top: 1px solid #e2e8f0;
+    padding-top: 20px;
+  }
+}
+
+/* Mobile: tất cả xếp thành 1 cột dọc */
+@media (max-width: 768px) {
+  .cms-detail-3col {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "main"
+      "sidebar-right"
+      "sidebar-left";
+    gap: 20px;
+  }
+
+  .cms-sidebar-left,
+  .cms-sidebar-right {
+    position: static;
+    border-top: 1px solid #e2e8f0;
+    padding-top: 20px;
+  }
+
+  .cms-comments-area {
+    padding: 20px 16px;
+  }
+
+  .tdc-post-nav.cms-detail-fullwidth {
+    margin-top: 16px;
+  }
+}
