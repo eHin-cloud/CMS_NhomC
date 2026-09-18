@@ -141,7 +141,7 @@
         // Xử lý sự kiện click bằng event delegation trên container bình luận
         commentsSection.addEventListener('click', function(e) {
             
-            // 1. NÚT SỬA BÌNH LUẬN
+            // 1. NÚT SỬA BÌNH LUẬN -> MỞ Ô NHẬP TRỰC TIẾP (CHO PHÉP MỞ CÙNG LÚC)
             var editBtn = e.target.closest('.cms-comment-edit-btn');
             if (editBtn) {
                 e.preventDefault();
@@ -177,12 +177,13 @@
                 return;
             }
 
-            // 3. NÚT LƯU CHỈNH SỬA
+            // 3. NÚT LƯU CHỈNH SỬA -> BÊN NÀO BẤM SAU SẼ BÁO LỖI
             var saveBtn = e.target.closest('.cms-btn-save-edit');
             if (saveBtn) {
                 e.preventDefault();
                 var commentId = saveBtn.getAttribute('data-comment-id');
                 var nonce = saveBtn.getAttribute('data-nonce');
+                var versionHash = saveBtn.getAttribute('data-version-hash') || '';
                 var textarea = document.getElementById('cms-comment-textarea-' + commentId);
                 var textEl = document.getElementById('cms-comment-text-' + commentId);
                 var formEl = document.getElementById('cms-comment-edit-form-' + commentId);
@@ -204,6 +205,7 @@
                 formData.append('comment_id', commentId);
                 formData.append('nonce', nonce);
                 formData.append('content', newContent);
+                formData.append('version_hash', versionHash);
 
                 fetch(config.ajaxUrl, {
                     method: 'POST',
@@ -220,7 +222,11 @@
                             formEl.style.display = 'none';
                             textEl.style.display = 'block';
                         }
+                        if (response.data && response.data.new_version_hash) {
+                            saveBtn.setAttribute('data-version-hash', response.data.new_version_hash);
+                        }
                     } else {
+                        // NẾU BÊN KHÁC ĐÃ LƯU TRƯỚC ĐÓ -> HIỆN THÔNG BÁO LỖI NGAY TẠI ĐÂY
                         alert((response && response.data && response.data.message) || 'Có lỗi xảy ra khi cập nhật bình luận.');
                     }
                 })
