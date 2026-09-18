@@ -40,11 +40,7 @@
                             <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                         </svg>
                     </span>
-<<<<<<< HEAD
                     <input type="search" id="headerSearchInput" name="s" placeholder="<?php esc_attr_e('Search...', 'cms-nhomc'); ?>" value="<?php echo esc_attr($header_clean); ?>" autocomplete="off" maxlength="100" />
-=======
-                    <input type="search" id="headerSearchInput" name="s" placeholder="<?php esc_attr_e('Search...', 'cms-nhomc'); ?>" value="<?php echo esc_attr($header_clean); ?>" minlength="2" maxlength="100" required title="<?php esc_attr_e('Vui lòng nhập từ khóa từ 2 đến 100 ký tự', 'cms-nhomc'); ?>" autocomplete="off" />
->>>>>>> main
                 </div>
                 <button type="submit"><?php esc_html_e('Submit', 'cms-nhomc'); ?></button>
                 <div id="headerSearchError" class="header-search-error" style="display: none;"></div>
