@@ -8,19 +8,22 @@ if %errorLevel% neq 0 (
 )
 
 echo Dang cap nhat file C:\Windows\System32\drivers\etc\hosts ...
-findstr /i "WordpressC.local" C:\Windows\System32\drivers\etc\hosts >nul
+findstr /i "wordpressc.local" C:\Windows\System32\drivers\etc\hosts >nul
 if %errorLevel% neq 0 (
     echo.>> C:\Windows\System32\drivers\etc\hosts
+    echo 127.0.0.1   wordpressc.local>> C:\Windows\System32\drivers\etc\hosts
     echo 127.0.0.1   WordpressC.local>> C:\Windows\System32\drivers\etc\hosts
+    echo 127.0.0.1   www.wordpressc.local>> C:\Windows\System32\drivers\etc\hosts
     echo 127.0.0.1   www.WordpressC.local>> C:\Windows\System32\drivers\etc\hosts
-    echo Da them thanh cong WordpressC.local vao file hosts!
+    echo Da them thanh cong wordpressc.local vao file hosts!
 ) else (
-    echo WordpressC.local da ton tai trong file hosts.
+    echo wordpressc.local da ton tai trong file hosts.
 )
 
 ipconfig /flushdns
 echo.
 echo ==============================================
 echo DA CAU HINH XONG VIRTUAL HOST CHO WINDOWS!
+echo Tên miền: http://wordpressc.local
 echo ==============================================
 pause
