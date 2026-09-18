@@ -1896,6 +1896,114 @@ section#footer {
   cursor: pointer;
 }
 
+/* ==========================================================================
+   MODAL XÁC NHẬN XÓA BÌNH LUẬN Ở CHÍNH GIỮA MÀN HÌNH (THAY THẾ CONFIRM MẶC ĐỊNH)
+   ========================================================================== */
+.cms-modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(2px);
+  z-index: 9999999;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.cms-modal-backdrop.active {
+  opacity: 1;
+}
+
+.cms-modal-dialog {
+  background: #ffffff;
+  width: 90%;
+  max-width: 420px;
+  border-radius: 8px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+  overflow: hidden;
+  transform: scale(0.9);
+  transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  text-align: center;
+  padding: 24px 20px 20px 20px;
+  box-sizing: border-box;
+}
+
+.cms-modal-backdrop.active .cms-modal-dialog {
+  transform: scale(1);
+}
+
+.cms-modal-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background-color: #fff1f2;
+  color: #e11d48;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  margin: 0 auto 14px auto;
+}
+
+.cms-modal-title {
+  font-size: 17.5px;
+  font-weight: 600;
+  color: #1e293b;
+  margin: 0 0 8px 0;
+}
+
+.cms-modal-body p {
+  font-size: 14px;
+  color: #64748b;
+  line-height: 1.5;
+  margin: 0 0 20px 0;
+}
+
+.cms-modal-footer {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
+
+.cms-modal-footer .btn {
+  padding: 8px 20px;
+  font-size: 14px;
+  font-weight: 500;
+  border-radius: 6px;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: all 0.15s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.cms-modal-btn-cancel {
+  background-color: #f1f5f9;
+  color: #475569;
+  border-color: #e2e8f0;
+}
+
+.cms-modal-btn-cancel:hover {
+  background-color: #e2e8f0;
+  color: #1e293b;
+}
+
+.cms-modal-btn-confirm {
+  background-color: #e11d48;
+  color: #ffffff;
+}
+
+.cms-modal-btn-confirm:hover {
+  background-color: #be123c;
+  color: #ffffff;
+}
+
 /* Thụt lề comment phân cấp con: kéo sát lên trên (khoảng cách 10px) giống chuẩn ảnh mẫu 2 */
 .cms-comment-list .children {
   list-style: none !important;
