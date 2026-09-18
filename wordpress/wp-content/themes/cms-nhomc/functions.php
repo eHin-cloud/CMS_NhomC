@@ -999,12 +999,10 @@ function cms_nhomc_comment_callback($comment, $args, $depth) {
     // Avatar bóng người màu xám chuẩn theo ảnh mẫu Bootsnipp gNVj0
     $avatar_url = 'https://ssl.gstatic.com/accounts/ui/avatar_2x.png';
 
-    // Kiểm tra quyền Sửa/Xóa: Người dùng viết bình luận đó hoặc Quản trị viên
+    // Kiểm tra quyền Sửa/Xóa: CHỈ cho phép chính chủ tài khoản đã viết bình luận đó (không cho phép sửa bình luận của user khác)
     $current_user_id = get_current_user_id();
     $can_edit_or_delete = is_user_logged_in() && (
-        ((int)$comment->user_id > 0 && (int)$comment->user_id === (int)$current_user_id) ||
-        current_user_can('moderate_comments') ||
-        current_user_can('edit_comment', $comment_id)
+        (int)$comment->user_id > 0 && (int)$comment->user_id === (int)$current_user_id
     );
     ?>
     <li <?php comment_class('cms-comment-item'); ?> id="comment-<?php echo $comment_id; ?>">
@@ -1267,13 +1265,11 @@ function cms_nhomc_ajax_edit_comment() {
 
     $current_user_id = get_current_user_id();
     $can_edit = is_user_logged_in() && (
-        ((int)$comment->user_id > 0 && (int)$comment->user_id === (int)$current_user_id) ||
-        current_user_can('moderate_comments') ||
-        current_user_can('edit_comment', $comment_id)
+        (int)$comment->user_id > 0 && (int)$comment->user_id === (int)$current_user_id
     );
 
     if (!$can_edit) {
-        wp_send_json_error(array('message' => 'Bạn không có quyền chỉnh sửa bình luận này.'));
+        wp_send_json_error(array('message' => 'Bạn chỉ có quyền chỉnh sửa bình luận do chính mình viết!'));
     }
 
     $updated = wp_update_comment(array(
@@ -1318,13 +1314,11 @@ function cms_nhomc_ajax_delete_comment() {
 
     $current_user_id = get_current_user_id();
     $can_delete = is_user_logged_in() && (
-        ((int)$comment->user_id > 0 && (int)$comment->user_id === (int)$current_user_id) ||
-        current_user_can('moderate_comments') ||
-        current_user_can('edit_comment', $comment_id)
+        (int)$comment->user_id > 0 && (int)$comment->user_id === (int)$current_user_id
     );
 
     if (!$can_delete) {
-        wp_send_json_error(array('message' => 'Bạn không có quyền xóa bình luận này.'));
+        wp_send_json_error(array('message' => 'Bạn chỉ có quyền xóa bình luận do chính mình viết!'));
     }
 
     $post_id = $comment->comment_post_ID;
