@@ -42,6 +42,7 @@
     document.addEventListener('DOMContentLoaded', function() {
         initHeaderSmartSearch();
         initSearchResultsPageRealtime();
+        initBootsnippSearchValidation();
     });
 
     /**
@@ -85,7 +86,7 @@
             var query = input.value.trim();
             activeDropdownIndex = -1;
 
-            if (query.length < 2) {
+            if (query.length < 2 || query.length > 100 || !/[a-zA-Z0-9\u00C0-\u024F\u1EA0-\u1EF9]/i.test(query)) {
                 closeDropdown(dropdown, input);
                 spinner.classList.remove('is-active');
                 if (activeAbortController) {
@@ -506,6 +507,94 @@
     }
 
     /**
+     * 3. Khởi tạo Kiểm tra hợp lệ & Đếm ký tự cho Bootsnipp Search Form
+     */
+    function initBootsnippSearchValidation() {
+        var form = document.getElementById('bootsnippSearchForm');
+        var input = document.getElementById('bootsnippSearchInput') || (form ? form.querySelector('.search-input') : null);
+        var feedback = document.getElementById('bootsnippValidationMsg');
+        var charCounter = document.getElementById('bootsnippCharCount');
+        var counterWrap = charCounter ? charCounter.closest('.search-counter-wrapper') : null;
+
+        if (!form || !input) return;
+
+        function showFormError(msg) {
+            if (feedback) {
+                feedback.textContent = msg;
+                feedback.style.display = 'block';
+            }
+            form.classList.add('has-error', 'shake-error');
+            setTimeout(function() {
+                form.classList.remove('shake-error');
+            }, 500);
+        }
+
+        function clearFormError() {
+            if (feedback) {
+                feedback.style.display = 'none';
+                feedback.textContent = '';
+            }
+            form.classList.remove('has-error');
+        }
+
+        function updateCounter() {
+            var len = input.value.length;
+            if (charCounter) {
+                charCounter.textContent = len;
+            }
+            if (counterWrap) {
+                counterWrap.classList.remove('is-warning', 'is-limit');
+                if (len >= 100) {
+                    counterWrap.classList.add('is-limit');
+                } else if (len >= 85) {
+                    counterWrap.classList.add('is-warning');
+                }
+            }
+        }
+
+        input.addEventListener('input', function() {
+            clearFormError();
+            updateCounter();
+        });
+
+        // Cập nhật đếm ký tự ban đầu
+        updateCounter();
+
+        form.addEventListener('submit', function(e) {
+            var raw = input.value;
+            var trimmed = raw ? raw.trim() : '';
+
+            if (trimmed === '') {
+                e.preventDefault();
+                showFormError('Vui lòng nhập từ khóa để tìm kiếm.');
+                input.focus();
+                return;
+            }
+
+            if (trimmed.length < 2) {
+                e.preventDefault();
+                showFormError('Từ khóa tìm kiếm phải có từ 2 ký tự trở lên.');
+                input.focus();
+                return;
+            }
+
+            if (trimmed.length > 100) {
+                e.preventDefault();
+                showFormError('Từ khóa tìm kiếm không được vượt quá 100 ký tự.');
+                input.focus();
+                return;
+            }
+
+            if (!/[a-zA-Z0-9\u00C0-\u024F\u1EA0-\u1EF9]/i.test(trimmed)) {
+                e.preventDefault();
+                showFormError('Từ khóa chỉ chứa ký tự đặc biệt. Vui lòng nhập chữ hoặc số.');
+                input.focus();
+                return;
+            }
+        });
+    }
+
+    /**
      * Escape chuỗi HTML chống XSS
      */
     function escapeHtml(str) {
@@ -516,3 +605,4 @@
     }
 
 })();
+
