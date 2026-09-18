@@ -11,9 +11,6 @@ get_header();
 $raw_query    = isset($_GET['s']) ? wp_unslash($_GET['s']) : get_search_query(false);
 $clean_query  = is_string($raw_query) ? trim(preg_replace('/\s+/u', ' ', wp_strip_all_tags($raw_query))) : '';
 $search_error = function_exists('cms_nhomc_get_search_error') ? cms_nhomc_get_search_error($clean_query) : null;
-
-// Từ khóa hiển thị mặc định theo ảnh mẫu nếu trống
-$display_term = !empty($clean_query) ? $clean_query : 'abc';
 ?>
 
 <main class="site-content search-results-page">
@@ -39,9 +36,16 @@ $display_term = !empty($clean_query) ? $clean_query : 'abc';
                     </div>
                 </div>
 
-            <?php elseif (!have_posts() || empty($clean_query)) : ?>
+            <?php elseif (empty($clean_query)) : ?>
+                <!-- Trạng thái ban đầu khi vừa vào trang tìm kiếm, chưa nhập từ khóa nào -->
                 <h1 class="search-main-title">
-                    <span class="search-title-prefix">Search:</span> &quot;<?php echo esc_html($display_term); ?>&quot;
+                    <span class="search-title-prefix">Search</span>
+                </h1>
+
+            <?php elseif (!have_posts()) : ?>
+                <!-- Khi đã tìm kiếm nhưng không có kết quả phù hợp (ví dụ: tìm "abc") -->
+                <h1 class="search-main-title">
+                    <span class="search-title-prefix">Search:</span> &quot;<?php echo esc_html($clean_query); ?>&quot;
                 </h1>
                 <p class="search-notice-text">
                     We could not find any results for your search. You can give it another try through the search form below.
@@ -51,6 +55,7 @@ $display_term = !empty($clean_query) ? $clean_query : 'abc';
                 global $wp_query;
                 $total = isset($wp_query->found_posts) ? (int) $wp_query->found_posts : 0;
             ?>
+                <!-- Khi tìm thấy kết quả bài viết -->
                 <h1 class="search-main-title">
                     <span class="search-title-prefix">Search:</span> &quot;<?php echo esc_html($clean_query); ?>&quot;
                 </h1>

@@ -134,7 +134,7 @@
     </div>
     <ul class="drawer-nav-list">
         <li><a href="<?php echo esc_url(home_url('/')); ?>"><i class="fa fa-home"></i> Trang chủ</a></li>
-        <li><a href="<?php echo esc_url(home_url('/?s=abc')); ?>"><i class="fa fa-search"></i> Tìm kiếm (Search)</a></li>
+        <li><a href="<?php echo esc_url(home_url('/?s=')); ?>"><i class="fa fa-search"></i> Tìm kiếm (Search)</a></li>
         <li><a href="<?php echo esc_url(home_url('/category/the-thao/')); ?>"><i class="fa fa-futbol-o"></i> Thể thao</a></li>
         <li><a href="<?php echo esc_url(home_url('/category/khoa-hoc/')); ?>"><i class="fa fa-flask"></i> Khoa học</a></li>
         <li><a href="<?php echo esc_url(home_url('/category/tin-tuc/')); ?>"><i class="fa fa-newspaper-o"></i> Tin tức</a></li>
@@ -249,9 +249,9 @@ document.addEventListener('DOMContentLoaded', function() {
                         headerSearchForm.submit();
                     }
                 } else {
-                    // Nếu chưa nhập từ khóa, điều hướng đến trang tìm kiếm mẫu abc
+                    // Nếu chưa nhập từ khóa, điều hướng đến trang tìm kiếm ban đầu
                     e.preventDefault();
-                    window.location.href = this.getAttribute('href') || '<?php echo esc_js(home_url('/?s=abc')); ?>';
+                    window.location.href = this.getAttribute('href') || '<?php echo esc_js(home_url('/?s=')); ?>';
                 }
             }
         });
