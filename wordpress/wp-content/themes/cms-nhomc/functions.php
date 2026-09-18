@@ -58,8 +58,15 @@ function cms_nhomc_scripts() {
     ));
 
     // Nạp script trả lời bình luận lồng nhau chuẩn WordPress
-    if (is_singular() && comments_open() && get_option('thread_comments')) {
-        wp_enqueue_script('comment-reply');
+    if (is_singular() && comments_open()) {
+        if (get_option('thread_comments')) {
+            wp_enqueue_script('comment-reply');
+        }
+        // Nạp script xử lý Sửa/Xóa bình luận cho tài khoản đã đăng nhập
+        wp_enqueue_script('cms-nhomc-comment-actions', get_template_directory_uri() . '/assets/js/comment-actions.js', array(), '1.0.0', true);
+        wp_localize_script('cms-nhomc-comment-actions', 'cmsNhomcComment', array(
+            'ajaxUrl' => admin_url('admin-ajax.php'),
+        ));
     }
 }
 add_action('wp_enqueue_scripts', 'cms_nhomc_scripts');
@@ -991,6 +998,12 @@ function cms_nhomc_comment_callback($comment, $args, $depth) {
     $comment_id = get_comment_ID();
     // Avatar bóng người màu xám chuẩn theo ảnh mẫu Bootsnipp gNVj0
     $avatar_url = 'https://ssl.gstatic.com/accounts/ui/avatar_2x.png';
+
+    // Kiểm tra quyền Sửa/Xóa: CHỈ cho phép chính chủ tài khoản đã viết bình luận đó (không cho phép sửa bình luận của user khác)
+    $current_user_id = get_current_user_id();
+    $can_edit_or_delete = is_user_logged_in() && (
+        (int)$comment->user_id > 0 && (int)$comment->user_id === (int)$current_user_id
+    );
     ?>
     <li <?php comment_class('cms-comment-item'); ?> id="comment-<?php echo $comment_id; ?>">
         <div class="media comment-box" id="div-comment-<?php echo $comment_id; ?>">
@@ -1006,9 +1019,32 @@ function cms_nhomc_comment_callback($comment, $args, $depth) {
                     <p class="cms-comment-moderation-notice"><em>Bình luận của bạn đang chờ quản trị viên phê duyệt.</em></p>
                 <?php endif; ?>
 
-                <?php comment_text(); ?>
+                <div class="cms-comment-content-wrap" id="cms-comment-wrap-<?php echo $comment_id; ?>">
+                    <div class="cms-comment-text" id="cms-comment-text-<?php echo $comment_id; ?>">
+                        <?php comment_text(); ?>
+                    </div>
+
+                    <?php if ($can_edit_or_delete) : ?>
+                        <div class="cms-comment-edit-form" id="cms-comment-edit-form-<?php echo $comment_id; ?>" style="display: none;">
+                            <textarea class="form-control cms-comment-edit-textarea" id="cms-comment-textarea-<?php echo $comment_id; ?>" rows="3"><?php echo esc_textarea(get_comment_text($comment_id)); ?></textarea>
+                            <div class="cms-comment-edit-buttons">
+                                <button type="button" class="btn btn-sm btn-secondary cms-btn-cancel-edit" data-comment-id="<?php echo $comment_id; ?>">Hủy</button>
+                                <button type="button" class="btn btn-sm btn-primary cms-btn-save-edit" data-comment-id="<?php echo $comment_id; ?>" data-nonce="<?php echo wp_create_nonce('cms_edit_comment_' . $comment_id); ?>">Lưu thay đổi</button>
+                            </div>
+                        </div>
+                    <?php endif; ?>
+                </div>
 
                 <div class="comment-reply-wrap">
+                    <?php if ($can_edit_or_delete) : ?>
+                        <button type="button" class="cms-comment-action-btn cms-comment-edit-btn" data-comment-id="<?php echo $comment_id; ?>" title="<?php esc_attr_e('Chỉnh sửa bình luận', 'cms-nhomc'); ?>">
+                            <i class="fa fa-pencil"></i> Sửa
+                        </button>
+                        <button type="button" class="cms-comment-action-btn cms-comment-delete-btn" data-comment-id="<?php echo $comment_id; ?>" data-nonce="<?php echo wp_create_nonce('cms_delete_comment_' . $comment_id); ?>" title="<?php esc_attr_e('Xóa bình luận', 'cms-nhomc'); ?>">
+                            <i class="fa fa-trash"></i> Xóa
+                        </button>
+                    <?php endif; ?>
+
                     <?php
                     comment_reply_link(array_merge($args, array(
                         'add_below'  => 'div-comment',
@@ -1197,4 +1233,110 @@ if (!function_exists('my_custom_comments')) {
     function my_custom_comments($comment, $args, $depth) {
         return cms_nhomc_comment_callback($comment, $args, $depth);
     }
+}
+
+/**
+ * ==========================================================================
+ * AJAX HANDLERS: SỬA VÀ XÓA BÌNH LUẬN (DÀNH CHO NGƯỜI DÙNG ĐÃ LOGIN)
+ * ==========================================================================
+ */
+
+/**
+ * AJAX: Chỉnh sửa nội dung bình luận
+ */
+add_action('wp_ajax_cms_nhomc_edit_comment', 'cms_nhomc_ajax_edit_comment');
+function cms_nhomc_ajax_edit_comment() {
+    $comment_id = isset($_POST['comment_id']) ? intval($_POST['comment_id']) : 0;
+    $content    = isset($_POST['content']) ? trim($_POST['content']) : '';
+    $nonce      = isset($_POST['nonce']) ? sanitize_text_field($_POST['nonce']) : '';
+
+    if (!$comment_id || empty($content)) {
+        wp_send_json_error(array('message' => 'Dữ liệu không hợp lệ hoặc nội dung trống.'));
+    }
+
+    if (!wp_verify_nonce($nonce, 'cms_edit_comment_' . $comment_id)) {
+        wp_send_json_error(array('message' => 'Lỗi bảo mật (nonce không hợp lệ). Vui lòng tải lại trang.'));
+    }
+
+    $comment = get_comment($comment_id);
+    if (!$comment) {
+        wp_send_json_error(array('message' => 'Không tìm thấy bình luận.'));
+    }
+
+    $current_user_id = get_current_user_id();
+    $can_edit = is_user_logged_in() && (
+        (int)$comment->user_id > 0 && (int)$comment->user_id === (int)$current_user_id
+    );
+
+    if (!$can_edit) {
+        wp_send_json_error(array('message' => 'Bạn chỉ có quyền chỉnh sửa bình luận do chính mình viết!'));
+    }
+
+    $updated = wp_update_comment(array(
+        'comment_ID'      => $comment_id,
+        'comment_content' => wp_kses_post($content),
+    ));
+
+    if ($updated === false) {
+        wp_send_json_error(array('message' => 'Không thể cập nhật bình luận.'));
+    }
+
+    $updated_comment = get_comment($comment_id);
+    $formatted_content = apply_filters('comment_text', $updated_comment->comment_content, $updated_comment);
+
+    wp_send_json_success(array(
+        'message'     => 'Cập nhật bình luận thành công!',
+        'content'     => $formatted_content,
+        'raw_content' => $updated_comment->comment_content,
+    ));
+}
+
+/**
+ * AJAX: Xóa bình luận
+ */
+add_action('wp_ajax_cms_nhomc_delete_comment', 'cms_nhomc_ajax_delete_comment');
+function cms_nhomc_ajax_delete_comment() {
+    $comment_id = isset($_POST['comment_id']) ? intval($_POST['comment_id']) : 0;
+    $nonce      = isset($_POST['nonce']) ? sanitize_text_field($_POST['nonce']) : '';
+
+    if (!$comment_id) {
+        wp_send_json_error(array('message' => 'ID bình luận không hợp lệ.'));
+    }
+
+    if (!wp_verify_nonce($nonce, 'cms_delete_comment_' . $comment_id)) {
+        wp_send_json_error(array('message' => 'Lỗi bảo mật (nonce không hợp lệ). Vui lòng tải lại trang.'));
+    }
+
+    $comment = get_comment($comment_id);
+    if (!$comment) {
+        wp_send_json_error(array('message' => 'Không tìm thấy bình luận.'));
+    }
+
+    $current_user_id = get_current_user_id();
+    $can_delete = is_user_logged_in() && (
+        (int)$comment->user_id > 0 && (int)$comment->user_id === (int)$current_user_id
+    );
+
+    if (!$can_delete) {
+        wp_send_json_error(array('message' => 'Bạn chỉ có quyền xóa bình luận do chính mình viết!'));
+    }
+
+    $post_id = $comment->comment_post_ID;
+
+    // Xóa bình luận vĩnh viễn
+    $deleted = wp_delete_comment($comment_id, true);
+
+    if (!$deleted) {
+        wp_send_json_error(array('message' => 'Không thể xóa bình luận này.'));
+    }
+
+    // Cập nhật lại số lượng bình luận cho bài viết
+    wp_update_comment_count_now($post_id);
+    $new_count = get_comments_number($post_id);
+
+    wp_send_json_success(array(
+        'message'     => 'Đã xóa bình luận thành công!',
+        'new_count'   => $new_count,
+        'count_label' => sprintf('(%d) Comments', $new_count),
+    ));
 }
