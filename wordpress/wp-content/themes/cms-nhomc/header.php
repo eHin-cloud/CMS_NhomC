@@ -79,13 +79,13 @@
                 </button>
 
                 <!-- Nút Kính lúp: Search -->
-                <button type="button" class="action-btn icon-stroke" id="focusSearchBtn" title="Tìm kiếm" aria-label="Tìm kiếm">
+                <a href="<?php echo esc_url(home_url('/?s=')); ?>" class="action-btn icon-stroke" id="focusSearchBtn" title="Tìm kiếm" aria-label="Tìm kiếm">
                     <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
                         <circle cx="11" cy="11" r="8"></circle>
                         <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                     </svg>
                     <span class="btn-label">Search</span>
-                </button>
+                </a>
 
                 <!-- Nút Account: Dropdown người dùng -->
                 <div class="account-dropdown-wrapper">
@@ -130,6 +130,7 @@
     </div>
     <ul>
         <li><a href="<?php echo esc_url(home_url('/')); ?>">Trang chủ (Home)</a></li>
+        <li><a href="<?php echo esc_url(home_url('/?s=')); ?>">Tìm kiếm (Search)</a></li>
         <li><a href="<?php echo esc_url(home_url('/category/the-thao/')); ?>">Thể thao</a></li>
         <li><a href="<?php echo esc_url(home_url('/category/khoa-hoc/')); ?>">Khoa học</a></li>
         <li><a href="<?php echo esc_url(home_url('/category/tin-tuc/')); ?>">Tin tức</a></li>
@@ -140,13 +141,22 @@
 <script>
 // Xử lý sự kiện JavaScript cho Header
 document.addEventListener('DOMContentLoaded', function() {
-    // 1. Focus ô tìm kiếm khi click nút Search
+    // 1. Chuyển hướng sang trang tìm kiếm khi click nút Search
     var focusSearchBtn = document.getElementById('focusSearchBtn');
     var headerSearchInput = document.getElementById('headerSearchInput');
-    if (focusSearchBtn && headerSearchInput) {
-        focusSearchBtn.addEventListener('click', function() {
-            headerSearchInput.focus();
-            headerSearchInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    var headerSearchForm = document.getElementById('headerSearchForm');
+
+    if (focusSearchBtn) {
+        focusSearchBtn.addEventListener('click', function(e) {
+            var q = headerSearchInput ? headerSearchInput.value.trim() : '';
+            if (q !== '') {
+                e.preventDefault();
+                headerSearchForm.submit();
+            } else {
+                // Nếu chưa nhập từ khóa, điều hướng đến trang tìm kiếm trống
+                e.preventDefault();
+                window.location.href = this.getAttribute('href') || '<?php echo esc_js(home_url('/?s=')); ?>';
+            }
         });
     }
 
