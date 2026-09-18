@@ -1789,38 +1789,111 @@ section#footer {
   margin-bottom: 0 !important;
 }
 
-/* Nút Reply đặt góc trên bên phải header, không chiếm dòng riêng gây đẩy khung con xuống */
+/* Nút Hành động (Reply, Sửa, Xóa) đặt góc trên bên phải header, không chiếm dòng riêng */
 .comment-box .media-body .comment-reply-wrap {
   position: absolute;
-  top: 8px;
+  top: 7px;
   right: 12px;
   margin: 0 !important;
   line-height: 1;
   opacity: 0;
   transition: opacity 0.2s ease;
   z-index: 2;
+  display: flex !important;
+  align-items: center;
+  gap: 6px;
 }
 
 .comment-box:hover .media-body .comment-reply-wrap {
   opacity: 1;
 }
 
-.comment-box .media-body .comment-reply-link {
+.comment-box .media-body .comment-reply-link,
+.cms-comment-action-btn {
   font-size: 11.5px;
-  color: #007bff;
   text-decoration: none;
   padding: 3px 8px;
   background-color: #ffffff;
   border: 1px solid #ced4da;
   border-radius: 3px;
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
   font-weight: 500;
+  cursor: pointer;
+  line-height: 1.2;
+  transition: all 0.15s ease-in-out;
+  outline: none;
+}
+
+.comment-box .media-body .comment-reply-link {
+  color: #007bff;
 }
 
 .comment-box .media-body .comment-reply-link:hover {
   background-color: #007bff;
   color: #ffffff;
   border-color: #007bff;
+}
+
+.cms-comment-edit-btn {
+  color: #495057;
+}
+
+.cms-comment-edit-btn:hover {
+  background-color: #e9ecef;
+  color: #212529;
+  border-color: #adb5bd;
+}
+
+.cms-comment-delete-btn {
+  color: #dc3545;
+}
+
+.cms-comment-delete-btn:hover {
+  background-color: #dc3545;
+  color: #ffffff;
+  border-color: #dc3545;
+}
+
+/* Khung form chỉnh sửa inline */
+.cms-comment-edit-form {
+  background-color: #ffffff;
+  border: 1px solid #ddd;
+  padding: 10px 12px;
+  border-top: none;
+}
+
+.cms-comment-edit-textarea {
+  width: 100%;
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: #333333;
+  padding: 8px 10px;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  resize: vertical;
+  box-sizing: border-box;
+}
+
+.cms-comment-edit-textarea:focus {
+  border-color: #80bdff;
+  outline: 0;
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.cms-comment-edit-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.cms-comment-edit-buttons .btn {
+  font-size: 12.5px;
+  padding: 4px 12px;
+  border-radius: 3px;
+  cursor: pointer;
 }
 
 /* Thụt lề comment phân cấp con: kéo sát lên trên (khoảng cách 10px) giống chuẩn ảnh mẫu 2 */
