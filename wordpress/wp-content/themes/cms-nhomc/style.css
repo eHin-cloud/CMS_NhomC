@@ -4174,7 +4174,7 @@ ul.timeline>li:before {
 }
 
 /* ====================================================
-   BỐ CỤC CHUẨN WIREFRAME TRANG TÌM KIẾM (13 | 5 | 14 & 15)
+   BỐ CỤC TRANG TÌM KIẾM (MODULE 5 & HÀNG NGANG: LATEST NEWS + COMMENTS)
    ==================================================== */
 .search-results-page {
   max-width: 1240px;
@@ -4183,39 +4183,42 @@ ul.timeline>li:before {
   min-height: 60vh;
 }
 
-.search-layout-3col {
+/* Hàng ngang phía dưới: Latest News & Module 14 Comments đặt ngang hàng nhau */
+.search-bottom-row-dual {
   display: flex;
-  gap: 28px;
+  gap: 32px;
   align-items: flex-start;
-  margin: 30px 0 40px 0;
+  margin-top: 40px;
+  margin-bottom: 30px;
+  border-top: 1px solid #e5e7eb;
+  padding-top: 35px;
   width: 100%;
 }
 
-/* Cột giữa: Kết quả tìm kiếm (Module 5 Search result) */
-.search-main-col-5 {
-  flex: 1;
+.search-bottom-row-dual .cms-module-15-section {
+  flex: 1 1 58%;
   min-width: 0;
+  margin-top: 0;
+  border-top: none;
+  padding-top: 0;
 }
 
-/* Cột 14 bên phải: Vị trí 14 - Module Comments (Hien/14-comments) */
-.search-sidebar-col-14 {
-  flex: 0 0 300px;
-  width: 300px;
+.search-bottom-row-dual .cms-module-14-comments-section {
+  flex: 1 1 42%;
   min-width: 0;
 }
 
 /* Tùy biến kiểu dáng Widget Comments tại Module 14 */
-.search-sidebar-col-14 .widget-comments-box,
+.cms-module-14-comments-section .widget-comments-box,
 .cms-sidebar .widget-comments-box {
   background: #ffffff;
   border: 1px solid #e5e7eb;
   border-radius: 8px;
-  padding: 18px 20px;
-  margin-bottom: 24px;
+  padding: 20px 22px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
 }
 
-.search-sidebar-col-14 .widget-comments-title,
+.cms-module-14-comments-section .widget-comments-title,
 .cms-sidebar .widget-comments-title {
   font-size: 16px;
   font-weight: 700;
@@ -4225,7 +4228,7 @@ ul.timeline>li:before {
   margin: 0 0 8px 0;
 }
 
-.search-sidebar-col-14 .widget-comments-stripe,
+.cms-module-14-comments-section .widget-comments-stripe,
 .cms-sidebar .widget-comments-stripe {
   width: 40px;
   height: 3px;
@@ -4234,7 +4237,7 @@ ul.timeline>li:before {
   margin-bottom: 14px;
 }
 
-.search-sidebar-col-14 .widget-comments-list,
+.cms-module-14-comments-section .widget-comments-list,
 .cms-sidebar .widget-comments-list {
   list-style: none;
   padding: 0;
@@ -4244,20 +4247,20 @@ ul.timeline>li:before {
   gap: 12px;
 }
 
-.search-sidebar-col-14 .widget-comments-item,
+.cms-module-14-comments-section .widget-comments-item,
 .cms-sidebar .widget-comments-item {
   border-bottom: 1px dashed #e5e7eb;
   padding-bottom: 10px;
   padding-top: 2px;
 }
 
-.search-sidebar-col-14 .widget-comments-item:last-child,
+.cms-module-14-comments-section .widget-comments-item:last-child,
 .cms-sidebar .widget-comments-item:last-child {
   border-bottom: none;
   padding-bottom: 0;
 }
 
-.search-sidebar-col-14 .widget-comments-link,
+.cms-module-14-comments-section .widget-comments-link,
 .cms-sidebar .widget-comments-link {
   text-decoration: none;
   color: #374151;
@@ -4265,7 +4268,7 @@ ul.timeline>li:before {
   transition: all 0.2s ease;
 }
 
-.search-sidebar-col-14 .widget-comments-link:hover,
+.cms-module-14-comments-section .widget-comments-link:hover,
 .cms-sidebar .widget-comments-link:hover {
   color: #2563eb;
   text-decoration: none;
@@ -4279,7 +4282,7 @@ ul.timeline>li:before {
   font-weight: 500;
 }
 
-.search-sidebar-col-14 .widget-comments-link:hover .widget-comment-content,
+.cms-module-14-comments-section .widget-comments-link:hover .widget-comment-content,
 .cms-sidebar .widget-comments-link:hover .widget-comment-content {
   color: #2563eb;
 }
@@ -4313,12 +4316,14 @@ ul.timeline>li:before {
   color: #9ca3af;
 }
 
-/* Responsive cho layout tìm kiếm có Module 14 */
+/* Responsive cho layout hàng ngang Latest News & Comments */
 @media (max-width: 992px) {
-  .search-layout-3col {
+  .search-bottom-row-dual {
     flex-direction: column;
+    gap: 25px;
   }
-  .search-sidebar-col-14 {
+  .search-bottom-row-dual .cms-module-15-section,
+  .search-bottom-row-dual .cms-module-14-comments-section {
     width: 100%;
     flex: 1 1 100%;
   }
