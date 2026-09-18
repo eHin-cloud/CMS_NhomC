@@ -1702,6 +1702,61 @@ section#footer {
   top: 75px;
 }
 
+/* ====================================================
+   Layout trang chi tiết bài viết (Single Detail) theo wireframe:
+   3 Cột: Categories (Trái) - Detail (Giữa) - Recent Post (Phải)
+   ==================================================== */
+.cms-single-grid {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 28px;
+  width: 100%;
+}
+
+/* Cột trái: Categories (Module 9) */
+.cms-single-sidebar-left {
+  flex: 0 0 270px;
+  width: 270px;
+  position: sticky;
+  top: 75px;
+}
+
+/* Cột giữa: Detail (Module 6) */
+.cms-single-main-column {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Cột phải: Recent post (Module 10) */
+.cms-single-sidebar-right {
+  flex: 0 0 300px;
+  width: 300px;
+  position: sticky;
+  top: 75px;
+}
+
+/* Khối điều hướng bài trước / kế tiếp (Module 7) bên dưới full width */
+.cms-single-bottom-nav {
+  width: 100%;
+  margin-top: 32px;
+  background: #ffffff;
+  padding: 24px 32px;
+  border-radius: 6px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+  border: 1px solid #eef2f6;
+}
+
+.cms-single-bottom-nav .tdc-post-nav {
+  margin: 0;
+}
+
+/* Khối bình luận (Module 8) bên dưới full width */
+.cms-single-bottom-comments {
+  width: 100%;
+  margin-top: 24px;
+}
+
 .cms-sidebar {
   display: flex;
   flex-direction: column;
@@ -1814,9 +1869,34 @@ section#footer {
 /* Responsive cho layout 2 cột Archive, Content, Detail & Sidebar */
 @media (max-width: 991px) {
   .cms-main-layout,
-  .cms-layout-grid {
+  .cms-layout-grid,
+  .cms-single-grid {
     flex-direction: column !important;
     gap: 28px;
+  }
+
+  .cms-single-sidebar-left,
+  .cms-single-sidebar-right {
+    flex: none !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    position: static !important;
+  }
+
+  .cms-single-sidebar-left {
+    order: 2;
+  }
+
+  .cms-single-main-column {
+    order: 1;
+  }
+
+  .cms-single-sidebar-right {
+    order: 3;
+  }
+
+  .cms-single-bottom-nav {
+    padding: 18px 20px;
   }
 
   .cms-sidebar-column {

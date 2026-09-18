@@ -8,10 +8,17 @@
 get_header();
 ?>
 
-<div class="site-content cms-container-layout">
-    <div class="cms-layout-grid">
-        <!-- Cột nội dung chính bài viết -->
-        <main class="cms-main-column">
+<div class="site-content cms-container-layout cms-single-container-layout">
+    <!-- Hàng 3 cột theo sơ đồ: Categories (Trái) | Detail (Giữa) | Recent Post (Phải) -->
+    <div class="cms-single-grid">
+        
+        <!-- Cột trái: Categories (Module 9) -->
+        <aside class="cms-single-sidebar-left" aria-label="Chuyên mục">
+            <?php cms_nhomc_render_categories_widget(); ?>
+        </aside>
+
+        <!-- Cột giữa: Detail (Module 6) -->
+        <main class="cms-single-main-column">
             <?php while (have_posts()) : the_post(); 
                 $post_id   = get_the_ID();
                 $categories = get_the_category();
@@ -67,69 +74,6 @@ get_header();
                         ?>
                     </div>
 
-                    <!-- Điều hướng bài trước / bài kế tiếp (7) Prev - Next Post chuẩn mẫu TDC -->
-                    <?php
-                    $prev_post = get_previous_post();
-                    $next_post = get_next_post();
-
-                    if (!empty($next_post) || !empty($prev_post)) :
-                    ?>
-                    <nav class="single-post-nav tdc-post-nav" aria-label="Điều hướng bài viết">
-                        <ul class="tdc-post-nav-list">
-                            <?php if (!empty($next_post)) : 
-                                $next_day   = get_the_date('d', $next_post->ID);
-                                $next_month = get_the_date('m', $next_post->ID);
-                                $next_year  = get_the_date('y', $next_post->ID);
-                            ?>
-                                <li class="tdc-post-nav-item tdc-nav-next">
-                                    <div class="tdc-nav-date">
-                                        <span class="tdc-day-month">
-                                            <span class="tdc-day"><?php echo esc_html($next_day); ?></span>
-                                            <span class="tdc-divider"></span>
-                                            <span class="tdc-month"><?php echo esc_html($next_month); ?></span>
-                                        </span>
-                                        <span class="tdc-year"><?php echo esc_html($next_year); ?></span>
-                                    </div>
-                                    <div class="tdc-nav-title-wrap">
-                                        <a href="<?php echo esc_url(get_permalink($next_post->ID)); ?>" class="tdc-nav-link">
-                                            <?php echo esc_html(get_the_title($next_post->ID)); ?>
-                                        </a>
-                                    </div>
-                                </li>
-                            <?php endif; ?>
-
-                            <?php if (!empty($prev_post)) : 
-                                $prev_day   = get_the_date('d', $prev_post->ID);
-                                $prev_month = get_the_date('m', $prev_post->ID);
-                                $prev_year  = get_the_date('y', $prev_post->ID);
-                            ?>
-                                <li class="tdc-post-nav-item tdc-nav-prev">
-                                    <div class="tdc-nav-date">
-                                        <span class="tdc-day-month">
-                                            <span class="tdc-day"><?php echo esc_html($prev_day); ?></span>
-                                            <span class="tdc-divider"></span>
-                                            <span class="tdc-month"><?php echo esc_html($prev_month); ?></span>
-                                        </span>
-                                        <span class="tdc-year"><?php echo esc_html($prev_year); ?></span>
-                                    </div>
-                                    <div class="tdc-nav-title-wrap">
-                                        <a href="<?php echo esc_url(get_permalink($prev_post->ID)); ?>" class="tdc-nav-link">
-                                            <?php echo esc_html(get_the_title($prev_post->ID)); ?>
-                                        </a>
-                                    </div>
-                                </li>
-                            <?php endif; ?>
-                        </ul>
-                    </nav>
-                    <?php endif; ?>
-
-                    <!-- Khu vực bình luận (Comments) -->
-                    <?php
-                    if (comments_open() || get_comments_number()) :
-                        comments_template();
-                    endif;
-                    ?>
-
                     <!-- Bài viết liên quan -->
                     <?php
                     $related_args = array(
@@ -172,14 +116,79 @@ get_header();
             <?php endwhile; ?>
         </main>
 
-        <!-- Sidebar bên phải: Categories & BÀI VIẾT MỚI trong trang Detail -->
-        <aside class="cms-sidebar-column">
-            <?php cms_nhomc_render_categories_widget(); ?>
+        <!-- Cột phải: Recent post (Module 10) -->
+        <aside class="cms-single-sidebar-right" aria-label="Bài viết mới">
             <?php cms_nhomc_render_recent_posts_widget(10, 'BÀI VIẾT MỚI'); ?>
-            <?php cms_nhomc_render_comments_widget(3, 'Comments'); ?>
             <?php if (function_exists('cms_nhomc_render_last_posts_widget')) { cms_nhomc_render_last_posts_widget(5, 'Latest News'); } ?>
         </aside>
     </div>
+
+    <!-- Khối hàng bên dưới: Prev - Next Post (Module 7) -->
+    <?php
+    $prev_post = get_previous_post();
+    $next_post = get_next_post();
+
+    if (!empty($next_post) || !empty($prev_post)) :
+    ?>
+    <section class="cms-single-bottom-nav">
+        <nav class="single-post-nav tdc-post-nav" aria-label="Điều hướng bài viết">
+            <ul class="tdc-post-nav-list">
+                <?php if (!empty($next_post)) : 
+                    $next_day   = get_the_date('d', $next_post->ID);
+                    $next_month = get_the_date('m', $next_post->ID);
+                    $next_year  = get_the_date('y', $next_post->ID);
+                ?>
+                    <li class="tdc-post-nav-item tdc-nav-next">
+                        <div class="tdc-nav-date">
+                            <span class="tdc-day-month">
+                                <span class="tdc-day"><?php echo esc_html($next_day); ?></span>
+                                <span class="tdc-divider"></span>
+                                <span class="tdc-month"><?php echo esc_html($next_month); ?></span>
+                            </span>
+                            <span class="tdc-year"><?php echo esc_html($next_year); ?></span>
+                        </div>
+                        <div class="tdc-nav-title-wrap">
+                            <a href="<?php echo esc_url(get_permalink($next_post->ID)); ?>" class="tdc-nav-link">
+                                <?php echo esc_html(get_the_title($next_post->ID)); ?>
+                            </a>
+                        </div>
+                    </li>
+                <?php endif; ?>
+
+                <?php if (!empty($prev_post)) : 
+                    $prev_day   = get_the_date('d', $prev_post->ID);
+                    $prev_month = get_the_date('m', $prev_post->ID);
+                    $prev_year  = get_the_date('y', $prev_post->ID);
+                ?>
+                    <li class="tdc-post-nav-item tdc-nav-prev">
+                        <div class="tdc-nav-date">
+                            <span class="tdc-day-month">
+                                <span class="tdc-day"><?php echo esc_html($prev_day); ?></span>
+                                <span class="tdc-divider"></span>
+                                <span class="tdc-month"><?php echo esc_html($prev_month); ?></span>
+                            </span>
+                            <span class="tdc-year"><?php echo esc_html($prev_year); ?></span>
+                        </div>
+                        <div class="tdc-nav-title-wrap">
+                            <a href="<?php echo esc_url(get_permalink($prev_post->ID)); ?>" class="tdc-nav-link">
+                                <?php echo esc_html(get_the_title($prev_post->ID)); ?>
+                            </a>
+                        </div>
+                    </li>
+                <?php endif; ?>
+            </ul>
+        </nav>
+    </section>
+    <?php endif; ?>
+
+    <!-- Khối hàng bên dưới: Comments (Module 8) -->
+    <?php
+    if (comments_open() || get_comments_number()) :
+    ?>
+    <section class="cms-single-bottom-comments">
+        <?php comments_template(); ?>
+    </section>
+    <?php endif; ?>
 </div>
 
 <?php
