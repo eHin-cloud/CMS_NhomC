@@ -24,3 +24,5 @@ TestResults.xml
 
 # Cache files
 *.cache
+# WordPress Uploads
+wordpress/wp-content/uploads/

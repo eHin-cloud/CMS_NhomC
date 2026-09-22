@@ -4161,3 +4161,85 @@ ul.timeline>li:before {
     height: 42px;
   }
 }
+
+/* ==========================================================================
+   MODULE 13: PAGES (TRANG MỚI NHẤT) - BỐ CỤC 1 HÀNG 1 BÀI VIẾT (CỘT ĐỨNG)
+   Thiết kế chuẩn TDC: Các bài viết xếp chồng theo chiều dọc (Vertical stack),
+   mỗi hàng chỉ có 1 bài viết ổn định trên Desktop, Laptop, Tablet và Mobile.
+   Hình ảnh responsive, không méo, không tràn container, giữ tỷ lệ 16:9.
+   ========================================================================== */
+.widget-pages-card {
+  margin-bottom: 24px;
+}
+
+.module13-pages-list {
+  display: flex !important;
+  flex-direction: column !important;
+  width: 100% !important;
+  gap: 18px;
+}
+
+.module13-page-item {
+  display: flex !important;
+  flex-direction: column !important;
+  width: 100% !important;
+  padding-bottom: 16px;
+  border-bottom: 1px dashed #e2e8f0;
+}
+
+.module13-page-item:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+  margin-bottom: 0;
+}
+
+.module13-page-title {
+  font-size: 14.5px;
+  font-weight: 700;
+  line-height: 1.4;
+  margin: 0 0 8px 0;
+}
+
+.module13-page-title a {
+  color: #1e293b;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.module13-page-title a:hover {
+  color: #0056b3;
+}
+
+.module13-page-thumb {
+  width: 100%;
+  overflow: hidden;
+  border-radius: 4px;
+  margin-bottom: 8px;
+  background-color: #f1f5f9;
+}
+
+.module13-page-thumb a {
+  display: block;
+  width: 100%;
+}
+
+.module13-page-thumb img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  border-radius: 4px;
+  transition: transform 0.3s ease;
+}
+
+.module13-page-item:hover .module13-page-thumb img {
+  transform: scale(1.02);
+}
+
+.module13-page-desc {
+  font-size: 13px;
+  line-height: 1.55;
+  color: #475569;
+  margin: 0;
+}

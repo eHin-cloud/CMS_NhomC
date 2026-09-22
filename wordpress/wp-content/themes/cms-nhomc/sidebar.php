@@ -34,7 +34,12 @@ if (empty($sidebar_type)) {
         cms_nhomc_render_comments_widget(3, 'Comments');
     }
 
-    // 4. Module 15: Hiển thị widget Last Posts - Latest News Timeline (Bootsnipp xrKXW) (Xuân Hòa)
+    // 4. Module 13: Hiển thị widget Pages - Trang mới nhất (Đặng Nguyên)
+    if (function_exists('cms_nhomc_render_pages_widget')) {
+        cms_nhomc_render_pages_widget(3, 'Trang mới nhất');
+    }
+
+    // 5. Module 15: Hiển thị widget Last Posts - Latest News Timeline (Bootsnipp xrKXW) (Xuân Hòa)
     if (function_exists('cms_nhomc_render_last_posts_widget')) {
         cms_nhomc_render_last_posts_widget(5, 'Latest News');
     }

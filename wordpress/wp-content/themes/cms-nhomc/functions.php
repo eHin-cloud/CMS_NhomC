@@ -1436,3 +1436,208 @@ function cms_nhomc_ajax_delete_comment() {
         'count_label' => sprintf('(%d) Comments', $new_count),
     ));
 }
+
+/* ==========================================================================
+   MODULE 13: PAGES - TRANG MỚI NHẤT (ĐẶNG NGUYÊN)
+   - Bố cục chuẩn TDC: Thay vì 3 bài trên 1 dòng, chuyển thành dạng cột đứng:
+     1 HÀNG = 1 BÀI VIẾT trên mọi breakpoint (Desktop, Laptop, Tablet, Mobile).
+   - Hiển thị đầy đủ: Tiêu đề, Hình ảnh responsive (không méo, đúng tỷ lệ),
+     mô tả ngắn (excerpt) và link đến trang chi tiết.
+   ========================================================================== */
+
+/**
+ * Tự động tạo 3 trang chuyên ngành mẫu (Module 13) nếu chưa có
+ */
+function cms_nhomc_create_default_pages() {
+    $theme_uri = get_template_directory_uri();
+    $default_pages = array(
+        array(
+            'title'   => 'Ngành Công Nghệ Thông Tin',
+            'slug'    => 'nganh-cong-nghe-thong-tin',
+            'content' => 'Trang bị cho sinh viên kiến thức và kỹ năng để trở thành nhà phát triển phần mềm chuyên nghiệp.',
+            'image'   => 'nganh-cong-nghe-thong-tin.jpg',
+            'order'   => 1,
+        ),
+        array(
+            'title'   => 'Ngành Truyền Thông & Mạng Máy Tính',
+            'slug'    => 'nganh-truyen-thong-va-mang-may-tinh',
+            'content' => 'Sinh viên có khả năng nghiên cứu, thiết kế, phát triển và triển khai các ứng dụng về các công nghệ Mạng máy tính.',
+            'image'   => 'nganh-truyen-thong-mang.jpg',
+            'order'   => 2,
+        ),
+        array(
+            'title'   => 'Ngành Thiết Kế Đồ Họa',
+            'slug'    => 'nganh-thiet-ke-do-hoa',
+            'content' => 'Cung cấp các kiến thức về thiết kế đồ họa và công nghệ thông tin đa phương tiện.',
+            'image'   => 'nganh-thiet-ke-do-hoa.jpg',
+            'order'   => 3,
+        ),
+    );
+
+    foreach ($default_pages as $p) {
+        $existing = get_page_by_path($p['slug'], OBJECT, 'page');
+        if (!$existing) {
+            $pid = wp_insert_post(array(
+                'post_title'   => $p['title'],
+                'post_name'    => $p['slug'],
+                'post_content' => '<p>' . esc_html($p['content']) . '</p>',
+                'post_excerpt' => $p['content'],
+                'post_status'  => 'publish',
+                'post_type'    => 'page',
+                'menu_order'   => $p['order'],
+            ));
+            if ($pid && !is_wp_error($pid)) {
+                update_post_meta($pid, '_thumbnail_ext_url', $theme_uri . '/assets/images/' . $p['image']);
+            }
+        }
+    }
+}
+add_action('after_setup_theme', 'cms_nhomc_create_default_pages');
+
+/**
+ * Lấy danh sách Pages hiển thị cho Module 13
+ */
+function cms_nhomc_get_module13_pages($limit = 3) {
+    $theme_uri = get_template_directory_uri();
+    $limit = max(1, intval($limit));
+
+    $query_pages = get_posts(array(
+        'post_type'      => 'page',
+        'post_status'    => 'publish',
+        'posts_per_page' => $limit,
+        'orderby'        => 'menu_order date',
+        'order'          => 'ASC',
+        'exclude'        => array(2, 3),
+    ));
+
+    if (empty($query_pages)) {
+        $query_pages = get_posts(array(
+            'post_type'      => 'page',
+            'post_status'    => 'publish',
+            'posts_per_page' => $limit,
+            'orderby'        => 'menu_order date',
+            'order'          => 'ASC',
+        ));
+    }
+
+    $results = array();
+    if (!empty($query_pages)) {
+        foreach ($query_pages as $page) {
+            $pid = $page->ID;
+            $thumb = get_post_meta($pid, '_thumbnail_ext_url', true);
+            if (empty($thumb) && has_post_thumbnail($pid)) {
+                $thumb = get_the_post_thumbnail_url($pid, 'large');
+            }
+            if (empty($thumb)) {
+                $thumb = cms_nhomc_get_post_thumbnail_url($pid);
+            }
+
+            $excerpt = !empty($page->post_excerpt) ? $page->post_excerpt : wp_trim_words(wp_strip_all_tags($page->post_content), 20, '...');
+
+            $results[] = array(
+                'id'        => $pid,
+                'title'     => get_the_title($pid),
+                'permalink' => get_permalink($pid),
+                'thumb'     => $thumb,
+                'excerpt'   => $excerpt,
+            );
+        }
+    }
+
+    if (empty($results)) {
+        $results = array(
+            array(
+                'title'     => 'Ngành Công Nghệ Thông Tin',
+                'permalink' => home_url('/nganh-cong-nghe-thong-tin/'),
+                'thumb'     => $theme_uri . '/assets/images/nganh-cong-nghe-thong-tin.jpg',
+                'excerpt'   => 'Trang bị cho sinh viên kiến thức và kỹ năng để trở thành nhà phát triển phần mềm chuyên nghiệp.',
+            ),
+            array(
+                'title'     => 'Ngành Truyền Thông & Mạng Máy Tính',
+                'permalink' => home_url('/nganh-truyen-thong-va-mang-may-tinh/'),
+                'thumb'     => $theme_uri . '/assets/images/nganh-truyen-thong-mang.jpg',
+                'excerpt'   => 'Sinh viên có khả năng nghiên cứu, thiết kế, phát triển và triển khai các ứng dụng về các công nghệ Mạng máy tính.',
+            ),
+            array(
+                'title'     => 'Ngành Thiết Kế Đồ Họa',
+                'permalink' => home_url('/nganh-thiet-ke-do-hoa/'),
+                'thumb'     => $theme_uri . '/assets/images/nganh-thiet-ke-do-hoa.jpg',
+                'excerpt'   => 'Cung cấp các kiến thức về thiết kế đồ họa và công nghệ thông tin đa phương tiện.',
+            ),
+        );
+    }
+
+    return $results;
+}
+
+/**
+ * Render Widget: TRANG MỚI NHẤT / PAGES (Module 13 - Đặng Nguyên)
+ * Bố cục: 1 HÀNG = 1 BÀI VIẾT (dạng cột đứng) trên mọi breakpoint.
+ */
+function cms_nhomc_render_pages_widget($limit = 3, $title = 'Trang mới nhất') {
+    $title = !empty($title) ? $title : __('Trang mới nhất', 'cms-nhomc');
+    $pages = cms_nhomc_get_module13_pages($limit);
+    ?>
+    <div class="widget-categories-card widget-pages-card">
+        <h3 class="widget-cat-title widget-pages-title"><?php echo esc_html($title); ?></h3>
+        <div class="widget-cat-stripe widget-pages-stripe"></div>
+        <div class="widget-cat-body widget-pages-body">
+            <div class="module13-pages-list">
+                <?php foreach ($pages as $item) : ?>
+                    <article class="module13-page-item">
+                        <h4 class="module13-page-title">
+                            <a href="<?php echo esc_url($item['permalink']); ?>"><?php echo esc_html($item['title']); ?></a>
+                        </h4>
+                        <div class="module13-page-thumb">
+                            <a href="<?php echo esc_url($item['permalink']); ?>" tabindex="-1" aria-hidden="true">
+                                <img src="<?php echo esc_url($item['thumb']); ?>" alt="<?php echo esc_attr($item['title']); ?>" loading="lazy" />
+                            </a>
+                        </div>
+                        <div class="module13-page-desc">
+                            <?php echo esc_html($item['excerpt']); ?>
+                        </div>
+                    </article>
+                <?php endforeach; ?>
+            </div>
+        </div>
+    </div>
+    <?php
+}
+
+/**
+ * Shortcode [cms_nhomc_pages limit="3" title="Trang mới nhất"]
+ */
+function cms_nhomc_pages_shortcode($atts) {
+    $atts = shortcode_atts(array(
+        'limit' => 3,
+        'title' => 'Trang mới nhất',
+    ), $atts, 'cms_nhomc_pages');
+
+    ob_start();
+    cms_nhomc_render_pages_widget(intval($atts['limit']), sanitize_text_field($atts['title']));
+    return ob_get_clean();
+}
+add_shortcode('cms_nhomc_pages', 'cms_nhomc_pages_shortcode');
+
+/**
+ * Đăng ký Widget WordPress chuẩn cho Module 13
+ */
+class CMS_NhomC_Pages_Widget extends WP_Widget {
+    public function __construct() {
+        parent::__construct(
+            'cms_nhomc_pages_widget',
+            __('CMS Nhóm C: Trang mới nhất (Module 13)', 'cms-nhomc'),
+            array('description' => __('Hiển thị 3 bài viết/trang dạng cột đứng 1 hàng 1 bài (Module 13)', 'cms-nhomc'))
+        );
+    }
+    public function widget($args, $instance) {
+        $title = !empty($instance['title']) ? $instance['title'] : __('Trang mới nhất', 'cms-nhomc');
+        $limit = !empty($instance['limit']) ? intval($instance['limit']) : 3;
+        cms_nhomc_render_pages_widget($limit, $title);
+    }
+}
+function cms_nhomc_register_pages_widget() {
+    register_widget('CMS_NhomC_Pages_Widget');
+}
+add_action('widgets_init', 'cms_nhomc_register_pages_widget');
+

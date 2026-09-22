@@ -43,6 +43,7 @@ get_header();
             <?php cms_nhomc_render_categories_widget(); ?>
             <?php cms_nhomc_render_featured_posts_widget(5, 'BÀI VIẾT NỔI BẬT'); ?>
             <?php cms_nhomc_render_comments_widget(3, 'Comments'); ?>
+            <?php if (function_exists('cms_nhomc_render_pages_widget')) { cms_nhomc_render_pages_widget(3, 'Trang mới nhất'); } ?>
             <?php if (function_exists('cms_nhomc_render_last_posts_widget')) { cms_nhomc_render_last_posts_widget(5, 'Latest News'); } ?>
         </aside>
     </div>
