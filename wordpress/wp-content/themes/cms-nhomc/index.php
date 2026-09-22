@@ -9,6 +9,11 @@ get_header();
 ?>
 
 <div class="site-content cms-container-layout cms-home-container-layout">
+    <!-- Khối Tin Tiêu Điểm / Hero Slider (Module 16 - Anh Quý) -->
+    <?php if (function_exists('cms_nhomc_render_featured_slider')) : ?>
+        <?php cms_nhomc_render_featured_slider(4, 'TIN TIÊU ĐIỂM'); ?>
+    <?php endif; ?>
+
     <!-- Hàng 3 cột theo sơ đồ Hình 1: Archive (Trái) | Content (Giữa) | Comments (Phải) -->
     <div class="cms-layout-grid cms-home-grid">
         <!-- Cột trái: Archive (Module 11) -->
