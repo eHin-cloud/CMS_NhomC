@@ -908,46 +908,203 @@ function cms_nhomc_render_categories_widget($title = 'Categories') {
 }
 
 /**
- * Render Widget: ARCHIVE (Lưu trữ theo tháng) - Module 11
+ * Render Widget: ARCHIVE (Lưu trữ theo ngày tháng / Bài viết mới nhất) - Module 11
+ * Thiết kế giao diện 2 cột đánh số 1 - 8 theo chuẩn thiết kế spec
  */
-function cms_nhomc_render_archive_widget($title = 'Archive') {
-    ?>
-    <div class="widget-categories-card widget-archives-card">
-        <h3 class="widget-cat-title widget-archive-title"><?php echo esc_html($title); ?></h3>
-        <div class="widget-cat-stripe"></div>
-        <div class="widget-cat-body">
-            <ul class="widget-cat-list">
-                <?php
-                $archives = wp_get_archives(array(
-                    'type'            => 'monthly',
-                    'format'          => 'custom',
-                    'before'          => '<li><span class="cat-bullet"></span>',
-                    'after'           => '</li>',
-                    'show_post_count' => false,
-                    'echo'            => 0,
-                ));
+function cms_nhomc_render_archive_widget($title = 'Xem nhiều') {
+    // 1. Lấy danh sách bài viết mới nhất theo ngày tháng đăng tải
+    $recent_posts = get_posts(array(
+        'numberposts' => 8,
+        'post_status' => 'publish',
+        'orderby'     => 'date',
+        'order'       => 'DESC',
+    ));
 
-                if (!empty($archives)) {
-                    echo $archives;
-                } else {
-                    $sample_months = array(
-                        'Tháng 7 2026',
-                        'Tháng 6 2026',
-                        'Tháng 4 2026',
-                        'Tháng 3 2026',
-                        'Tháng 2 2026',
-                    );
-                    foreach ($sample_months as $month) {
-                        echo '<li>';
-                        echo '<span class="cat-bullet"></span>';
-                        echo '<a href="#">' . esc_html($month) . '</a>';
-                        echo '</li>';
-                    }
-                }
-                ?>
-            </ul>
+    // Dữ liệu dự phòng chuẩn theo ảnh thiết kế spec
+    $spec_sample_posts = array(
+        array('title' => 'Việt Nam thua Hàn Quốc 0 - 6', 'link' => home_url('/'), 'comments' => 0),
+        array('title' => 'Hai nhà thầu nước ngoài từ chối bồi thường vụ cao tốc Đà Nẵng – Quảng Ngãi', 'link' => home_url('/'), 'comments' => 37),
+        array('title' => 'Dự kiến trình Chính phủ nghỉ Tết từ 29/12 Âm lịch', 'link' => home_url('/'), 'comments' => 0),
+        array('title' => 'Israel lắp lồng chống UAV trên nóc xe tăng hiện đại nhất', 'link' => home_url('/'), 'comments' => 0),
+        array('title' => 'Chủ tịch nước Võ Văn Thưởng gặp Tổng thống Putin', 'link' => home_url('/'), 'comments' => 0),
+        array('title' => 'Xem xét đình chỉ Chủ tịch xã liên quan chung cư mini 200 căn hộ', 'link' => home_url('/'), 'comments' => 0),
+        array('title' => 'Mắt 10/10 cũng khó thấy mặt người trong hình', 'link' => home_url('/'), 'comments' => 0),
+        array('title' => 'Mỹ sẵn sàng đưa 2.000 lính phản ứng nhanh tới Israel', 'link' => home_url('/'), 'comments' => 0),
+    );
+
+    $items_posts = array();
+    if (!empty($recent_posts)) {
+        foreach ($recent_posts as $p) {
+            $items_posts[] = array(
+                'title'    => get_the_title($p->ID),
+                'link'     => get_permalink($p->ID),
+                'comments' => get_comments_number($p->ID),
+            );
+        }
+    }
+    // Bù đủ 8 bài viết nếu DB chưa đủ
+    $count_p = count($items_posts);
+    if ($count_p < 8) {
+        for ($i = $count_p; $i < 8; $i++) {
+            $items_posts[] = $spec_sample_posts[$i];
+        }
+    }
+
+    // 2. Lấy danh sách các mốc ngày tháng lưu trữ (Monthly Archives)
+    $monthly_archives = wp_get_archives(array(
+        'type'            => 'monthly',
+        'format'          => 'custom',
+        'echo'            => 0,
+        'limit'           => 8,
+    ));
+
+    $items_dates = array();
+    if (!empty($monthly_archives)) {
+        preg_match_all('/<a[^>]*href=[\'"]([^\'"]*)[\'"][^>]*>(.*?)<\/a>/i', $monthly_archives, $matches, PREG_SET_ORDER);
+        foreach ($matches as $match) {
+            $items_dates[] = array(
+                'link'  => $match[1],
+                'title' => strip_tags($match[2]),
+            );
+            if (count($items_dates) >= 8) break;
+        }
+    }
+
+    if (empty($items_dates)) {
+        $sample_months = array(
+            'Tháng 7 2026', 'Tháng 6 2026', 'Tháng 4 2026', 'Tháng 3 2026',
+            'Tháng 2 2026', 'Tháng 12 2025', 'Tháng 11 2025', 'Tháng 10 2023'
+        );
+        foreach ($sample_months as $sm) {
+            $items_dates[] = array('link' => home_url('/'), 'title' => $sm);
+        }
+    }
+    // Bù đủ 8 mốc lưu trữ nếu chưa đủ
+    $count_d = count($items_dates);
+    if ($count_d < 8) {
+        for ($i = $count_d; $i < 8; $i++) {
+            $items_dates[] = array('link' => home_url('/'), 'title' => 'Tháng ' . (8 - $i) . ' 2025');
+        }
+    }
+    ?>
+    <div class="cms-archive-ranked-widget">
+        <div class="archive-ranked-header">
+            <h3 class="archive-ranked-title"><?php echo esc_html($title); ?></h3>
+            <div class="archive-ranked-tabs">
+                <button type="button" class="archive-tab-btn active" data-target="posts">Mới nhất</button>
+                <span class="tab-sep">|</span>
+                <button type="button" class="archive-tab-btn" data-target="dates">Theo tháng</button>
+            </div>
+        </div>
+
+        <div class="archive-ranked-body">
+            <!-- TAB 1: Danh sách bài viết mới nhất theo ngày tháng (8 bài) -->
+            <div class="archive-tab-panel active" id="archive-panel-posts">
+                <div class="archive-ranked-grid">
+                    <!-- Cột 1: Đánh số 1 - 4 -->
+                    <div class="archive-col">
+                        <?php for ($i = 0; $i < 4; $i++) : 
+                            $item = $items_posts[$i];
+                        ?>
+                            <div class="archive-ranked-item">
+                                <span class="archive-ranked-num"><?php echo ($i + 1); ?></span>
+                                <div class="archive-ranked-content">
+                                    <a href="<?php echo esc_url($item['link']); ?>" class="archive-ranked-link" title="<?php echo esc_attr($item['title']); ?>">
+                                        <?php echo esc_html($item['title']); ?>
+                                    </a>
+                                    <?php if (!empty($item['comments'])) : ?>
+                                        <span class="archive-ranked-comments" title="<?php echo esc_attr($item['comments']); ?> bình luận">
+                                            <i class="fa fa-commenting-o"></i> <?php echo intval($item['comments']); ?>
+                                        </span>
+                                    <?php endif; ?>
+                                </div>
+                            </div>
+                        <?php endfor; ?>
+                    </div>
+
+                    <!-- Cột 2: Đánh số 5 - 8 -->
+                    <div class="archive-col">
+                        <?php for ($i = 4; $i < 8; $i++) : 
+                            $item = $items_posts[$i];
+                        ?>
+                            <div class="archive-ranked-item">
+                                <span class="archive-ranked-num"><?php echo ($i + 1); ?></span>
+                                <div class="archive-ranked-content">
+                                    <a href="<?php echo esc_url($item['link']); ?>" class="archive-ranked-link" title="<?php echo esc_attr($item['title']); ?>">
+                                        <?php echo esc_html($item['title']); ?>
+                                    </a>
+                                    <?php if (!empty($item['comments'])) : ?>
+                                        <span class="archive-ranked-comments" title="<?php echo esc_attr($item['comments']); ?> bình luận">
+                                            <i class="fa fa-commenting-o"></i> <?php echo intval($item['comments']); ?>
+                                        </span>
+                                    <?php endif; ?>
+                                </div>
+                            </div>
+                        <?php endfor; ?>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 2: Danh sách mốc lưu trữ theo ngày tháng (8 tháng) -->
+            <div class="archive-tab-panel" id="archive-panel-dates" style="display: none;">
+                <div class="archive-ranked-grid">
+                    <!-- Cột 1: Đánh số 1 - 4 -->
+                    <div class="archive-col">
+                        <?php for ($i = 0; $i < 4; $i++) : 
+                            $item = $items_dates[$i];
+                        ?>
+                            <div class="archive-ranked-item">
+                                <span class="archive-ranked-num"><?php echo ($i + 1); ?></span>
+                                <div class="archive-ranked-content">
+                                    <a href="<?php echo esc_url($item['link']); ?>" class="archive-ranked-link" title="<?php echo esc_attr($item['title']); ?>">
+                                        <?php echo esc_html($item['title']); ?>
+                                    </a>
+                                </div>
+                            </div>
+                        <?php endfor; ?>
+                    </div>
+
+                    <!-- Cột 2: Đánh số 5 - 8 -->
+                    <div class="archive-col">
+                        <?php for ($i = 4; $i < 8; $i++) : 
+                            $item = $items_dates[$i];
+                        ?>
+                            <div class="archive-ranked-item">
+                                <span class="archive-ranked-num"><?php echo ($i + 1); ?></span>
+                                <div class="archive-ranked-content">
+                                    <a href="<?php echo esc_url($item['link']); ?>" class="archive-ranked-link" title="<?php echo esc_attr($item['title']); ?>">
+                                        <?php echo esc_html($item['title']); ?>
+                                    </a>
+                                </div>
+                            </div>
+                        <?php endfor; ?>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
+    <script>
+    (function() {
+        var widget = document.querySelector('.cms-archive-ranked-widget');
+        if (!widget) return;
+        var buttons = widget.querySelectorAll('.archive-tab-btn');
+        buttons.forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                buttons.forEach(function(b) { b.classList.remove('active'); });
+                this.classList.add('active');
+                var target = this.getAttribute('data-target');
+                var panels = widget.querySelectorAll('.archive-tab-panel');
+                panels.forEach(function(panel) {
+                    if (panel.id === 'archive-panel-' + target) {
+                        panel.style.display = 'block';
+                    } else {
+                        panel.style.display = 'none';
+                    }
+                });
+            });
+        });
+    })();
+    </script>
     <?php
 }
 

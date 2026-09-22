@@ -13,7 +13,7 @@ get_header();
     <div class="cms-layout-grid cms-home-grid">
         <!-- Cột trái: Archive (Module 11) -->
         <aside class="cms-sidebar-column cms-home-sidebar-left" aria-label="Lưu trữ">
-            <?php cms_nhomc_render_archive_widget('Archive'); ?>
+            <?php cms_nhomc_render_archive_widget('Xem nhiều'); ?>
         </aside>
 
         <!-- Cột giữa: Content (Module 2) - Danh sách bài viết -->
