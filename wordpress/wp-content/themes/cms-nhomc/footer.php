@@ -16,39 +16,154 @@
 
     <div class="container">
         <div class="row text-center text-xs-center text-sm-left text-md-left">
-            <!-- Cột 1: Quick links -->
+            <!-- Cột 1: Comments -->
             <div class="col-xs-12 col-sm-4 col-md-4">
-                <h5>Quick links</h5>
+                <h5>Comments</h5>
                 <ul class="list-unstyled quick-links">
-                    <li><a href="<?php echo esc_url(home_url('/')); ?>"><i class="fa fa-angle-double-right"></i>Home</a></li>
-                    <li><a href="<?php echo esc_url(home_url('/about/')); ?>"><i class="fa fa-angle-double-right"></i>About</a></li>
-                    <li><a href="<?php echo esc_url(home_url('/faq/')); ?>"><i class="fa fa-angle-double-right"></i>FAQ</a></li>
-                    <li><a href="<?php echo esc_url(home_url('/get-started/')); ?>"><i class="fa fa-angle-double-right"></i>Get Started</a></li>
-                    <li><a href="<?php echo esc_url(home_url('/videos/')); ?>"><i class="fa fa-angle-double-right"></i>Videos</a></li>
+                    <?php
+                    $footer_comments = get_comments(array(
+                        'number'      => 10,
+                        'status'      => 'approve',
+                        'post_status' => 'publish',
+                        'type'        => 'comment',
+                    ));
+
+                    $display_comments = array();
+                    if (!empty($footer_comments)) {
+                        foreach ($footer_comments as $cmt) {
+                            if (strpos($cmt->comment_content, 'Xin chào, đây là một bình luận') !== false) {
+                                continue;
+                            }
+                            $raw_content = wp_strip_all_tags($cmt->comment_content);
+                            $author = !empty($cmt->comment_author) ? $cmt->comment_author : 'Guest';
+                            $display_comments[] = array(
+                                'text'  => $author . ': ' . wp_trim_words($raw_content, 6, '...'),
+                                'title' => $author . ': ' . $raw_content,
+                                'link'  => get_comment_link($cmt),
+                            );
+                            if (count($display_comments) >= 5) {
+                                break;
+                            }
+                        }
+                    }
+
+                    if (empty($display_comments)) {
+                        $sample_comments_text = array(
+                            'Bài viết rất hay và chi tiết!',
+                            'Cảm ơn tác giả đã chia sẻ nội dung này.',
+                            'Bài viết thật sự hữu ích cho dự án của tôi.',
+                            'Hướng dẫn rất rõ ràng, áp dụng được ngay.',
+                            'Mong tác giả có thêm nhiều bài viết chất lượng.',
+                        );
+                        $recent_posts = get_posts(array('numberposts' => 5, 'post_status' => 'publish'));
+                        foreach ($sample_comments_text as $idx => $sample_text) {
+                            $link = isset($recent_posts[$idx]) ? get_permalink($recent_posts[$idx]->ID) : home_url('/');
+                            $display_comments[] = array(
+                                'text'  => $sample_text,
+                                'title' => $sample_text,
+                                'link'  => $link,
+                            );
+                        }
+                    }
+
+                    foreach ($display_comments as $item) :
+                    ?>
+                        <li>
+                            <a href="<?php echo esc_url($item['link']); ?>" title="<?php echo esc_attr($item['title']); ?>">
+                                <i class="fa fa-angle-double-right"></i><?php echo esc_html($item['text']); ?>
+                            </a>
+                        </li>
+                    <?php endforeach; ?>
                 </ul>
             </div>
 
-            <!-- Cột 2: Quick links -->
+            <!-- Cột 2: Categories -->
             <div class="col-xs-12 col-sm-4 col-md-4">
-                <h5>Quick links</h5>
+                <h5>Categories</h5>
                 <ul class="list-unstyled quick-links">
-                    <li><a href="<?php echo esc_url(home_url('/')); ?>"><i class="fa fa-angle-double-right"></i>Home</a></li>
-                    <li><a href="<?php echo esc_url(home_url('/about/')); ?>"><i class="fa fa-angle-double-right"></i>About</a></li>
-                    <li><a href="<?php echo esc_url(home_url('/faq/')); ?>"><i class="fa fa-angle-double-right"></i>FAQ</a></li>
-                    <li><a href="<?php echo esc_url(home_url('/get-started/')); ?>"><i class="fa fa-angle-double-right"></i>Get Started</a></li>
-                    <li><a href="<?php echo esc_url(home_url('/videos/')); ?>"><i class="fa fa-angle-double-right"></i>Videos</a></li>
+                    <?php
+                    $footer_categories = get_categories(array(
+                        'orderby'    => 'count',
+                        'order'      => 'DESC',
+                        'number'     => 10,
+                        'hide_empty' => false,
+                    ));
+
+                    $display_categories = array();
+                    if (!empty($footer_categories)) {
+                        foreach ($footer_categories as $cat) {
+                            if ($cat->slug !== 'uncategorized' && $cat->slug !== 'chua-phan-loai') {
+                                $display_categories[] = array(
+                                    'name' => $cat->name,
+                                    'link' => get_category_link($cat->term_id),
+                                );
+                            }
+                        }
+                    }
+
+                    if (empty($display_categories)) {
+                        $display_categories = array(
+                            array('name' => '.Net Developer', 'link' => home_url('/category/net-developer/')),
+                            array('name' => 'Thực Tập Sinh Tester', 'link' => home_url('/category/thuc-tap-sinh-tester/')),
+                            array('name' => 'Trợ giảng lập trình - Part time', 'link' => home_url('/category/tro-giang-lap-trinh/')),
+                            array('name' => 'Frontend Development', 'link' => home_url('/category/frontend/')),
+                            array('name' => 'Backend Development', 'link' => home_url('/category/backend/')),
+                        );
+                    } else {
+                        $display_categories = array_slice($display_categories, 0, 5);
+                    }
+
+                    foreach ($display_categories as $item) :
+                    ?>
+                        <li>
+                            <a href="<?php echo esc_url($item['link']); ?>" title="<?php echo esc_attr($item['name']); ?>">
+                                <i class="fa fa-angle-double-right"></i><?php echo esc_html($item['name']); ?>
+                            </a>
+                        </li>
+                    <?php endforeach; ?>
                 </ul>
             </div>
 
-            <!-- Cột 3: Quick links -->
+            <!-- Cột 3: Last Posts -->
             <div class="col-xs-12 col-sm-4 col-md-4">
-                <h5>Quick links</h5>
+                <h5>Last Posts</h5>
                 <ul class="list-unstyled quick-links">
-                    <li><a href="<?php echo esc_url(home_url('/')); ?>"><i class="fa fa-angle-double-right"></i>Home</a></li>
-                    <li><a href="<?php echo esc_url(home_url('/about/')); ?>"><i class="fa fa-angle-double-right"></i>About</a></li>
-                    <li><a href="<?php echo esc_url(home_url('/faq/')); ?>"><i class="fa fa-angle-double-right"></i>FAQ</a></li>
-                    <li><a href="<?php echo esc_url(home_url('/get-started/')); ?>"><i class="fa fa-angle-double-right"></i>Get Started</a></li>
-                    <li><a href="<?php echo esc_url(home_url('/imprint/')); ?>"><i class="fa fa-angle-double-right"></i>Imprint</a></li>
+                    <?php
+                    $footer_recent_posts = wp_get_recent_posts(array(
+                        'numberposts' => 5,
+                        'post_status' => 'publish',
+                        'orderby'     => 'date',
+                        'order'       => 'DESC',
+                    ));
+
+                    $display_posts = array();
+                    if (!empty($footer_recent_posts)) {
+                        foreach ($footer_recent_posts as $post_item) {
+                            $display_posts[] = array(
+                                'title' => get_the_title($post_item['ID']),
+                                'link'  => get_permalink($post_item['ID']),
+                            );
+                        }
+                    }
+
+                    if (empty($display_posts)) {
+                        $display_posts = array(
+                            array('title' => 'New Web Design', 'link' => home_url('/')),
+                            array('title' => '21 000 Job Seekers', 'link' => home_url('/')),
+                            array('title' => 'Awesome Employers', 'link' => home_url('/')),
+                            array('title' => 'Lập Trình Web Hiện Đại', 'link' => home_url('/')),
+                            array('title' => 'Kỹ Năng Phỏng Vấn IT', 'link' => home_url('/')),
+                        );
+                    }
+
+                    foreach ($display_posts as $item) :
+                    ?>
+                        <li>
+                            <a href="<?php echo esc_url($item['link']); ?>" title="<?php echo esc_attr($item['title']); ?>">
+                                <i class="fa fa-angle-double-right"></i><?php echo esc_html($item['title']); ?>
+                            </a>
+                        </li>
+                    <?php endforeach; ?>
                 </ul>
             </div>
         </div>

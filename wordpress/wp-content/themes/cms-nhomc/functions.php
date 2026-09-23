@@ -56,8 +56,8 @@ function cms_nhomc_scripts() {
     // Nạp Font Awesome 4.7.0 cho các icon Footer và điều hướng
     wp_enqueue_style('font-awesome', 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css', array(), '4.7.0');
 
-    // Nạp style.css của Theme
-    wp_enqueue_style('cms-nhomc-style', get_stylesheet_uri(), array('font-awesome'), '1.3.0');
+    // Nạp style.css của Theme (sử dụng filemtime để tự động xóa cache trình duyệt khi sửa css)
+    wp_enqueue_style('cms-nhomc-style', get_stylesheet_uri(), array('font-awesome'), filemtime(get_stylesheet_directory() . '/style.css'));
 
     // Nạp JavaScript Smart Search & Autocomplete
     wp_enqueue_script('cms-nhomc-smart-search', get_template_directory_uri() . '/assets/js/smart-search.js', array(), '1.0.0', true);
@@ -74,7 +74,7 @@ function cms_nhomc_scripts() {
             wp_enqueue_script('comment-reply');
         }
         // Nạp script xử lý Sửa/Xóa bình luận cho tài khoản đã đăng nhập
-        wp_enqueue_script('cms-nhomc-comment-actions', get_template_directory_uri() . '/assets/js/comment-actions.js', array(), '1.0.0', true);
+        wp_enqueue_script('cms-nhomc-comment-actions', get_template_directory_uri() . '/assets/js/comment-actions.js', array(), filemtime(get_template_directory() . '/assets/js/comment-actions.js'), true);
         wp_localize_script('cms-nhomc-comment-actions', 'cmsNhomcComment', array(
             'ajaxUrl' => admin_url('admin-ajax.php'),
         ));
@@ -908,6 +908,207 @@ function cms_nhomc_render_categories_widget($title = 'Categories') {
 }
 
 /**
+ * Render Widget: ARCHIVE (Lưu trữ theo ngày tháng / Bài viết mới nhất) - Module 11
+ * Thiết kế giao diện 2 cột đánh số 1 - 8 theo chuẩn thiết kế spec
+ */
+function cms_nhomc_render_archive_widget($title = 'Xem nhiều') {
+    // 1. Lấy danh sách bài viết mới nhất theo ngày tháng đăng tải
+    $recent_posts = get_posts(array(
+        'numberposts' => 8,
+        'post_status' => 'publish',
+        'orderby'     => 'date',
+        'order'       => 'DESC',
+    ));
+
+    // Dữ liệu dự phòng chuẩn theo ảnh thiết kế spec
+    $spec_sample_posts = array(
+        array('title' => 'Việt Nam thua Hàn Quốc 0 - 6', 'link' => home_url('/'), 'comments' => 0),
+        array('title' => 'Hai nhà thầu nước ngoài từ chối bồi thường vụ cao tốc Đà Nẵng – Quảng Ngãi', 'link' => home_url('/'), 'comments' => 37),
+        array('title' => 'Dự kiến trình Chính phủ nghỉ Tết từ 29/12 Âm lịch', 'link' => home_url('/'), 'comments' => 0),
+        array('title' => 'Israel lắp lồng chống UAV trên nóc xe tăng hiện đại nhất', 'link' => home_url('/'), 'comments' => 0),
+        array('title' => 'Chủ tịch nước Võ Văn Thưởng gặp Tổng thống Putin', 'link' => home_url('/'), 'comments' => 0),
+        array('title' => 'Xem xét đình chỉ Chủ tịch xã liên quan chung cư mini 200 căn hộ', 'link' => home_url('/'), 'comments' => 0),
+        array('title' => 'Mắt 10/10 cũng khó thấy mặt người trong hình', 'link' => home_url('/'), 'comments' => 0),
+        array('title' => 'Mỹ sẵn sàng đưa 2.000 lính phản ứng nhanh tới Israel', 'link' => home_url('/'), 'comments' => 0),
+    );
+
+    $items_posts = array();
+    if (!empty($recent_posts)) {
+        foreach ($recent_posts as $p) {
+            $items_posts[] = array(
+                'title'    => get_the_title($p->ID),
+                'link'     => get_permalink($p->ID),
+                'comments' => get_comments_number($p->ID),
+            );
+        }
+    }
+    // Bù đủ 8 bài viết nếu DB chưa đủ
+    $count_p = count($items_posts);
+    if ($count_p < 8) {
+        for ($i = $count_p; $i < 8; $i++) {
+            $items_posts[] = $spec_sample_posts[$i];
+        }
+    }
+
+    // 2. Lấy danh sách các mốc ngày tháng lưu trữ (Monthly Archives)
+    $monthly_archives = wp_get_archives(array(
+        'type'            => 'monthly',
+        'format'          => 'custom',
+        'echo'            => 0,
+        'limit'           => 8,
+    ));
+
+    $items_dates = array();
+    if (!empty($monthly_archives)) {
+        preg_match_all('/<a[^>]*href=[\'"]([^\'"]*)[\'"][^>]*>(.*?)<\/a>/i', $monthly_archives, $matches, PREG_SET_ORDER);
+        foreach ($matches as $match) {
+            $items_dates[] = array(
+                'link'  => $match[1],
+                'title' => strip_tags($match[2]),
+            );
+            if (count($items_dates) >= 8) break;
+        }
+    }
+
+    if (empty($items_dates)) {
+        $sample_months = array(
+            'Tháng 7 2026', 'Tháng 6 2026', 'Tháng 4 2026', 'Tháng 3 2026',
+            'Tháng 2 2026', 'Tháng 12 2025', 'Tháng 11 2025', 'Tháng 10 2023'
+        );
+        foreach ($sample_months as $sm) {
+            $items_dates[] = array('link' => home_url('/'), 'title' => $sm);
+        }
+    }
+    // Bù đủ 8 mốc lưu trữ nếu chưa đủ
+    $count_d = count($items_dates);
+    if ($count_d < 8) {
+        for ($i = $count_d; $i < 8; $i++) {
+            $items_dates[] = array('link' => home_url('/'), 'title' => 'Tháng ' . (8 - $i) . ' 2025');
+        }
+    }
+    ?>
+    <div class="cms-archive-ranked-widget">
+        <div class="archive-ranked-header">
+            <h3 class="archive-ranked-title"><?php echo esc_html($title); ?></h3>
+            <div class="archive-ranked-tabs">
+                <button type="button" class="archive-tab-btn active" data-target="posts">Mới nhất</button>
+                <span class="tab-sep">|</span>
+                <button type="button" class="archive-tab-btn" data-target="dates">Theo tháng</button>
+            </div>
+        </div>
+
+        <div class="archive-ranked-body">
+            <!-- TAB 1: Danh sách bài viết mới nhất theo ngày tháng (8 bài) -->
+            <div class="archive-tab-panel active" id="archive-panel-posts">
+                <div class="archive-ranked-grid">
+                    <!-- Cột 1: Đánh số 1 - 4 -->
+                    <div class="archive-col">
+                        <?php for ($i = 0; $i < 4; $i++) : 
+                            $item = $items_posts[$i];
+                        ?>
+                            <div class="archive-ranked-item">
+                                <span class="archive-ranked-num"><?php echo ($i + 1); ?></span>
+                                <div class="archive-ranked-content">
+                                    <a href="<?php echo esc_url($item['link']); ?>" class="archive-ranked-link" title="<?php echo esc_attr($item['title']); ?>">
+                                        <?php echo esc_html($item['title']); ?>
+                                    </a>
+                                    <?php if (!empty($item['comments'])) : ?>
+                                        <span class="archive-ranked-comments" title="<?php echo esc_attr($item['comments']); ?> bình luận">
+                                            <i class="fa fa-commenting-o"></i> <?php echo intval($item['comments']); ?>
+                                        </span>
+                                    <?php endif; ?>
+                                </div>
+                            </div>
+                        <?php endfor; ?>
+                    </div>
+
+                    <!-- Cột 2: Đánh số 5 - 8 -->
+                    <div class="archive-col">
+                        <?php for ($i = 4; $i < 8; $i++) : 
+                            $item = $items_posts[$i];
+                        ?>
+                            <div class="archive-ranked-item">
+                                <span class="archive-ranked-num"><?php echo ($i + 1); ?></span>
+                                <div class="archive-ranked-content">
+                                    <a href="<?php echo esc_url($item['link']); ?>" class="archive-ranked-link" title="<?php echo esc_attr($item['title']); ?>">
+                                        <?php echo esc_html($item['title']); ?>
+                                    </a>
+                                    <?php if (!empty($item['comments'])) : ?>
+                                        <span class="archive-ranked-comments" title="<?php echo esc_attr($item['comments']); ?> bình luận">
+                                            <i class="fa fa-commenting-o"></i> <?php echo intval($item['comments']); ?>
+                                        </span>
+                                    <?php endif; ?>
+                                </div>
+                            </div>
+                        <?php endfor; ?>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 2: Danh sách mốc lưu trữ theo ngày tháng (8 tháng) -->
+            <div class="archive-tab-panel" id="archive-panel-dates" style="display: none;">
+                <div class="archive-ranked-grid">
+                    <!-- Cột 1: Đánh số 1 - 4 -->
+                    <div class="archive-col">
+                        <?php for ($i = 0; $i < 4; $i++) : 
+                            $item = $items_dates[$i];
+                        ?>
+                            <div class="archive-ranked-item">
+                                <span class="archive-ranked-num"><?php echo ($i + 1); ?></span>
+                                <div class="archive-ranked-content">
+                                    <a href="<?php echo esc_url($item['link']); ?>" class="archive-ranked-link" title="<?php echo esc_attr($item['title']); ?>">
+                                        <?php echo esc_html($item['title']); ?>
+                                    </a>
+                                </div>
+                            </div>
+                        <?php endfor; ?>
+                    </div>
+
+                    <!-- Cột 2: Đánh số 5 - 8 -->
+                    <div class="archive-col">
+                        <?php for ($i = 4; $i < 8; $i++) : 
+                            $item = $items_dates[$i];
+                        ?>
+                            <div class="archive-ranked-item">
+                                <span class="archive-ranked-num"><?php echo ($i + 1); ?></span>
+                                <div class="archive-ranked-content">
+                                    <a href="<?php echo esc_url($item['link']); ?>" class="archive-ranked-link" title="<?php echo esc_attr($item['title']); ?>">
+                                        <?php echo esc_html($item['title']); ?>
+                                    </a>
+                                </div>
+                            </div>
+                        <?php endfor; ?>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+    (function() {
+        var widget = document.querySelector('.cms-archive-ranked-widget');
+        if (!widget) return;
+        var buttons = widget.querySelectorAll('.archive-tab-btn');
+        buttons.forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                buttons.forEach(function(b) { b.classList.remove('active'); });
+                this.classList.add('active');
+                var target = this.getAttribute('data-target');
+                var panels = widget.querySelectorAll('.archive-tab-panel');
+                panels.forEach(function(panel) {
+                    if (panel.id === 'archive-panel-' + target) {
+                        panel.style.display = 'block';
+                    } else {
+                        panel.style.display = 'none';
+                    }
+                });
+            });
+        });
+    })();
+    </script>
+    <?php
+}
+
+/**
  * Đăng ký Widget Area (Sidebar)
  */
 function cms_nhomc_widgets_init() {
@@ -941,9 +1142,9 @@ function cms_nhomc_create_default_categories() {
 add_action('after_setup_theme', 'cms_nhomc_create_default_categories');
 
 /**
- * Render Widget: COMMENTS (Bình luận) - Module 12 (Anh Quý)
+ * Render Widget: COMMENTS (Bình luận) - Module 14 (Hien/14-comments)
  */
-function cms_nhomc_render_comments_widget($limit = 3, $title = 'Comments') {
+function cms_nhomc_render_comments_widget($limit = 5, $title = 'Comments') {
     $comments = get_comments(array(
         'number'      => intval($limit) * 2,
         'status'      => 'approve',
@@ -958,9 +1159,13 @@ function cms_nhomc_render_comments_widget($limit = 3, $title = 'Comments') {
             if (strpos($comment->comment_content, 'Xin chào, đây là một bình luận') !== false) {
                 continue;
             }
+            $post_title = get_the_title($comment->comment_post_ID);
             $display_items[] = array(
+                'author'  => get_comment_author($comment),
+                'date'    => get_comment_date('d/m/Y', $comment),
                 'content' => wp_strip_all_tags($comment->comment_content),
                 'link'    => get_comment_link($comment),
+                'post'    => !empty($post_title) ? $post_title : '',
             );
             if (count($display_items) >= $limit) {
                 break;
@@ -971,21 +1176,27 @@ function cms_nhomc_render_comments_widget($limit = 3, $title = 'Comments') {
     // Dữ liệu mẫu chuẩn y chang mẫu hình ảnh nếu chưa có bình luận
     if (empty($display_items)) {
         $sample_comments = array(
-            'Bài viết hay quá',
-            'Cảm ơn tác giả',
-            'Bài viết thật hữu ích',
+            array('author' => 'Thành Viên', 'content' => 'Bài viết hay quá, rất hữu ích!', 'date' => date('d/m/Y')),
+            array('author' => 'Độc Giả', 'content' => 'Cảm ơn tác giả đã chia sẻ nội dung này.', 'date' => date('d/m/Y')),
+            array('author' => 'Khách', 'content' => 'Trình bày chi tiết, dễ hiểu và chuyên nghiệp.', 'date' => date('d/m/Y')),
+            array('author' => 'Sinh Viên', 'content' => 'Nội dung bài viết rất thực tế và chất lượng.', 'date' => date('d/m/Y')),
+            array('author' => 'Admin', 'content' => 'Chào mừng bạn đến với hệ thống CMS Nhóm C!', 'date' => date('d/m/Y')),
         );
 
         $recent_posts = get_posts(array(
-            'numberposts' => 3,
+            'numberposts' => 5,
             'post_status' => 'publish',
         ));
 
-        foreach ($sample_comments as $idx => $cmt_text) {
+        foreach ($sample_comments as $idx => $cmt) {
+            if ($idx >= $limit) break;
             $link = isset($recent_posts[$idx]) ? get_permalink($recent_posts[$idx]->ID) : home_url('/');
             $display_items[] = array(
-                'content' => $cmt_text,
+                'author'  => $cmt['author'],
+                'date'    => $cmt['date'],
+                'content' => $cmt['content'],
                 'link'    => $link,
+                'post'    => '',
             );
         }
     }
@@ -997,7 +1208,19 @@ function cms_nhomc_render_comments_widget($limit = 3, $title = 'Comments') {
             <?php foreach ($display_items as $item) : ?>
                 <li class="widget-comments-item">
                     <a href="<?php echo esc_url($item['link']); ?>" class="widget-comments-link">
-                        <?php echo esc_html($item['content']); ?>
+                        <span class="widget-comment-content"><?php echo esc_html($item['content']); ?></span>
+                        <?php if (!empty($item['author'])) : ?>
+                            <span class="widget-comment-meta">
+                                <span class="widget-comment-author">
+                                    <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                                    <?php echo esc_html($item['author']); ?>
+                                </span>
+                                <?php if (!empty($item['date'])) : ?>
+                                    <span class="widget-comment-dot">&bull;</span>
+                                    <span class="widget-comment-date"><?php echo esc_html($item['date']); ?></span>
+                                <?php endif; ?>
+                            </span>
+                        <?php endif; ?>
                     </a>
                 </li>
             <?php endforeach; ?>
@@ -1107,7 +1330,7 @@ function cms_nhomc_comment_callback($comment, $args, $depth) {
                             <textarea class="form-control cms-comment-edit-textarea" id="cms-comment-textarea-<?php echo $comment_id; ?>" rows="3"><?php echo esc_textarea(get_comment_text($comment_id)); ?></textarea>
                             <div class="cms-comment-edit-buttons">
                                 <button type="button" class="btn btn-sm btn-secondary cms-btn-cancel-edit" data-comment-id="<?php echo $comment_id; ?>">Hủy</button>
-                                <button type="button" class="btn btn-sm btn-primary cms-btn-save-edit" data-comment-id="<?php echo $comment_id; ?>" data-nonce="<?php echo wp_create_nonce('cms_edit_comment_' . $comment_id); ?>">Lưu thay đổi</button>
+                                <button type="button" class="btn btn-sm btn-primary cms-btn-save-edit" data-comment-id="<?php echo $comment_id; ?>" data-nonce="<?php echo wp_create_nonce('cms_edit_comment_' . $comment_id); ?>" data-version-hash="<?php echo md5(trim($comment->comment_content)); ?>">Lưu thay đổi</button>
                             </div>
                         </div>
                     <?php endif; ?>
@@ -1115,7 +1338,7 @@ function cms_nhomc_comment_callback($comment, $args, $depth) {
 
                 <div class="comment-reply-wrap">
                     <?php if ($can_edit) : ?>
-                        <button type="button" class="cms-comment-action-btn cms-comment-edit-btn" data-comment-id="<?php echo $comment_id; ?>" title="<?php esc_attr_e('Chỉnh sửa bình luận', 'cms-nhomc'); ?>">
+                        <button type="button" class="cms-comment-action-btn cms-comment-edit-btn" data-comment-id="<?php echo $comment_id; ?>" data-nonce="<?php echo wp_create_nonce('cms_edit_comment_' . $comment_id); ?>" title="<?php esc_attr_e('Chỉnh sửa bình luận', 'cms-nhomc'); ?>">
                             <i class="fa fa-pencil"></i> Sửa
                         </button>
                     <?php endif; ?>
@@ -1330,19 +1553,42 @@ add_action('comment_post', function($comment_id) {
 }, 999);
 
 /**
+ * Xử lý khi người dùng gửi trả lời vào một bình luận đã bị xóa trước đó:
+ * Thay thế câu báo mặc định của WP core thành "Bình luận này đã bị xóa bởi tác giả hoặc quản trị viên."
+ */
+add_action('comment_reply_to_unapproved_comment', function($comment_post_id, $comment_parent) {
+    $parent = get_comment($comment_parent);
+    if (!$parent || 'trash' === $parent->comment_approved) {
+        wp_die(
+            '<p>Bình luận bạn đang trả lời đã bị xóa bởi tác giả hoặc quản trị viên.</p>',
+            'Bình luận đã bị xóa',
+            array('response' => 403, 'back_link' => true)
+        );
+    }
+}, 1, 2);
+
+add_filter('gettext', function($translation, $text, $domain) {
+    if ('Sorry, replies to unapproved comments are not allowed.' === $text || 'Sorry, you cannot reply to a comment that is not approved.' === $text) {
+        return 'Bình luận bạn đang trả lời đã bị xóa bởi tác giả hoặc quản trị viên.';
+    }
+    return $translation;
+}, 20, 3);
+
+/**
  * ==========================================================================
  * AJAX HANDLERS: SỬA VÀ XÓA BÌNH LUẬN (DÀNH CHO NGƯỜI DÙNG ĐÃ LOGIN)
  * ==========================================================================
  */
 
 /**
- * AJAX: Chỉnh sửa nội dung bình luận
+ * AJAX: Chỉnh sửa nội dung bình luận (Bên lưu sau sẽ báo lỗi xung đột)
  */
 add_action('wp_ajax_cms_nhomc_edit_comment', 'cms_nhomc_ajax_edit_comment');
 function cms_nhomc_ajax_edit_comment() {
-    $comment_id = isset($_POST['comment_id']) ? intval($_POST['comment_id']) : 0;
-    $content    = isset($_POST['content']) ? trim($_POST['content']) : '';
-    $nonce      = isset($_POST['nonce']) ? sanitize_text_field($_POST['nonce']) : '';
+    $comment_id   = isset($_POST['comment_id']) ? intval($_POST['comment_id']) : 0;
+    $content      = isset($_POST['content']) ? trim($_POST['content']) : '';
+    $nonce        = isset($_POST['nonce']) ? sanitize_text_field($_POST['nonce']) : '';
+    $version_hash = isset($_POST['version_hash']) ? sanitize_text_field($_POST['version_hash']) : '';
 
     if (!$comment_id || empty($content)) {
         wp_send_json_error(array('message' => 'Dữ liệu không hợp lệ hoặc nội dung trống.'));
@@ -1366,6 +1612,14 @@ function cms_nhomc_ajax_edit_comment() {
         wp_send_json_error(array('message' => 'Bạn chỉ có quyền chỉnh sửa bình luận do chính mình viết!'));
     }
 
+    // NẾU NỘI DUNG ĐÃ BỊ THAY ĐỔI BỞI PHIÊN KHÁC TRƯỚC ĐÓ -> BÁO LỖI CHẶN LƯU
+    $current_db_hash = md5(trim($comment->comment_content));
+    if (!empty($version_hash) && $version_hash !== $current_db_hash) {
+        wp_send_json_error(array(
+            'message' => 'Lỗi: Bình luận này đã được chỉnh sửa trước đó bởi một phiên khác! Thao tác lưu bị từ chối để tránh ghi đè mất dữ liệu. Vui lòng tải lại trang để xem nội dung mới nhất.'
+        ));
+    }
+
     $updated = wp_update_comment(array(
         'comment_ID'      => $comment_id,
         'comment_content' => wp_kses_post($content),
@@ -1375,13 +1629,14 @@ function cms_nhomc_ajax_edit_comment() {
         wp_send_json_error(array('message' => 'Không thể cập nhật bình luận.'));
     }
 
-    $updated_comment = get_comment($comment_id);
+    $updated_comment   = get_comment($comment_id);
     $formatted_content = apply_filters('comment_text', $updated_comment->comment_content, $updated_comment);
 
     wp_send_json_success(array(
-        'message'     => 'Cập nhật bình luận thành công!',
-        'content'     => $formatted_content,
-        'raw_content' => $updated_comment->comment_content,
+        'message'          => 'Cập nhật bình luận thành công!',
+        'content'          => $formatted_content,
+        'raw_content'      => $updated_comment->comment_content,
+        'new_version_hash' => md5(trim($updated_comment->comment_content)),
     ));
 }
 

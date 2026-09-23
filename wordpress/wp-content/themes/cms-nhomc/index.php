@@ -8,10 +8,16 @@
 get_header();
 ?>
 
-<div class="site-content cms-container-layout">
-    <div class="cms-layout-grid">
-        <!-- Cột nội dung danh sách bài viết -->
-        <main class="cms-main-column">
+<div class="site-content cms-container-layout cms-home-container-layout">
+    <!-- Hàng 3 cột theo sơ đồ Hình 1: Archive (Trái) | Content (Giữa) | Comments (Phải) -->
+    <div class="cms-layout-grid cms-home-grid">
+        <!-- Cột trái: Archive (Module 11) -->
+        <aside class="cms-sidebar-column cms-home-sidebar-left" aria-label="Lưu trữ">
+            <?php cms_nhomc_render_archive_widget('Xem nhiều'); ?>
+        </aside>
+
+        <!-- Cột giữa: Content (Module 2) - Danh sách bài viết -->
+        <main class="cms-main-column cms-home-main-column">
             <?php if (have_posts()) : ?>
                 <div class="cms-post-list">
                     <?php
@@ -38,13 +44,9 @@ get_header();
             <?php endif; ?>
         </main>
 
-        <!-- Sidebar bên phải: Categories & BÀI VIẾT NỔI BẬT trong Content -->
-        <aside class="cms-sidebar-column">
-            <?php cms_nhomc_render_categories_widget(); ?>
-            <?php cms_nhomc_render_featured_posts_widget(5, 'BÀI VIẾT NỔI BẬT'); ?>
+        <!-- Cột phải: Comments (Module 12) chuẩn theo Hình 2 -->
+        <aside class="cms-sidebar-column cms-home-sidebar-right" aria-label="Bình luận">
             <?php cms_nhomc_render_comments_widget(3, 'Comments'); ?>
-            <?php if (function_exists('cms_nhomc_render_pages_widget')) { cms_nhomc_render_pages_widget(3, 'Trang mới nhất'); } ?>
-            <?php if (function_exists('cms_nhomc_render_last_posts_widget')) { cms_nhomc_render_last_posts_widget(5, 'Latest News'); } ?>
         </aside>
     </div>
 </div>

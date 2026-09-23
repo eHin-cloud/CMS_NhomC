@@ -63,7 +63,7 @@ iframe {
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
   position: sticky;
   top: 0;
-  z-index: 999;
+  z-index: 1010;
 }
 
 .navbar-container {
@@ -326,7 +326,7 @@ iframe {
   background-color: rgba(15, 23, 42, 0.45);
   backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(4px);
-  z-index: 1001;
+  z-index: 1000;
   opacity: 0;
   visibility: hidden;
   transition: opacity 0.28s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.28s ease;
@@ -352,7 +352,7 @@ body.drawer-open {
   background-color: #ffffff;
   box-shadow: -4px 0 24px rgba(0, 0, 0, 0.15);
   padding: 22px 20px;
-  z-index: 1002;
+  z-index: 1020;
   overflow-y: auto;
   transform: translateX(100%);
   transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
@@ -468,14 +468,26 @@ body.drawer-open {
     width: 100%;
     margin: 0;
     background-color: #ffffff;
-    padding: 10px 16px;
+    padding: 12px 16px;
     border-bottom: 1px solid var(--nav-border);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    z-index: 1000;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    z-index: 1011;
   }
 
   .nav-search-form.is-active {
     display: flex !important;
+    animation: searchBarSlideDown 0.22s ease-out;
+  }
+
+  @keyframes searchBarSlideDown {
+    from {
+      opacity: 0;
+      transform: translateY(-8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 
   .nav-search-form .search-input-wrapper {
@@ -1702,6 +1714,230 @@ section#footer {
   top: 75px;
 }
 
+/* ====================================================
+   Layout trang chủ (Homepage) theo sơ đồ Hình 1:
+   3 Cột: Archive (Trái) - Content (Giữa) - Comments (Phải)
+   ==================================================== */
+.cms-container-layout.cms-home-container-layout {
+  max-width: 1400px !important;
+  width: 95% !important;
+  margin: 28px auto 60px !important;
+}
+
+.cms-layout-grid.cms-home-grid,
+.cms-home-grid {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: flex-start !important;
+  gap: 24px !important;
+  width: 100% !important;
+}
+
+/* Cột trái: Archive (Module 11) */
+.cms-sidebar-column.cms-home-sidebar-left,
+.cms-home-sidebar-left {
+  flex: 0 0 350px !important;
+  width: 350px !important;
+  max-width: 350px !important;
+  position: sticky !important;
+  top: 75px !important;
+}
+
+/* Cột giữa: Content (Module 2) */
+.cms-main-column.cms-home-main-column,
+.cms-home-main-column {
+  flex: 1 1 0% !important;
+  min-width: 0 !important;
+}
+
+/* Cột phải: Comments (Module 12) */
+.cms-sidebar-column.cms-home-sidebar-right,
+.cms-home-sidebar-right {
+  flex: 0 0 235px !important;
+  width: 235px !important;
+  max-width: 235px !important;
+  position: sticky !important;
+  top: 75px !important;
+}
+
+/* Tối ưu thẻ bài viết (post card) khi hiển thị trong bố cục 3 cột để không bị vỡ/bóp méo */
+.cms-home-grid .cms-post-card {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: stretch !important;
+  min-height: 150px !important;
+  margin-bottom: 22px !important;
+}
+
+.cms-home-grid .cms-post-thumb {
+  flex: 0 0 200px !important;
+  width: 200px !important;
+  min-height: 140px !important;
+  max-height: 180px !important;
+}
+
+.cms-home-grid .cms-post-body {
+  flex: 1 1 0% !important;
+  padding: 14px 18px !important;
+  min-width: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+}
+
+.cms-home-grid .cms-post-header {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: flex-start !important;
+  gap: 14px !important;
+}
+
+.cms-home-grid .cms-date-badge {
+  flex-shrink: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  min-width: 52px !important;
+  max-width: 60px !important;
+  text-align: center !important;
+  padding-right: 12px !important;
+  border-right: 2px solid #e2e8f0 !important;
+  gap: 2px !important;
+}
+
+.cms-home-grid .cms-date-day {
+  font-size: 28px !important;
+  line-height: 1 !important;
+  margin: 0 !important;
+  letter-spacing: -0.5px !important;
+}
+
+.cms-home-grid .cms-date-meta {
+  font-size: 10px !important;
+  line-height: 1.2 !important;
+  text-align: center !important;
+}
+
+.cms-home-grid .cms-date-month,
+.cms-home-grid .cms-date-year {
+  font-size: 10px !important;
+  display: block !important;
+}
+
+.cms-home-grid .cms-title-wrap {
+  flex: 1 1 0% !important;
+  min-width: 0 !important;
+}
+
+.cms-home-grid .cms-post-title {
+  font-size: 16px !important;
+  font-weight: 700 !important;
+  line-height: 1.4 !important;
+  margin: 0 0 6px 0 !important;
+  word-wrap: break-word !important;
+}
+
+.cms-home-grid .cms-post-meta {
+  margin-top: 4px !important;
+  font-size: 12.5px !important;
+}
+
+.cms-home-grid .cms-post-excerpt {
+  font-size: 13.5px !important;
+  line-height: 1.5 !important;
+  color: #64748b !important;
+  margin-top: 8px !important;
+  display: -webkit-box !important;
+  -webkit-line-clamp: 2 !important;
+  -webkit-box-orient: vertical !important;
+  overflow: hidden !important;
+}
+
+@media (max-width: 1200px) {
+  .cms-home-grid .cms-post-thumb {
+    flex: 0 0 170px !important;
+    width: 170px !important;
+  }
+  .cms-home-grid .cms-home-sidebar-left {
+    flex: 0 0 200px !important;
+    width: 200px !important;
+    max-width: 200px !important;
+  }
+  .cms-home-grid .cms-home-sidebar-right {
+    flex: 0 0 220px !important;
+    width: 220px !important;
+    max-width: 220px !important;
+  }
+}
+
+@media (max-width: 1060px) {
+  .cms-home-grid .cms-post-card {
+    flex-direction: column !important;
+  }
+  .cms-home-grid .cms-post-thumb {
+    flex: none !important;
+    width: 100% !important;
+    height: 180px !important;
+    max-height: 180px !important;
+  }
+}
+
+/* ====================================================
+   Layout trang chi tiết bài viết (Single Detail) theo wireframe:
+   3 Cột: Categories (Trái) - Detail (Giữa) - Recent Post (Phải)
+   ==================================================== */
+.cms-single-grid {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 28px;
+  width: 100%;
+}
+
+/* Cột trái: Categories (Module 9) */
+.cms-single-sidebar-left {
+  flex: 0 0 270px;
+  width: 270px;
+  position: sticky;
+  top: 75px;
+}
+
+/* Cột giữa: Detail (Module 6) */
+.cms-single-main-column {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Cột phải: Recent post (Module 10) */
+.cms-single-sidebar-right {
+  flex: 0 0 300px;
+  width: 300px;
+  position: sticky;
+  top: 75px;
+}
+
+/* Khối điều hướng bài trước / kế tiếp (Module 7) bên dưới full width */
+.cms-single-bottom-nav {
+  width: 100%;
+  margin-top: 32px;
+  background: #ffffff;
+  padding: 24px 32px;
+  border-radius: 6px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+  border: 1px solid #eef2f6;
+}
+
+.cms-single-bottom-nav .tdc-post-nav {
+  margin: 0;
+}
+
+/* Khối bình luận (Module 8) bên dưới full width */
+.cms-single-bottom-comments {
+  width: 100%;
+  margin-top: 24px;
+}
+
 .cms-sidebar {
   display: flex;
   flex-direction: column;
@@ -1814,9 +2050,59 @@ section#footer {
 /* Responsive cho layout 2 cột Archive, Content, Detail & Sidebar */
 @media (max-width: 991px) {
   .cms-main-layout,
-  .cms-layout-grid {
+  .cms-layout-grid,
+  .cms-single-grid,
+  .cms-home-grid {
     flex-direction: column !important;
     gap: 28px;
+  }
+
+  .cms-home-sidebar-left,
+  .cms-home-sidebar-right {
+    flex: none !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    position: static !important;
+  }
+
+  .cms-home-main-column {
+    order: 1;
+  }
+
+  .cms-home-sidebar-left {
+    order: 2;
+  }
+
+  .cms-home-sidebar-right {
+    order: 3;
+  }
+
+  .cms-single-sidebar-left,
+  .cms-single-sidebar-right {
+    flex: none !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    position: static !important;
+  }
+
+  .cms-single-sidebar-left {
+    order: 2;
+  }
+
+  .cms-single-main-column {
+    order: 1;
+  }
+
+  .cms-single-sidebar-right {
+    order: 3;
+  }
+
+  .cms-single-bottom-nav {
+    padding: 18px 20px;
+  }
+
+  .cms-main-column {
+    order: 1;
   }
 
   .cms-sidebar-column {
@@ -1826,6 +2112,7 @@ section#footer {
     position: static !important;
     border-top: 1px solid #e2e8f0;
     padding-top: 26px;
+    order: 2;
   }
 
   .cms-sidebar {
@@ -2504,24 +2791,24 @@ section#footer {
   background: transparent;
 }
 
-/* Tiêu đề "Comments" */
+/* Tiêu đề "Comments" chuẩn theo Hình 2 */
 .widget-comments-title {
-  font-size: 16px;
-  font-weight: 600;
-  color: #333333;
-  margin: 0 0 6px 0;
+  font-size: 18px;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0 0 8px 0;
   line-height: 1.3;
   text-transform: none;
   font-family: inherit;
   letter-spacing: normal;
 }
 
-/* Đường gạch ngang ngắn trang trí dưới tiêu đề */
+/* Đường gạch ngang ngắn trang trí dưới tiêu đề chuẩn theo Hình 2 */
 .widget-comments-stripe {
-  width: 45px;
+  width: 44px;
   height: 2px;
-  background-color: #999eab;
-  margin-bottom: 12px;
+  background-color: #8c98a4;
+  margin-bottom: 14px;
 }
 
 /* Danh sách bình luận */
@@ -2533,22 +2820,22 @@ section#footer {
 
 /* Mỗi dòng bình luận */
 .widget-comments-item {
-  border-bottom: 1px solid #efefef;
-  padding: 7px 0;
+  border-bottom: 1px solid #f1f5f9;
+  padding: 10px 0;
 }
 
-/* Liên kết chữ bình luận */
+/* Liên kết chữ bình luận chuẩn màu xanh Hình 2 */
 .widget-comments-link {
-  color: #488dc6;
-  font-size: 14px;
-  line-height: 1.5;
+  color: #2563eb;
+  font-size: 15px;
+  line-height: 1.45;
   text-decoration: none;
   display: block;
   transition: color 0.15s ease;
 }
 
 .widget-comments-link:hover {
-  color: #1a68a5;
+  color: #1d4ed8;
   text-decoration: underline;
 }
 
@@ -3038,7 +3325,7 @@ div.search-no-results,
   border: 1px solid #e5e7eb;
   border-radius: 8px;
   box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.12), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
-  z-index: 1000;
+  z-index: 1015;
   display: none;
   max-height: 480px;
   overflow-y: auto;
@@ -4162,84 +4449,343 @@ ul.timeline>li:before {
   }
 }
 
-/* ==========================================================================
-   MODULE 13: PAGES (TRANG MỚI NHẤT) - BỐ CỤC 1 HÀNG 1 BÀI VIẾT (CỘT ĐỨNG)
-   Thiết kế chuẩn TDC: Các bài viết xếp chồng theo chiều dọc (Vertical stack),
-   mỗi hàng chỉ có 1 bài viết ổn định trên Desktop, Laptop, Tablet và Mobile.
-   Hình ảnh responsive, không méo, không tràn container, giữ tỷ lệ 16:9.
-   ========================================================================== */
-.widget-pages-card {
+/* ====================================================
+   (15) VỊ TRÍ MODULE 15 - LAST POSTS (THEO WIREFRAME ĐỀ BÀI)
+   ==================================================== */
+.cms-module-15-section {
+  width: 100%;
+  margin-top: 40px;
+  margin-bottom: 30px;
+  border-top: 1px solid #e5e7eb;
+  padding-top: 35px;
+}
+
+/* ====================================================
+   BỐ CỤC TRANG TÌM KIẾM (MODULE 5 & HÀNG NGANG: LATEST NEWS + COMMENTS)
+   ==================================================== */
+.search-results-page {
+  max-width: 1240px;
+  margin: 30px auto 60px;
+  padding: 0 20px;
+  min-height: 60vh;
+}
+
+/* Hàng ngang phía dưới: Latest News & Module 14 Comments đặt ngang hàng nhau */
+.search-bottom-row-dual {
+  display: flex;
+  gap: 32px;
+  align-items: flex-start;
+  margin-top: 40px;
+  margin-bottom: 30px;
+  border-top: 1px solid #e5e7eb;
+  padding-top: 35px;
+  width: 100%;
+}
+
+.search-bottom-row-dual .cms-module-15-section {
+  flex: 1;
+  min-width: 0;
+  margin-top: 0;
+  border-top: none;
+  padding-top: 0;
+}
+
+/* Thu nhỏ ô Module 14 Comments */
+.search-bottom-row-dual .cms-module-14-comments-section {
+  flex: 0 0 280px;
+  width: 280px;
+  max-width: 280px;
+  min-width: 0;
+}
+
+/* Tùy biến kiểu dáng Widget Comments tại Module 14 nhỏ gọn, tinh tế */
+.cms-module-14-comments-section .widget-comments-box,
+.cms-sidebar .widget-comments-box {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 14px 16px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.cms-module-14-comments-section .widget-comments-title,
+.cms-sidebar .widget-comments-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: #1f2937;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin: 0 0 6px 0;
+}
+
+.cms-module-14-comments-section .widget-comments-stripe,
+.cms-sidebar .widget-comments-stripe {
+  width: 32px;
+  height: 2px;
+  background: #2563eb;
+  border-radius: 2px;
+  margin-bottom: 10px;
+}
+
+.cms-module-14-comments-section .widget-comments-list,
+.cms-sidebar .widget-comments-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.cms-module-14-comments-section .widget-comments-item,
+.cms-sidebar .widget-comments-item {
+  border-bottom: 1px dashed #e5e7eb;
+  padding-bottom: 8px;
+  padding-top: 2px;
+}
+
+.cms-module-14-comments-section .widget-comments-item:last-child,
+.cms-sidebar .widget-comments-item:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.cms-module-14-comments-section .widget-comments-link,
+.cms-sidebar .widget-comments-link {
+  text-decoration: none;
+  color: #374151;
+  display: block;
+  transition: all 0.2s ease;
+}
+
+.cms-module-14-comments-section .widget-comments-link:hover,
+.cms-sidebar .widget-comments-link:hover {
+  color: #2563eb;
+  text-decoration: none;
+}
+
+.widget-comment-content {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 13px;
+  line-height: 1.4;
+  color: #374151;
+  font-weight: 500;
+}
+
+.cms-module-14-comments-section .widget-comments-link:hover .widget-comment-content,
+.cms-sidebar .widget-comments-link:hover .widget-comment-content {
+  color: #2563eb;
+}
+
+.widget-comment-meta {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11.5px;
+  color: #9ca3af;
+  margin-top: 3px;
+}
+
+.widget-comment-author {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+.widget-comment-author svg {
+  color: #9ca3af;
+  width: 11px;
+  height: 11px;
+}
+
+.widget-comment-dot {
+  color: #d1d5db;
+}
+
+.widget-comment-date {
+  color: #9ca3af;
+  font-size: 11px;
+}
+
+/* Responsive cho layout hàng ngang Latest News & Comments */
+@media (max-width: 992px) {
+  .search-bottom-row-dual {
+    flex-direction: column;
+    gap: 25px;
+  }
+  .search-bottom-row-dual .cms-module-15-section,
+  .search-bottom-row-dual .cms-module-14-comments-section {
+    width: 100%;
+    flex: 1 1 100%;
+  }
+}
+
+/* ====================================================
+   MODULE 11: ARCHIVE / XEM NHIỀU (Giao diện 2 cột đánh số 1 - 8)
+   ==================================================== */
+.cms-archive-ranked-widget {
+  background: #ffffff;
+  padding: 16px 18px;
+  border-radius: 6px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e2e8f0;
   margin-bottom: 24px;
 }
 
-.module13-pages-list {
-  display: flex !important;
-  flex-direction: column !important;
-  width: 100% !important;
-  gap: 18px;
+.cms-archive-ranked-widget .archive-ranked-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  border-bottom: 1.5px solid #e2e8f0;
+  padding-bottom: 6px;
+  margin-bottom: 10px;
+  position: relative;
 }
 
-.module13-page-item {
-  display: flex !important;
-  flex-direction: column !important;
-  width: 100% !important;
-  padding-bottom: 16px;
-  border-bottom: 1px dashed #e2e8f0;
-}
-
-.module13-page-item:last-child {
-  border-bottom: none;
-  padding-bottom: 0;
-  margin-bottom: 0;
-}
-
-.module13-page-title {
-  font-size: 14.5px;
+.cms-archive-ranked-widget .archive-ranked-title {
+  margin: 0;
+  font-size: 16px;
   font-weight: 700;
-  line-height: 1.4;
-  margin: 0 0 8px 0;
+  color: #881337;
+  display: inline-block;
+  position: relative;
+  line-height: 1.2;
 }
 
-.module13-page-title a {
+.cms-archive-ranked-widget .archive-ranked-title::after {
+  content: "";
+  position: absolute;
+  bottom: -7.5px;
+  left: 0;
+  width: 100%;
+  height: 2.5px;
+  background-color: #be123c;
+}
+
+.cms-archive-ranked-widget .archive-ranked-tabs {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+}
+
+.cms-archive-ranked-widget .archive-tab-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 11px;
+  font-weight: 500;
+  color: #64748b;
+  cursor: pointer;
+  transition: color 0.15s ease;
+}
+
+.cms-archive-ranked-widget .archive-tab-btn:hover {
+  color: #0f172a;
+}
+
+.cms-archive-ranked-widget .archive-tab-btn.active {
+  color: #be123c;
+  font-weight: 700;
+}
+
+.cms-archive-ranked-widget .tab-sep {
+  color: #cbd5e1;
+  font-size: 10px;
+}
+
+.cms-archive-ranked-widget .archive-ranked-grid {
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+}
+
+.cms-archive-ranked-widget .archive-col {
+  flex: 1 1 50%;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.cms-archive-ranked-widget .archive-ranked-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 0;
+  border-bottom: 1px solid #f1f5f9;
+  min-height: 52px;
+}
+
+.cms-archive-ranked-widget .archive-ranked-item:last-child {
+  border-bottom: none;
+}
+
+.cms-archive-ranked-widget .archive-ranked-num {
+  font-size: 24px;
+  font-weight: 800;
+  line-height: 1;
+  color: #0f172a;
+  min-width: 18px;
+  text-align: center;
+  flex-shrink: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  padding-top: 1px;
+}
+
+.cms-archive-ranked-widget .archive-ranked-content {
+  flex: 1 1 0%;
+  min-width: 0;
+  line-height: 1.35;
+}
+
+.cms-archive-ranked-widget .archive-ranked-link {
+  font-size: 12.5px;
+  font-weight: 500;
   color: #1e293b;
   text-decoration: none;
-  transition: color 0.2s ease;
-}
-
-.module13-page-title a:hover {
-  color: #0056b3;
-}
-
-.module13-page-thumb {
-  width: 100%;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
   overflow: hidden;
-  border-radius: 4px;
-  margin-bottom: 8px;
-  background-color: #f1f5f9;
+  transition: color 0.15s ease;
 }
 
-.module13-page-thumb a {
-  display: block;
-  width: 100%;
+.cms-archive-ranked-widget .archive-ranked-link:hover {
+  color: #0284c7;
+  text-decoration: underline;
 }
 
-.module13-page-thumb img {
-  display: block;
-  width: 100%;
-  height: auto;
-  aspect-ratio: 16 / 9;
-  object-fit: cover;
-  border-radius: 4px;
-  transition: transform 0.3s ease;
+.cms-archive-ranked-widget .archive-ranked-comments {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 10.5px;
+  color: #94a3b8;
+  margin-left: 4px;
+  white-space: nowrap;
 }
 
-.module13-page-item:hover .module13-page-thumb img {
-  transform: scale(1.02);
+.cms-archive-ranked-widget .archive-ranked-comments i {
+  font-size: 10px;
 }
 
-.module13-page-desc {
-  font-size: 13px;
-  line-height: 1.55;
-  color: #475569;
-  margin: 0;
-}
+@media (max-width: 1200px) {
+  .cms-home-grid .cms-home-sidebar-left {
+    flex: 0 0 320px !important;
+    width: 320px !important;
+    max-width: 320px !important;
+  }
+}
+
+@media (max-width: 900px) {
+  .cms-archive-ranked-widget .archive-ranked-grid {
+    flex-direction: column;
+    gap: 0;
+  }
+}
