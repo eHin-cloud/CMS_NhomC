@@ -20,28 +20,40 @@ get_header();
         <!-- Cột giữa: Detail (Module 6) -->
         <main class="cms-single-main-column">
             <?php while (have_posts()) : the_post(); 
-                $post_id   = get_the_ID();
-                $categories = get_the_category();
+                $post_id     = get_the_ID();
+                $categories  = get_the_category();
                 $primary_cat = !empty($categories) ? $categories[0] : null;
+
+                // Module 19: Tăng lượt xem bài viết có cơ chế chống spam
+                cms_nhomc_track_post_views($post_id);
             ?>
                 <article id="post-<?php the_ID(); ?>" <?php post_class('cms-single-article'); ?>>
                     
-                    <!-- Breadcrumbs -->
-                    <nav class="cms-breadcrumb" aria-label="Breadcrumb">
-                        <a href="<?php echo esc_url(home_url('/')); ?>">Trang Chủ</a>
-                        <span class="sep">/</span>
-                        <?php if ($primary_cat) : ?>
-                            <a href="<?php echo esc_url(get_category_link($primary_cat->term_id)); ?>"><?php echo esc_html($primary_cat->name); ?></a>
-                            <span class="sep">/</span>
-                        <?php else : ?>
-                            <a href="<?php echo esc_url(home_url('/category/tin-tuc/')); ?>">Tin Tức</a>
-                            <span class="sep">/</span>
-                        <?php endif; ?>
-                        <span class="current"><?php the_title(); ?></span>
-                    </nav>
+                    <!-- Breadcrumbs (Module 19) -->
+                    <?php cms_nhomc_breadcrumbs(); ?>
 
                     <!-- Tiêu đề bài viết -->
                     <h1 class="single-post-title"><?php the_title(); ?></h1>
+
+                    <!-- Meta bài viết: Tác giả, Ngày đăng, Lượt xem & Thời gian đọc (Module 19) -->
+                    <div class="cms-single-post-meta">
+                        <span class="cms-meta-item cms-meta-date">
+                            <svg viewBox="0 0 24 24" width="13" height="13" fill="currentColor" aria-hidden="true"><path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zm0-12H5V6h14v2z"/></svg>
+                            <time datetime="<?php echo esc_attr(get_the_date('c')); ?>"><?php echo esc_html(get_the_date()); ?></time>
+                        </span>
+                        <span class="cms-meta-item cms-meta-author">
+                            <svg viewBox="0 0 24 24" width="13" height="13" fill="currentColor" aria-hidden="true"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                            <span><?php the_author(); ?></span>
+                        </span>
+                        <span class="cms-meta-item cms-meta-views" title="Lượt xem bài viết">
+                            <svg viewBox="0 0 24 24" width="13" height="13" fill="currentColor" aria-hidden="true"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+                            <span><?php echo esc_html(cms_nhomc_get_post_views($post_id)); ?></span>
+                        </span>
+                        <span class="cms-meta-item cms-meta-reading-time" title="Thời gian đọc ước tính">
+                            <svg viewBox="0 0 24 24" width="13" height="13" fill="currentColor" aria-hidden="true"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>
+                            <span><?php echo esc_html(cms_nhomc_calculate_reading_time($post_id)); ?></span>
+                        </span>
+                    </div>
 
                     <!-- Dẫn đề / Sapo (Excerpt) -->
                     <?php if (has_excerpt()) : ?>

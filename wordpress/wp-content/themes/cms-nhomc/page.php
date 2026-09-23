@@ -41,12 +41,8 @@ get_header();
             ?>
                 <article id="page-<?php the_ID(); ?>" <?php post_class('cms-single-article cms-single-page-article'); ?>>
 
-                    <!-- Breadcrumbs -->
-                    <nav class="cms-breadcrumb" aria-label="<?php esc_attr_e('Breadcrumb', 'cms-nhomc'); ?>">
-                        <a href="<?php echo esc_url(home_url('/')); ?>"><?php esc_html_e('Trang Chủ', 'cms-nhomc'); ?></a>
-                        <span class="sep">/</span>
-                        <span class="current"><?php the_title(); ?></span>
-                    </nav>
+                    <!-- Breadcrumbs (Module 19) -->
+                    <?php cms_nhomc_breadcrumbs(); ?>
 
                     <!-- Tiêu đề trang -->
                     <h1 class="single-post-title cms-single-page__title"><?php the_title(); ?></h1>

@@ -5117,3 +5117,227 @@ ul.timeline>li:before {
     width: 180px;
   }
 }
+
+/* ==========================================================================
+   MODULE 19: BREADCRUMBS NAVIGATION, POST VIEWS & ESTIMATED READING TIME
+   (Đồ án CMS Nhóm C - FIT TDC)
+   ========================================================================== */
+
+/* 1. Thanh điều hướng phân cấp (Breadcrumbs Navigation) */
+.cms-breadcrumbs-nav {
+  margin: 0 0 20px 0;
+  padding: 10px 16px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 13.5px;
+  line-height: 1.5;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+}
+
+.cms-breadcrumb-list {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  gap: 6px;
+}
+
+.cms-breadcrumb-item {
+  display: inline-flex;
+  align-items: center;
+  color: #64748b;
+}
+
+.cms-breadcrumb-link {
+  color: #0056b3;
+  text-decoration: none;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  transition: color 0.15s ease, text-decoration 0.15s ease;
+}
+
+.cms-breadcrumb-link:hover {
+  color: #003366;
+  text-decoration: underline;
+}
+
+.cms-breadcrumb-home-icon {
+  color: #0056b3;
+  vertical-align: middle;
+  flex-shrink: 0;
+}
+
+.cms-breadcrumb-sep {
+  color: #94a3b8;
+  font-weight: 600;
+  margin: 0 2px;
+  user-select: none;
+}
+
+.cms-breadcrumb-current .cms-breadcrumb-text {
+  color: #1e293b;
+  font-weight: 600;
+  max-width: 480px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: inline-block;
+}
+
+@media (max-width: 768px) {
+  .cms-breadcrumbs-nav {
+    padding: 8px 12px;
+    font-size: 12.5px;
+  }
+  .cms-breadcrumb-current .cms-breadcrumb-text {
+    max-width: 200px;
+  }
+}
+
+/* 2. Thanh Meta bài viết chi tiết (Single Post Meta - Views & Reading Time) */
+.cms-single-post-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px;
+  padding: 10px 16px;
+  background: #f8fafc;
+  border-left: 3px solid #0056b3;
+  border-top: 1px solid #e2e8f0;
+  border-right: 1px solid #e2e8f0;
+  border-bottom: 1px solid #e2e8f0;
+  border-radius: 6px;
+  margin: 14px 0 22px 0;
+  font-size: 13px;
+  color: #64748b;
+}
+
+.cms-single-post-meta .cms-meta-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.cms-single-post-meta .cms-meta-item svg {
+  color: #64748b;
+  flex-shrink: 0;
+}
+
+.cms-single-post-meta .cms-meta-views {
+  color: #0284c7;
+  font-weight: 500;
+}
+
+.cms-single-post-meta .cms-meta-views svg {
+  color: #0284c7;
+}
+
+.cms-single-post-meta .cms-meta-reading-time {
+  color: #0d9488;
+  font-weight: 500;
+}
+
+.cms-single-post-meta .cms-meta-reading-time svg {
+  color: #0d9488;
+}
+
+/* 3. Giao diện trang 404 (404 Error Page) */
+.cms-404-page-layout {
+  padding-top: 20px;
+  padding-bottom: 40px;
+}
+
+.cms-404-wrapper {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 40px 30px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+.cms-404-content {
+  max-width: 620px;
+  margin: 0 auto 40px auto;
+  text-align: center;
+}
+
+.cms-404-badge {
+  font-size: 80px;
+  font-weight: 900;
+  line-height: 1;
+  color: #0056b3;
+  letter-spacing: 2px;
+  margin-bottom: 12px;
+  text-shadow: 2px 2px 0px rgba(0, 86, 179, 0.15);
+}
+
+.cms-404-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0 0 12px 0;
+}
+
+.cms-404-desc {
+  font-size: 15px;
+  color: #64748b;
+  line-height: 1.6;
+  margin: 0 0 24px 0;
+}
+
+.cms-404-search-box {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 24px;
+}
+
+.cms-404-search-lead {
+  font-size: 14px;
+  font-weight: 600;
+  color: #334155;
+  margin: 0 0 12px 0;
+}
+
+.cms-404-actions .cms-btn-home {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #0056b3;
+  color: #ffffff;
+  padding: 10px 22px;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 14px;
+  transition: background 0.2s ease, transform 0.15s ease;
+}
+
+.cms-404-actions .cms-btn-home:hover {
+  background: #003875;
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+
+.cms-404-suggestions {
+  border-top: 1px solid #e2e8f0;
+  padding-top: 30px;
+  margin-top: 20px;
+}
+
+.cms-404-suggestions-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 20px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-left: 4px solid #0056b3;
+  padding-left: 10px;
+}

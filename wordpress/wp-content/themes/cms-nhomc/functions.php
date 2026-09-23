@@ -912,13 +912,24 @@ function cms_nhomc_render_categories_widget($title = 'Categories') {
  * Thiết kế giao diện 2 cột đánh số 1 - 8 theo chuẩn thiết kế spec
  */
 function cms_nhomc_render_archive_widget($title = 'Xem nhiều') {
-    // 1. Lấy danh sách bài viết mới nhất theo ngày tháng đăng tải
+    // 1. Lấy danh sách bài viết có lượt xem cao nhất (Tích hợp Module 19 Post Views vào Module 11)
     $recent_posts = get_posts(array(
         'numberposts' => 8,
         'post_status' => 'publish',
-        'orderby'     => 'date',
+        'meta_key'    => 'cms_post_views',
+        'orderby'     => 'meta_value_num',
         'order'       => 'DESC',
     ));
+
+    // Dự phòng nếu chưa có đủ bài có meta views
+    if (empty($recent_posts) || count($recent_posts) < 4) {
+        $recent_posts = get_posts(array(
+            'numberposts' => 8,
+            'post_status' => 'publish',
+            'orderby'     => 'date',
+            'order'       => 'DESC',
+        ));
+    }
 
     // Dữ liệu dự phòng chuẩn theo ảnh thiết kế spec
     $spec_sample_posts = array(
@@ -1895,4 +1906,255 @@ function cms_nhomc_register_pages_widget() {
     register_widget('CMS_NhomC_Pages_Widget');
 }
 add_action('widgets_init', 'cms_nhomc_register_pages_widget');
+
+/**
+ * =========================================================================
+ * MODULE 19: BREADCRUMBS NAVIGATION (Điều hướng phân cấp chuẩn SEO Schema.org)
+ * =========================================================================
+ */
+function cms_nhomc_breadcrumbs() {
+    // Không hiển thị trên trang chủ thuần túy nếu không phân trang
+    if (is_front_page() || (is_home() && !is_paged())) {
+        return;
+    }
+
+    $delimiter = '<span class="cms-breadcrumb-sep" aria-hidden="true">›</span>';
+    $home_title = 'Trang chủ';
+    $home_link = esc_url(home_url('/'));
+
+    echo '<nav class="cms-breadcrumbs-nav" aria-label="Breadcrumb">';
+    echo '<ol class="cms-breadcrumb-list" itemscope itemtype="https://schema.org/BreadcrumbList">';
+
+    // Item 1: Trang chủ
+    $position = 1;
+    echo '<li class="cms-breadcrumb-item" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">';
+    echo '<a itemprop="item" href="' . $home_link . '" class="cms-breadcrumb-link cms-breadcrumb-home">';
+    echo '<svg class="cms-breadcrumb-home-icon" viewBox="0 0 24 24" width="13" height="13" fill="currentColor" aria-hidden="true"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>';
+    echo '<span itemprop="name">' . esc_html($home_title) . '</span></a>';
+    echo '<meta itemprop="position" content="' . $position . '" />';
+    echo '</li>';
+
+    if (is_single()) {
+        $cats = get_the_category();
+        if (!empty($cats)) {
+            $cat = $cats[0];
+            $cat_parents = get_category_parents($cat->term_id, false, '|||');
+            $parents_arr = array_filter(explode('|||', $cat_parents));
+
+            foreach ($parents_arr as $p_name) {
+                $p_cat = get_term_by('name', $p_name, 'category');
+                if ($p_cat && !is_wp_error($p_cat)) {
+                    $position++;
+                    echo $delimiter;
+                    echo '<li class="cms-breadcrumb-item" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">';
+                    echo '<a itemprop="item" href="' . esc_url(get_category_link($p_cat->term_id)) . '" class="cms-breadcrumb-link">';
+                    echo '<span itemprop="name">' . esc_html($p_cat->name) . '</span></a>';
+                    echo '<meta itemprop="position" content="' . $position . '" />';
+                    echo '</li>';
+                }
+            }
+        }
+        $position++;
+        echo $delimiter;
+        echo '<li class="cms-breadcrumb-item cms-breadcrumb-current" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" aria-current="page">';
+        echo '<span itemprop="name" class="cms-breadcrumb-text">' . esc_html(get_the_title()) . '</span>';
+        echo '<meta itemprop="position" content="' . $position . '" />';
+        echo '</li>';
+
+    } elseif (is_page()) {
+        global $post;
+        if ($post && $post->post_parent) {
+            $ancestors = array_reverse(get_post_ancestors($post->ID));
+            foreach ($ancestors as $ancestor_id) {
+                $position++;
+                echo $delimiter;
+                echo '<li class="cms-breadcrumb-item" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">';
+                echo '<a itemprop="item" href="' . esc_url(get_permalink($ancestor_id)) . '" class="cms-breadcrumb-link">';
+                echo '<span itemprop="name">' . esc_html(get_the_title($ancestor_id)) . '</span></a>';
+                echo '<meta itemprop="position" content="' . $position . '" />';
+                echo '</li>';
+            }
+        }
+        $position++;
+        echo $delimiter;
+        echo '<li class="cms-breadcrumb-item cms-breadcrumb-current" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" aria-current="page">';
+        echo '<span itemprop="name" class="cms-breadcrumb-text">' . esc_html(get_the_title()) . '</span>';
+        echo '<meta itemprop="position" content="' . $position . '" />';
+        echo '</li>';
+
+    } elseif (is_category()) {
+        $current_cat = get_queried_object();
+        if ($current_cat && $current_cat->parent != 0) {
+            $parent_parents = get_category_parents($current_cat->parent, false, '|||');
+            $parents_arr = array_filter(explode('|||', $parent_parents));
+            foreach ($parents_arr as $p_name) {
+                $p_cat = get_term_by('name', $p_name, 'category');
+                if ($p_cat && !is_wp_error($p_cat)) {
+                    $position++;
+                    echo $delimiter;
+                    echo '<li class="cms-breadcrumb-item" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">';
+                    echo '<a itemprop="item" href="' . esc_url(get_category_link($p_cat->term_id)) . '" class="cms-breadcrumb-link">';
+                    echo '<span itemprop="name">' . esc_html($p_cat->name) . '</span></a>';
+                    echo '<meta itemprop="position" content="' . $position . '" />';
+                    echo '</li>';
+                }
+            }
+        }
+        $position++;
+        echo $delimiter;
+        echo '<li class="cms-breadcrumb-item cms-breadcrumb-current" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" aria-current="page">';
+        echo '<span itemprop="name" class="cms-breadcrumb-text">' . esc_html(single_cat_title('', false)) . '</span>';
+        echo '<meta itemprop="position" content="' . $position . '" />';
+        echo '</li>';
+
+    } elseif (is_tag()) {
+        $position++;
+        echo $delimiter;
+        echo '<li class="cms-breadcrumb-item cms-breadcrumb-current" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" aria-current="page">';
+        echo '<span itemprop="name" class="cms-breadcrumb-text">Thẻ: ' . esc_html(single_tag_title('', false)) . '</span>';
+        echo '<meta itemprop="position" content="' . $position . '" />';
+        echo '</li>';
+
+    } elseif (is_search()) {
+        $position++;
+        echo $delimiter;
+        echo '<li class="cms-breadcrumb-item cms-breadcrumb-current" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" aria-current="page">';
+        echo '<span itemprop="name" class="cms-breadcrumb-text">Tìm kiếm: &ldquo;' . esc_html(get_search_query()) . '&rdquo;</span>';
+        echo '<meta itemprop="position" content="' . $position . '" />';
+        echo '</li>';
+
+    } elseif (is_404()) {
+        $position++;
+        echo $delimiter;
+        echo '<li class="cms-breadcrumb-item cms-breadcrumb-current" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" aria-current="page">';
+        echo '<span itemprop="name" class="cms-breadcrumb-text">Lỗi 404 - Không tìm thấy</span>';
+        echo '<meta itemprop="position" content="' . $position . '" />';
+        echo '</li>';
+
+    } elseif (is_archive()) {
+        $position++;
+        echo $delimiter;
+        echo '<li class="cms-breadcrumb-item cms-breadcrumb-current" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" aria-current="page">';
+        echo '<span itemprop="name" class="cms-breadcrumb-text">' . esc_html(get_the_archive_title()) . '</span>';
+        echo '<meta itemprop="position" content="' . $position . '" />';
+        echo '</li>';
+    }
+
+    echo '</ol>';
+    echo '</nav>';
+}
+
+/**
+ * =========================================================================
+ * MODULE 19: POST VIEWS COUNTER & READING TIME (Bộ đếm lượt xem & Thời gian đọc)
+ * =========================================================================
+ */
+
+/**
+ * Đếm lượt xem bài viết có lọc bot và chống spam bằng cookie
+ */
+function cms_nhomc_track_post_views($post_id = null) {
+    if (!is_singular('post')) {
+        return;
+    }
+    if (empty($post_id)) {
+        $post_id = get_the_ID();
+    }
+    if (!$post_id) {
+        return;
+    }
+
+    // Không đếm lượt xem từ bot tìm kiếm
+    if (!empty($_SERVER['HTTP_USER_AGENT'])) {
+        $user_agent = strtolower($_SERVER['HTTP_USER_AGENT']);
+        $bots = array('bot', 'crawl', 'slurp', 'spider', 'mediapartners');
+        foreach ($bots as $bot) {
+            if (strpos($user_agent, $bot) !== false) {
+                return;
+            }
+        }
+    }
+
+    $cookie_key = 'cms_viewed_post_' . $post_id;
+    // Tăng lượt xem nếu chưa có cookie trong 12 giờ
+    if (!isset($_COOKIE[$cookie_key])) {
+        $count = (int) get_post_meta($post_id, 'cms_post_views', true);
+        if ($count < 0) {
+            $count = 0;
+        }
+        $count++;
+        update_post_meta($post_id, 'cms_post_views', $count);
+
+        if (!headers_sent()) {
+            setcookie($cookie_key, '1', time() + 43200, COOKIEPATH ? COOKIEPATH : '/', COOKIE_DOMAIN);
+        }
+    }
+}
+
+/**
+ * Lấy số lượt xem bài viết đã định dạng
+ */
+function cms_nhomc_get_post_views($post_id = null, $with_text = true) {
+    if (empty($post_id)) {
+        $post_id = get_the_ID();
+    }
+    $views = (int) get_post_meta($post_id, 'cms_post_views', true);
+    if ($views <= 0) {
+        $views = 1;
+    }
+
+    $formatted = number_format_i18n($views);
+    return $with_text ? ($formatted . ' lượt xem') : $formatted;
+}
+
+/**
+ * Ước tính thời gian đọc bài viết (tính theo tốc độ trung bình 200 từ/phút)
+ */
+function cms_nhomc_calculate_reading_time($post_id = null) {
+    if (empty($post_id)) {
+        $post_id = get_the_ID();
+    }
+    $content = get_post_field('post_content', $post_id);
+    $text = wp_strip_all_tags($content);
+    // Đếm số từ tiếng Việt theo khoảng trắng
+    $words = preg_split('/\s+/u', trim($text), -1, PREG_SPLIT_NO_EMPTY);
+    $word_count = count($words);
+
+    $minutes = (int) ceil($word_count / 200);
+    if ($minutes < 1) {
+        $minutes = 1;
+    }
+    return $minutes . ' phút đọc';
+}
+
+/**
+ * Tự động gán lượt xem ban đầu cho các bài viết để giao diện phong phú ngay
+ */
+function cms_nhomc_init_sample_views() {
+    $initialized = get_option('cms_nhomc_views_seeded');
+    if ($initialized) {
+        return;
+    }
+
+    $posts = get_posts(array(
+        'post_type'      => 'post',
+        'post_status'    => 'publish',
+        'posts_per_page' => 50,
+        'fields'         => 'ids',
+    ));
+
+    $sample_counts = array(1450, 1280, 980, 850, 720, 640, 530, 480, 390, 310, 270, 210, 180, 150);
+    $i = 0;
+    foreach ($posts as $pid) {
+        $views = get_post_meta($pid, 'cms_post_views', true);
+        if ($views === '' || $views === false) {
+            $val = isset($sample_counts[$i]) ? $sample_counts[$i] : rand(60, 450);
+            update_post_meta($pid, 'cms_post_views', $val);
+            $i++;
+        }
+    }
+    update_option('cms_nhomc_views_seeded', 1);
+}
+add_action('init', 'cms_nhomc_init_sample_views');
+
 
