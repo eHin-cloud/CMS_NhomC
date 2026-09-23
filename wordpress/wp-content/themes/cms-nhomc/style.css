@@ -4789,3 +4789,331 @@ ul.timeline>li:before {
     gap: 0;
   }
 }
+
+/* =====================================================
+   MODULE 13 - PAGES GRID (page.php)
+   3 cột trên desktop, responsive rớt về 1 cột mobile
+   ===================================================== */
+
+/* Container bao ngoài */
+.cms-page-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 32px 20px 48px;
+}
+
+/* Ảnh đại diện trang chi tiết (page.php) */
+.cms-single-page__thumbnail {
+  margin: 0 0 24px 0;
+  border-radius: 6px;
+  overflow: hidden;
+  max-height: 420px;
+  background-color: #f1f5f9;
+}
+
+.cms-single-page__thumb-img {
+  width: 100%;
+  height: auto;
+  max-height: 420px;
+  object-fit: cover;
+  display: block;
+}
+
+/* Section lưới pages */
+.cms-pages-grid-section {
+  margin-bottom: 48px;
+}
+
+/* Grid 3 cột */
+.cms-pages-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+}
+
+/* Lưới Module 13 Các trang khác bên trong cột giữa trang đơn (page.php) */
+.cms-single-main-column .cms-pages-grid-section {
+  margin-top: 32px;
+  margin-bottom: 20px;
+}
+
+.cms-single-main-column .cms-pages-grid-section__heading {
+  font-size: 15px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #1e293b;
+  margin-bottom: 16px;
+  letter-spacing: 0.3px;
+}
+
+.cms-single-main-column .cms-pages-grid {
+  gap: 16px;
+}
+
+.cms-single-main-column .cms-page-card {
+  border-radius: 8px;
+}
+
+.cms-single-main-column .cms-page-card__thumb-wrap {
+  aspect-ratio: 16 / 10;
+}
+
+.cms-single-main-column .cms-page-card__body {
+  padding: 12px 14px 16px;
+  gap: 6px;
+}
+
+.cms-single-main-column .cms-page-card__title {
+  font-size: 0.88rem;
+  line-height: 1.35;
+}
+
+.cms-single-main-column .cms-page-card__desc {
+  font-size: 0.78rem;
+  line-height: 1.45;
+  -webkit-line-clamp: 2;
+}
+
+@media (max-width: 768px) {
+  .cms-single-main-column .cms-pages-grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+}
+
+/* Card từng page */
+.cms-page-card {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  transition: transform 0.22s ease, box-shadow 0.22s ease;
+}
+
+.cms-page-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+/* Link bao toàn bộ card */
+.cms-page-card__link {
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+  color: inherit;
+  height: 100%;
+}
+
+/* Wrapper ảnh */
+.cms-page-card__thumb-wrap {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  background: #f1f5f9;
+}
+
+/* Ảnh thumbnail */
+.cms-page-card__thumb {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.3s ease;
+}
+
+.cms-page-card:hover .cms-page-card__thumb {
+  transform: scale(1.05);
+}
+
+/* Placeholder khi không có ảnh */
+.cms-page-card__thumb--placeholder {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #e0e7ef 0%, #c7d2e4 100%);
+}
+
+/* Body nội dung card */
+.cms-page-card__body {
+  padding: 18px 20px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex: 1;
+}
+
+/* Tiêu đề page */
+.cms-page-card__title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #1a2942;
+  line-height: 1.4;
+  margin: 0;
+  transition: color 0.2s;
+}
+
+.cms-page-card:hover .cms-page-card__title {
+  color: #2563eb;
+}
+
+/* Mô tả / excerpt */
+.cms-page-card__desc {
+  font-size: 0.875rem;
+  color: #6b7280;
+  line-height: 1.6;
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Trạng thái rỗng */
+.cms-pages-empty {
+  text-align: center;
+  padding: 48px 20px;
+  color: #9ca3af;
+  font-size: 0.95rem;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+}
+
+/* Module 15 – Trang mới nhất bên dưới grid */
+.cms-module-15-pages-section {
+  margin-top: 16px;
+}
+
+/* =====================================================
+   RESPONSIVE – Module 13 Pages Grid
+   ===================================================== */
+
+/* Tablet: 2 cột */
+@media (max-width: 1024px) {
+  .cms-pages-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 22px;
+  }
+}
+
+/* Mobile: 1 cột */
+@media (max-width: 640px) {
+  .cms-pages-grid {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+
+  .cms-page-container {
+    padding: 20px 14px 36px;
+  }
+
+  .cms-page-card__body {
+    padding: 14px 16px 18px;
+  }
+
+  .cms-page-card__title {
+    font-size: 0.95rem;
+  }
+}
+
+/* =====================================================
+   MODULE 13 trên trang TÌM KIẾM (search.php)
+   Sidebar trái: Module 13 Pages | Kết quả tìm kiếm
+   ===================================================== */
+
+/* Wrapper flex: Module 13 bên trái, search results bên phải */
+.cms-search-content-row {
+  display: flex;
+  gap: 24px;
+  margin: 24px 0;
+  align-items: stretch;
+}
+
+/* Sidebar trái - Module 13 */
+.cms-module-13-sidebar {
+  flex: 0 0 220px;
+  width: 220px;
+  min-width: 0;
+}
+
+/* Danh sách pages xếp dọc */
+.cms-module-13-pages-col {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Cột phải - Search results */
+.cms-search-results-main {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Card sidebar nhỏ gọn */
+.cms-page-card--sidebar {
+  border-radius: 8px;
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.06);
+}
+
+.cms-page-card--sidebar .cms-page-card__thumb-wrap {
+  aspect-ratio: 4 / 3;
+}
+
+.cms-page-card--sidebar .cms-page-card__body {
+  padding: 10px 12px 12px;
+}
+
+.cms-page-card--sidebar .cms-page-card__title {
+  font-size: 0.85rem;
+}
+
+.cms-page-card--sidebar .cms-page-card__desc {
+  font-size: 0.78rem;
+  -webkit-line-clamp: 2;
+}
+
+/* Responsive – Module 13 + 14 sidebar rớt xuống dưới trên mobile */
+@media (max-width: 768px) {
+  .cms-search-content-row {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .cms-module-13-sidebar,
+  .cms-module-14-sidebar {
+    flex: unset;
+    width: 100%;
+  }
+
+  .cms-module-13-pages-col {
+    flex-direction: row;
+    overflow-x: auto;
+    gap: 12px;
+    padding-bottom: 6px;
+  }
+
+  .cms-module-13-pages-col .cms-page-card--sidebar {
+    flex: 0 0 200px;
+    width: 200px;
+  }
+}
+
+/* Sidebar phải - Module 14 Comments */
+.cms-module-14-sidebar {
+  flex: 0 0 220px;
+  width: 220px;
+  min-width: 0;
+}
+
+/* Module 15 hàng đơn bên dưới */
+.search-bottom-row-single {
+  margin-top: 24px;
+}
+
+@media (max-width: 1024px) {
+  .cms-module-13-sidebar,
+  .cms-module-14-sidebar {
+    flex: 0 0 180px;
+    width: 180px;
+  }
+}

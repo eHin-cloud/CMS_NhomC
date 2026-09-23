@@ -72,6 +72,58 @@ $search_error = function_exists('cms_nhomc_get_search_error') ? cms_nhomc_get_se
             </div>
         </section>
 
+        <!-- Hàng: Module 13 Pages (trái) | Search result 5 (phải) -->
+        <div class="cms-search-content-row">
+
+            <!-- Cột trái: Module 13 Pages (DangNguyen/13-pages) -->
+            <aside class="cms-module-13-sidebar" id="module-13-pages-search" aria-label="<?php esc_attr_e('Danh sách trang', 'cms-nhomc'); ?>">
+                <?php
+                $pages_args_m13 = array(
+                    'post_type'      => 'page',
+                    'post_status'    => 'publish',
+                    'posts_per_page' => 3,
+                    'orderby'        => 'date',
+                    'order'          => 'DESC',
+                );
+                $pages_query_m13 = new WP_Query($pages_args_m13);
+                if ($pages_query_m13->have_posts()) :
+                ?>
+                    <div class="cms-module-13-pages-col">
+                        <?php while ($pages_query_m13->have_posts()) : $pages_query_m13->the_post(); 
+                            $m13_pid = get_the_ID();
+                            $m13_thumb = '';
+                            if (has_post_thumbnail($m13_pid)) {
+                                $m13_thumb = get_the_post_thumbnail_url($m13_pid, 'medium');
+                            }
+                            if (empty($m13_thumb)) {
+                                $m13_thumb = get_post_meta($m13_pid, '_thumbnail_ext_url', true);
+                            }
+                            if (empty($m13_thumb) && function_exists('cms_nhomc_get_post_thumbnail_url')) {
+                                $m13_thumb = cms_nhomc_get_post_thumbnail_url($m13_pid);
+                            }
+                        ?>
+                            <article class="cms-page-card cms-page-card--sidebar">
+                                <a href="<?php the_permalink(); ?>" class="cms-page-card__link">
+                                    <div class="cms-page-card__thumb-wrap">
+                                        <?php if (!empty($m13_thumb)) : ?>
+                                            <img class="cms-page-card__thumb" src="<?php echo esc_url($m13_thumb); ?>" alt="<?php the_title_attribute(); ?>" loading="lazy" />
+                                        <?php else : ?>
+                                            <div class="cms-page-card__thumb cms-page-card__thumb--placeholder"></div>
+                                        <?php endif; ?>
+                                    </div>
+                                    <div class="cms-page-card__body">
+                                        <h3 class="cms-page-card__title"><?php the_title(); ?></h3>
+                                        <p class="cms-page-card__desc"><?php echo esc_html(wp_trim_words(get_the_excerpt(), 15, '...')); ?></p>
+                                    </div>
+                                </a>
+                            </article>
+                        <?php endwhile; wp_reset_postdata(); ?>
+                    </div>
+                <?php endif; ?>
+            </aside>
+
+            <!-- Cột phải: Kết quả tìm kiếm (code gốc Module 5 - không sửa) -->
+            <div class="cms-search-results-main">
         <!-- Danh sách kết quả nếu có bài viết (Module 5 Search result) -->
         <?php if (!$search_error && !empty($clean_query) && have_posts()) : ?>
             <section class="search-results-list" id="module-5-search-results" aria-label="<?php esc_attr_e('Danh sách kết quả tìm kiếm', 'cms-nhomc'); ?>">
@@ -110,20 +162,24 @@ $search_error = function_exists('cms_nhomc_get_search_error') ? cms_nhomc_get_se
                 </p>
             </div>
         <?php endif; ?>
+            </div><!-- /.cms-search-results-main -->
 
-        <!-- Hàng ngang: Latest News & Module 14 Comments đặt ngang hàng nhau -->
-        <div class="search-bottom-row-dual">
-            <!-- Cột Latest News (Module 15 Timeline) -->
+            <!-- Cột phải: Module 14 Comments (Hien/14-comments) - logic giữ nguyên -->
+            <aside class="cms-module-14-sidebar">
+                <section class="cms-module-14-comments-section" id="module-14-comments" aria-label="<?php esc_attr_e('Bình luận - Module 14', 'cms-nhomc'); ?>">
+                    <?php if (function_exists('cms_nhomc_render_comments_widget')) : ?>
+                        <?php cms_nhomc_render_comments_widget(4, 'COMMENTS'); ?>
+                    <?php endif; ?>
+                </section>
+            </aside>
+
+        </div><!-- /.cms-search-content-row -->
+
+        <!-- Module 15: Latest News - logic giữ nguyên -->
+        <div class="search-bottom-row-single">
             <section class="cms-module-15-section" id="module-15-last-posts" aria-label="<?php esc_attr_e('Bài viết mới nhất - Module 15', 'cms-nhomc'); ?>">
                 <?php if (function_exists('cms_nhomc_render_last_posts_widget')) : ?>
                     <?php cms_nhomc_render_last_posts_widget(5, 'Latest News'); ?>
-                <?php endif; ?>
-            </section>
-
-            <!-- Cột Module 14 Comments (Hien/14-comments) đặt ngang hàng -->
-            <section class="cms-module-14-comments-section" id="module-14-comments" aria-label="<?php esc_attr_e('Bình luận - Module 14', 'cms-nhomc'); ?>">
-                <?php if (function_exists('cms_nhomc_render_comments_widget')) : ?>
-                    <?php cms_nhomc_render_comments_widget(4, 'COMMENTS'); ?>
                 <?php endif; ?>
             </section>
         </div>
