@@ -950,17 +950,17 @@ function cms_nhomc_render_archive_widget($title = 'Xem nhiều') {
         }
     }
 
-    // 2. Lấy danh sách các mốc ngày tháng lưu trữ (Monthly Archives)
-    $monthly_archives = wp_get_archives(array(
-        'type'            => 'monthly',
+    // 2. Lấy danh sách các mốc lưu trữ theo ngày tháng (Daily Archives)
+    $daily_archives = wp_get_archives(array(
+        'type'            => 'daily',
         'format'          => 'custom',
         'echo'            => 0,
         'limit'           => 8,
     ));
 
     $items_dates = array();
-    if (!empty($monthly_archives)) {
-        preg_match_all('/<a[^>]*href=[\'"]([^\'"]*)[\'"][^>]*>(.*?)<\/a>/i', $monthly_archives, $matches, PREG_SET_ORDER);
+    if (!empty($daily_archives)) {
+        preg_match_all('/<a[^>]*href=[\'"]([^\'"]*)[\'"][^>]*>(.*?)<\/a>/i', $daily_archives, $matches, PREG_SET_ORDER);
         foreach ($matches as $match) {
             $items_dates[] = array(
                 'link'  => $match[1],
@@ -971,19 +971,19 @@ function cms_nhomc_render_archive_widget($title = 'Xem nhiều') {
     }
 
     if (empty($items_dates)) {
-        $sample_months = array(
-            'Tháng 7 2026', 'Tháng 6 2026', 'Tháng 4 2026', 'Tháng 3 2026',
-            'Tháng 2 2026', 'Tháng 12 2025', 'Tháng 11 2025', 'Tháng 10 2023'
+        $sample_dates = array(
+            '27/07/2026', '14/07/2026', '13/07/2026', '07/07/2026',
+            '02/07/2026', '20/06/2026', '15/06/2026', '17/04/2026'
         );
-        foreach ($sample_months as $sm) {
-            $items_dates[] = array('link' => home_url('/'), 'title' => $sm);
+        foreach ($sample_dates as $sd) {
+            $items_dates[] = array('link' => home_url('/'), 'title' => $sd);
         }
     }
     // Bù đủ 8 mốc lưu trữ nếu chưa đủ
     $count_d = count($items_dates);
     if ($count_d < 8) {
         for ($i = $count_d; $i < 8; $i++) {
-            $items_dates[] = array('link' => home_url('/'), 'title' => 'Tháng ' . (8 - $i) . ' 2025');
+            $items_dates[] = array('link' => home_url('/'), 'title' => sprintf('%02d/01/2026', 8 - $i));
         }
     }
     ?>
@@ -993,7 +993,7 @@ function cms_nhomc_render_archive_widget($title = 'Xem nhiều') {
             <div class="archive-ranked-tabs">
                 <button type="button" class="archive-tab-btn active" data-target="posts">Mới nhất</button>
                 <span class="tab-sep">|</span>
-                <button type="button" class="archive-tab-btn" data-target="dates">Theo tháng</button>
+                <button type="button" class="archive-tab-btn" data-target="dates">Ngày tháng</button>
             </div>
         </div>
 
