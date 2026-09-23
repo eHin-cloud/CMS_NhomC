@@ -4700,97 +4700,79 @@ ul.timeline>li:before {
   font-size: 10px;
 }
 
-/* Bảng hiển thị 4 hàng x 2 cột ngay ngắn chuẩn theo Hình 2 */
-.cms-archive-ranked-widget .archive-ranked-table {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-}
-
-.cms-archive-ranked-widget .archive-ranked-row {
+.cms-archive-ranked-widget .archive-ranked-grid {
   display: flex;
   flex-direction: row;
-  align-items: stretch;
-  width: 100%;
-  border-bottom: 1px solid #f1f5f9;
+  gap: 16px;
 }
 
-.cms-archive-ranked-widget .archive-ranked-row:last-child {
-  border-bottom: none;
-}
-
-.cms-archive-ranked-widget .archive-ranked-cell {
+.cms-archive-ranked-widget .archive-col {
   flex: 1 1 50%;
   min-width: 0;
   display: flex;
+  flex-direction: column;
+}
+
+.cms-archive-ranked-widget .archive-ranked-item {
+  display: flex;
   align-items: flex-start;
-  gap: 12px;
-  padding: 12px 10px;
+  gap: 10px;
+  padding: 10px 0;
+  border-bottom: 1px solid #f1f5f9;
+  min-height: 52px;
 }
 
-/* Cột bên trái (Số 1 - 4) */
-.cms-archive-ranked-widget .archive-cell-left {
-  padding-left: 2px;
-  padding-right: 12px;
+.cms-archive-ranked-widget .archive-ranked-item:last-child {
+  border-bottom: none;
 }
 
-/* Cột bên phải (Số 5 - 8) có đường kẻ dọc phân cách ở giữa chuẩn Hình 2 */
-.cms-archive-ranked-widget .archive-cell-right {
-  padding-left: 14px;
-  padding-right: 2px;
-  border-left: 1px solid #f1f5f9;
-}
-
-/* Số thứ tự 1 - 8: Font chữ có chân (Serif) cổ điển, thanh lịch y hệt Hình 2 */
 .cms-archive-ranked-widget .archive-ranked-num {
-  font-family: Georgia, "Times New Roman", Times, serif;
-  font-size: 28px;
-  font-weight: 700;
+  font-size: 24px;
+  font-weight: 800;
   line-height: 1;
-  color: #1a1a1a;
-  min-width: 20px;
+  color: #0f172a;
+  min-width: 18px;
   text-align: center;
   flex-shrink: 0;
-  margin-top: 1px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  padding-top: 1px;
 }
 
 .cms-archive-ranked-widget .archive-ranked-content {
   flex: 1 1 0%;
   min-width: 0;
-  line-height: 1.4;
+  line-height: 1.35;
 }
 
 .cms-archive-ranked-widget .archive-ranked-link {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  font-size: 13px;
+  font-size: 12.5px;
   font-weight: 500;
-  color: #333333;
+  color: #1e293b;
   text-decoration: none;
-  display: inline;
-  word-break: break-word;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
   transition: color 0.15s ease;
 }
 
 .cms-archive-ranked-widget .archive-ranked-link:hover {
-  color: #be123c;
+  color: #0284c7;
   text-decoration: underline;
 }
 
-/* Icon bình luận hiển thị inline ngay sau tiêu đề như Hình 2 */
 .cms-archive-ranked-widget .archive-ranked-comments {
   display: inline-flex;
   align-items: center;
   gap: 3px;
-  font-size: 11px;
-  color: #8c98a4;
-  margin-left: 5px;
+  font-size: 10.5px;
+  color: #94a3b8;
+  margin-left: 4px;
   white-space: nowrap;
-  vertical-align: baseline;
 }
 
 .cms-archive-ranked-widget .archive-ranked-comments i {
-  font-size: 11px;
-  color: #94a3b8;
+  font-size: 10px;
 }
 
 @media (max-width: 1200px) {
@@ -4802,13 +4784,9 @@ ul.timeline>li:before {
 }
 
 @media (max-width: 900px) {
-  .cms-archive-ranked-widget .archive-ranked-row {
+  .cms-archive-ranked-widget .archive-ranked-grid {
     flex-direction: column;
-  }
-  .cms-archive-ranked-widget .archive-cell-right {
-    border-left: none;
-    border-top: 1px solid #f1f5f9;
-    padding-left: 2px;
+    gap: 0;
   }
 }
 
