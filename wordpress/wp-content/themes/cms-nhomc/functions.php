@@ -1144,9 +1144,10 @@ function cms_nhomc_create_default_categories() {
 add_action('after_setup_theme', 'cms_nhomc_create_default_categories');
 
 /**
- * Render Widget: COMMENTS (Bình luận) - Module 14 (Hien/14-comments)
+ * Render Widget: COMMENTS (Bình luận) - Module 12 (Anh Quý)
+ * Mặc định hiển thị danh sách dạng liên kết chữ chuẩn 100% theo thiết kế Hình 1.
  */
-function cms_nhomc_render_comments_widget($limit = 5, $title = 'Comments') {
+function cms_nhomc_render_comments_widget($limit = 3, $title = 'Comments', $show_meta = false) {
     $comments = get_comments(array(
         'number'      => intval($limit) * 2,
         'status'      => 'approve',
@@ -1178,9 +1179,9 @@ function cms_nhomc_render_comments_widget($limit = 5, $title = 'Comments') {
     // Dữ liệu mẫu chuẩn y chang mẫu hình ảnh nếu chưa có bình luận
     if (empty($display_items)) {
         $sample_comments = array(
-            array('author' => 'Thành Viên', 'content' => 'Bài viết hay quá, rất hữu ích!', 'date' => date('d/m/Y')),
-            array('author' => 'Độc Giả', 'content' => 'Cảm ơn tác giả đã chia sẻ nội dung này.', 'date' => date('d/m/Y')),
-            array('author' => 'Khách', 'content' => 'Trình bày chi tiết, dễ hiểu và chuyên nghiệp.', 'date' => date('d/m/Y')),
+            array('author' => 'Thành Viên', 'content' => 'Đúng Thật Sự ngốc', 'date' => date('d/m/Y')),
+            array('author' => 'Độc Giả', 'content' => 'Hiền ngốc quá', 'date' => date('d/m/Y')),
+            array('author' => 'Khách', 'content' => 'Bài viết hay quá', 'date' => date('d/m/Y')),
             array('author' => 'Sinh Viên', 'content' => 'Nội dung bài viết rất thực tế và chất lượng.', 'date' => date('d/m/Y')),
             array('author' => 'Admin', 'content' => 'Chào mừng bạn đến với hệ thống CMS Nhóm C!', 'date' => date('d/m/Y')),
         );
@@ -1210,18 +1211,22 @@ function cms_nhomc_render_comments_widget($limit = 5, $title = 'Comments') {
             <?php foreach ($display_items as $item) : ?>
                 <li class="widget-comments-item">
                     <a href="<?php echo esc_url($item['link']); ?>" class="widget-comments-link">
-                        <span class="widget-comment-content"><?php echo esc_html($item['content']); ?></span>
-                        <?php if (!empty($item['author'])) : ?>
-                            <span class="widget-comment-meta">
-                                <span class="widget-comment-author">
-                                    <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-                                    <?php echo esc_html($item['author']); ?>
+                        <?php if ($show_meta) : ?>
+                            <span class="widget-comment-content"><?php echo esc_html($item['content']); ?></span>
+                            <?php if (!empty($item['author'])) : ?>
+                                <span class="widget-comment-meta">
+                                    <span class="widget-comment-author">
+                                        <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                                        <?php echo esc_html($item['author']); ?>
+                                    </span>
+                                    <?php if (!empty($item['date'])) : ?>
+                                        <span class="widget-comment-dot">&bull;</span>
+                                        <span class="widget-comment-date"><?php echo esc_html($item['date']); ?></span>
+                                    <?php endif; ?>
                                 </span>
-                                <?php if (!empty($item['date'])) : ?>
-                                    <span class="widget-comment-dot">&bull;</span>
-                                    <span class="widget-comment-date"><?php echo esc_html($item['date']); ?></span>
-                                <?php endif; ?>
-                            </span>
+                            <?php endif; ?>
+                        <?php else : ?>
+                            <?php echo esc_html($item['content']); ?>
                         <?php endif; ?>
                     </a>
                 </li>

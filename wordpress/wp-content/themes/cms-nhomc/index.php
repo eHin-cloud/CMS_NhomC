@@ -49,7 +49,7 @@ get_header();
             <?php endif; ?>
         </main>
 
-        <!-- Cột phải: Comments (Module 12) chuẩn theo Hình 2 -->
+        <!-- Cột phải: Comments (Module 12) chuẩn theo Hình 1 (Anh Quý) -->
         <aside class="cms-sidebar-column cms-home-sidebar-right" aria-label="Bình luận">
             <?php cms_nhomc_render_comments_widget(3, 'Comments'); ?>
         </aside>

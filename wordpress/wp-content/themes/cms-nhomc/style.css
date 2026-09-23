@@ -2791,24 +2791,24 @@ section#footer {
   background: transparent;
 }
 
-/* Tiêu đề "Comments" chuẩn theo Hình 2 */
+/* Tiêu đề "Comments" chuẩn theo Hình 1 */
 .widget-comments-title {
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 700;
   color: #1e293b;
-  margin: 0 0 8px 0;
+  margin: 0 0 6px 0;
   line-height: 1.3;
   text-transform: none;
   font-family: inherit;
   letter-spacing: normal;
 }
 
-/* Đường gạch ngang ngắn trang trí dưới tiêu đề chuẩn theo Hình 2 */
+/* Đường gạch ngang ngắn trang trí dưới tiêu đề chuẩn theo Hình 1 */
 .widget-comments-stripe {
-  width: 44px;
+  width: 45px;
   height: 2px;
-  background-color: #8c98a4;
-  margin-bottom: 14px;
+  background-color: #999eab;
+  margin-bottom: 12px;
 }
 
 /* Danh sách bình luận */
@@ -2818,24 +2818,24 @@ section#footer {
   margin: 0;
 }
 
-/* Mỗi dòng bình luận */
+/* Mỗi dòng bình luận chuẩn theo Hình 1 */
 .widget-comments-item {
-  border-bottom: 1px solid #f1f5f9;
-  padding: 10px 0;
+  border-bottom: 1px solid #efefef;
+  padding: 8px 0;
 }
 
-/* Liên kết chữ bình luận chuẩn màu xanh Hình 2 */
+/* Liên kết chữ bình luận chuẩn màu xanh Hình 1 */
 .widget-comments-link {
-  color: #2563eb;
-  font-size: 15px;
-  line-height: 1.45;
+  color: #488dc6;
+  font-size: 14.5px;
+  line-height: 1.5;
   text-decoration: none;
   display: block;
   transition: color 0.15s ease;
 }
 
 .widget-comments-link:hover {
-  color: #1d4ed8;
+  color: #1a68a5;
   text-decoration: underline;
 }
 
@@ -4550,21 +4550,19 @@ ul.timeline>li:before {
   padding-bottom: 0;
 }
 
-.cms-module-14-comments-section .widget-comments-link,
-.cms-sidebar .widget-comments-link {
+.cms-module-14-comments-section .widget-comments-link {
   text-decoration: none;
   color: #374151;
   display: block;
   transition: all 0.2s ease;
 }
 
-.cms-module-14-comments-section .widget-comments-link:hover,
-.cms-sidebar .widget-comments-link:hover {
+.cms-module-14-comments-section .widget-comments-link:hover {
   color: #2563eb;
   text-decoration: none;
 }
 
-.widget-comment-content {
+.cms-module-14-comments-section .widget-comment-content {
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
@@ -4576,8 +4574,7 @@ ul.timeline>li:before {
   font-weight: 500;
 }
 
-.cms-module-14-comments-section .widget-comments-link:hover .widget-comment-content,
-.cms-sidebar .widget-comments-link:hover .widget-comment-content {
+.cms-module-14-comments-section .widget-comments-link:hover .widget-comment-content {
   color: #2563eb;
 }
 
