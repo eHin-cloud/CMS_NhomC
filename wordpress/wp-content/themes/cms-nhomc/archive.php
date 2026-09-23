@@ -9,6 +9,9 @@ get_header();
 ?>
 
 <div class="site-content cms-container-layout">
+    <!-- Breadcrumbs (Module 19) -->
+    <?php cms_nhomc_breadcrumbs(); ?>
+
     <header class="cms-archive-header">
         <h1 class="cms-archive-title"><?php the_archive_title(); ?></h1>
         <?php the_archive_description('<div class="cms-archive-desc">', '</div>'); ?>
