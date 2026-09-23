@@ -68,17 +68,19 @@ function cms_nhomc_scripts() {
         'homeUrl' => home_url('/'),
     ));
 
-    // Nạp script trả lời bình luận lồng nhau chuẩn WordPress
+    // Nạp script xử lý Sửa/Xóa bình luận cho tài khoản đã đăng nhập
     if (is_singular() && comments_open()) {
         if (get_option('thread_comments')) {
             wp_enqueue_script('comment-reply');
         }
-        // Nạp script xử lý Sửa/Xóa bình luận cho tài khoản đã đăng nhập
         wp_enqueue_script('cms-nhomc-comment-actions', get_template_directory_uri() . '/assets/js/comment-actions.js', array(), filemtime(get_template_directory() . '/assets/js/comment-actions.js'), true);
         wp_localize_script('cms-nhomc-comment-actions', 'cmsNhomcComment', array(
             'ajaxUrl' => admin_url('admin-ajax.php'),
         ));
     }
+
+    // Nạp JavaScript Featured Posts Slider (Module 16 - Anh Quý)
+    wp_enqueue_script('cms-nhomc-featured-slider', get_template_directory_uri() . '/assets/js/featured-slider.js', array(), filemtime(get_template_directory() . '/assets/js/featured-slider.js'), true);
 }
 add_action('wp_enqueue_scripts', 'cms_nhomc_scripts');
 
@@ -1153,9 +1155,10 @@ function cms_nhomc_create_default_categories() {
 add_action('after_setup_theme', 'cms_nhomc_create_default_categories');
 
 /**
- * Render Widget: COMMENTS (Bình luận) - Module 14 (Hien/14-comments)
+ * Render Widget: COMMENTS (Bình luận) - Module 12 (Anh Quý)
+ * Mặc định hiển thị danh sách dạng liên kết chữ chuẩn 100% theo thiết kế Hình 1.
  */
-function cms_nhomc_render_comments_widget($limit = 5, $title = 'Comments') {
+function cms_nhomc_render_comments_widget($limit = 3, $title = 'Comments', $show_meta = false) {
     $comments = get_comments(array(
         'number'      => intval($limit) * 2,
         'status'      => 'approve',
@@ -1187,9 +1190,9 @@ function cms_nhomc_render_comments_widget($limit = 5, $title = 'Comments') {
     // Dữ liệu mẫu chuẩn y chang mẫu hình ảnh nếu chưa có bình luận
     if (empty($display_items)) {
         $sample_comments = array(
-            array('author' => 'Thành Viên', 'content' => 'Bài viết hay quá, rất hữu ích!', 'date' => date('d/m/Y')),
-            array('author' => 'Độc Giả', 'content' => 'Cảm ơn tác giả đã chia sẻ nội dung này.', 'date' => date('d/m/Y')),
-            array('author' => 'Khách', 'content' => 'Trình bày chi tiết, dễ hiểu và chuyên nghiệp.', 'date' => date('d/m/Y')),
+            array('author' => 'Thành Viên', 'content' => 'Đúng Thật Sự ngốc', 'date' => date('d/m/Y')),
+            array('author' => 'Độc Giả', 'content' => 'Hiền ngốc quá', 'date' => date('d/m/Y')),
+            array('author' => 'Khách', 'content' => 'Bài viết hay quá', 'date' => date('d/m/Y')),
             array('author' => 'Sinh Viên', 'content' => 'Nội dung bài viết rất thực tế và chất lượng.', 'date' => date('d/m/Y')),
             array('author' => 'Admin', 'content' => 'Chào mừng bạn đến với hệ thống CMS Nhóm C!', 'date' => date('d/m/Y')),
         );
@@ -1219,18 +1222,22 @@ function cms_nhomc_render_comments_widget($limit = 5, $title = 'Comments') {
             <?php foreach ($display_items as $item) : ?>
                 <li class="widget-comments-item">
                     <a href="<?php echo esc_url($item['link']); ?>" class="widget-comments-link">
-                        <span class="widget-comment-content"><?php echo esc_html($item['content']); ?></span>
-                        <?php if (!empty($item['author'])) : ?>
-                            <span class="widget-comment-meta">
-                                <span class="widget-comment-author">
-                                    <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-                                    <?php echo esc_html($item['author']); ?>
+                        <?php if ($show_meta) : ?>
+                            <span class="widget-comment-content"><?php echo esc_html($item['content']); ?></span>
+                            <?php if (!empty($item['author'])) : ?>
+                                <span class="widget-comment-meta">
+                                    <span class="widget-comment-author">
+                                        <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                                        <?php echo esc_html($item['author']); ?>
+                                    </span>
+                                    <?php if (!empty($item['date'])) : ?>
+                                        <span class="widget-comment-dot">&bull;</span>
+                                        <span class="widget-comment-date"><?php echo esc_html($item['date']); ?></span>
+                                    <?php endif; ?>
                                 </span>
-                                <?php if (!empty($item['date'])) : ?>
-                                    <span class="widget-comment-dot">&bull;</span>
-                                    <span class="widget-comment-date"><?php echo esc_html($item['date']); ?></span>
-                                <?php endif; ?>
-                            </span>
+                            <?php endif; ?>
+                        <?php else : ?>
+                            <?php echo esc_html($item['content']); ?>
                         <?php endif; ?>
                     </a>
                 </li>
@@ -2294,5 +2301,161 @@ function cms_nhomc_init_sample_views() {
 }
 add_action('init', 'cms_nhomc_init_sample_views');
 
+/**
+ * =========================================================================
+ * MODULE 16: FEATURED POSTS SLIDER / HERO CAROUSEL (Anh Quý)
+ * =========================================================================
+ * Hiển thị khối slider bài viết tiêu điểm nổi bật ở đầu trang chủ.
+ * Hỗ trợ hiển thị ảnh đại diện, chuyên mục, ngày đăng, tiêu đề và trích dẫn.
+ */
+function cms_nhomc_render_featured_slider($limit = 4, $title = 'TIN TIÊU ĐIỂM') {
+    $limit = !empty($limit) ? absint($limit) : 4;
 
+    // 1. Thử lấy các bài viết ghim (Sticky Posts) trước
+    $sticky = get_option('sticky_posts');
+    $args = array(
+        'posts_per_page'      => $limit,
+        'post_status'         => 'publish',
+        'ignore_sticky_posts' => 1,
+    );
 
+    if (!empty($sticky)) {
+        $args['post__in'] = $sticky;
+    }
+
+    $slider_query = new WP_Query($args);
+
+    // 2. Nếu không có sticky posts hoặc ít hơn 2 bài, lấy bài viết mới nhất
+    if (!$slider_query->have_posts() || $slider_query->post_count < 2) {
+        wp_reset_postdata();
+        $args = array(
+            'posts_per_page'      => $limit,
+            'post_status'         => 'publish',
+            'ignore_sticky_posts' => 1,
+            'orderby'             => 'date',
+            'order'               => 'DESC',
+        );
+        $slider_query = new WP_Query($args);
+    }
+
+    if (!$slider_query->have_posts()) {
+        wp_reset_postdata();
+        return;
+    }
+
+    $posts_data = array();
+    while ($slider_query->have_posts()) {
+        $slider_query->the_post();
+        $pid        = get_the_ID();
+        $categories = get_the_category($pid);
+        $cat_name   = !empty($categories) ? $categories[0]->name : 'Tin tức';
+        $cat_link   = !empty($categories) ? get_category_link($categories[0]->term_id) : '#';
+
+        $posts_data[] = array(
+            'id'       => $pid,
+            'title'    => get_the_title($pid),
+            'link'     => get_permalink($pid),
+            'thumb'    => function_exists('cms_nhomc_get_post_thumbnail_url') ? cms_nhomc_get_post_thumbnail_url($pid) : get_the_post_thumbnail_url($pid, 'full'),
+            'date'     => get_the_date('d/m/Y', $pid),
+            'author'   => get_the_author_meta('display_name'),
+            'cat_name' => $cat_name,
+            'cat_link' => $cat_link,
+            'excerpt'  => wp_trim_words(get_the_excerpt($pid), 24, '...'),
+        );
+    }
+    wp_reset_postdata();
+
+    if (empty($posts_data)) {
+        return;
+    }
+    ?>
+    <section class="cms-featured-slider-section" aria-label="<?php echo esc_attr($title); ?>">
+        <div class="cms-slider-header-bar">
+            <h2 class="cms-slider-heading">
+                <span class="cms-slider-heading-icon"><i class="fa fa-bolt" aria-hidden="true"></i></span>
+                <span class="cms-slider-heading-text"><?php echo esc_html($title); ?></span>
+            </h2>
+        </div>
+
+        <div class="cms-featured-slider" role="region" aria-roledescription="carousel" aria-label="<?php echo esc_attr($title); ?>">
+            <!-- Thanh tiến trình tự động chuyển slide -->
+            <div class="cms-slider-progress"><div class="cms-slider-progress-bar"></div></div>
+
+            <!-- Khung chiếu slides -->
+            <div class="cms-slider-viewport">
+                <?php foreach ($posts_data as $idx => $item) : ?>
+                    <article class="cms-slider-slide<?php echo ($idx === 0) ? ' is-active' : ''; ?>" data-index="<?php echo esc_attr($idx); ?>" role="group" aria-roledescription="slide" aria-label="<?php printf('%d / %d', $idx + 1, count($posts_data)); ?>" <?php echo ($idx !== 0) ? 'aria-hidden="true"' : 'aria-hidden="false"'; ?>>
+                        <div class="cms-slider-media">
+                            <a href="<?php echo esc_url($item['link']); ?>" class="cms-slider-media-link" tabindex="<?php echo ($idx === 0) ? '0' : '-1'; ?>">
+                                <img src="<?php echo esc_url($item['thumb']); ?>" alt="<?php echo esc_attr($item['title']); ?>" loading="<?php echo ($idx === 0) ? 'eager' : 'lazy'; ?>" class="cms-slider-img" />
+                            </a>
+                            <div class="cms-slider-overlay"></div>
+                        </div>
+
+                        <div class="cms-slider-caption">
+                            <div class="cms-slider-meta">
+                                <a href="<?php echo esc_url($item['cat_link']); ?>" class="cms-slider-category-badge" tabindex="<?php echo ($idx === 0) ? '0' : '-1'; ?>">
+                                    <?php echo esc_html($item['cat_name']); ?>
+                                </a>
+                                <span class="cms-slider-meta-item cms-slider-date">
+                                    <i class="fa fa-calendar-o" aria-hidden="true"></i> <?php echo esc_html($item['date']); ?>
+                                </span>
+                                <span class="cms-slider-meta-item cms-slider-author">
+                                    <i class="fa fa-user-circle-o" aria-hidden="true"></i> <?php echo esc_html($item['author']); ?>
+                                </span>
+                            </div>
+
+                            <h3 class="cms-slider-title">
+                                <a href="<?php echo esc_url($item['link']); ?>" tabindex="<?php echo ($idx === 0) ? '0' : '-1'; ?>">
+                                    <?php echo esc_html($item['title']); ?>
+                                </a>
+                            </h3>
+
+                            <?php if (!empty($item['excerpt'])) : ?>
+                                <p class="cms-slider-desc"><?php echo esc_html($item['excerpt']); ?></p>
+                            <?php endif; ?>
+
+                            <div class="cms-slider-actions">
+                                <a href="<?php echo esc_url($item['link']); ?>" class="cms-slider-btn-read" tabindex="<?php echo ($idx === 0) ? '0' : '-1'; ?>">
+                                    <span>Xem chi tiết</span>
+                                    <i class="fa fa-arrow-right" aria-hidden="true"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </article>
+                <?php endforeach; ?>
+            </div>
+
+            <!-- Nút điều hướng chuyển bài -->
+            <button type="button" class="cms-slider-nav cms-slider-nav-prev" aria-label="Bài trước">
+                <i class="fa fa-chevron-left" aria-hidden="true"></i>
+            </button>
+            <button type="button" class="cms-slider-nav cms-slider-nav-next" aria-label="Bài kế tiếp">
+                <i class="fa fa-chevron-right" aria-hidden="true"></i>
+            </button>
+
+            <!-- Chấm chỉ mục phân trang (Dots) -->
+            <div class="cms-slider-dots" role="tablist" aria-label="Danh sách bài viết tiêu điểm">
+                <?php foreach ($posts_data as $idx => $item) : ?>
+                    <button type="button" class="cms-slider-dot<?php echo ($idx === 0) ? ' is-active' : ''; ?>" data-slide-to="<?php echo esc_attr($idx); ?>" role="tab" aria-label="<?php printf('Chuyển tới bài viết %d', $idx + 1); ?>" <?php echo ($idx === 0) ? 'aria-current="true"' : ''; ?>></button>
+                <?php endforeach; ?>
+            </div>
+        </div>
+    </section>
+    <?php
+}
+
+/**
+ * Shortcode [cms_featured_slider]
+ */
+function cms_nhomc_featured_slider_shortcode($atts) {
+    $atts = shortcode_atts(array(
+        'limit' => 4,
+        'title' => 'TIN TIÊU ĐIỂM',
+    ), $atts, 'cms_featured_slider');
+
+    ob_start();
+    cms_nhomc_render_featured_slider(intval($atts['limit']), sanitize_text_field($atts['title']));
+    return ob_get_clean();
+}
+add_shortcode('cms_featured_slider', 'cms_nhomc_featured_slider_shortcode');
