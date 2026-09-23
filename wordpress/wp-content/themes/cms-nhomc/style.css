@@ -5117,3 +5117,138 @@ ul.timeline>li:before {
     width: 180px;
   }
 }
+
+/* ====================================================
+   MODULE: CHIA SẺ & SAO CHÉP LIÊN KẾT BÀI VIẾT (SINGLE POST)
+   ==================================================== */
+.cms-social-share-box {
+  margin: 24px 0;
+  padding: 14px 18px;
+  background-color: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  box-sizing: border-box;
+}
+
+.cms-share-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.cms-share-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #334155;
+}
+
+.cms-share-icon {
+  stroke: #64748b;
+  flex-shrink: 0;
+}
+
+.cms-share-buttons {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+/* Base button style */
+.cms-share-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 7px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.2;
+  border-radius: 6px;
+  text-decoration: none !important;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  border: 1px solid transparent;
+  outline: none;
+  font-family: inherit;
+}
+
+/* Nút Facebook */
+.cms-share-fb {
+  background-color: #1877f2;
+  color: #ffffff !important;
+}
+.cms-share-fb:hover {
+  background-color: #0c63d4;
+  color: #ffffff !important;
+  box-shadow: 0 3px 8px rgba(24, 119, 242, 0.35);
+  transform: translateY(-1px);
+}
+
+/* Nút Zalo */
+.cms-share-zalo {
+  background-color: #0068ff;
+  color: #ffffff !important;
+}
+.cms-share-zalo:hover {
+  background-color: #0054d1;
+  color: #ffffff !important;
+  box-shadow: 0 3px 8px rgba(0, 104, 255, 0.35);
+  transform: translateY(-1px);
+}
+.cms-zalo-icon {
+  flex-shrink: 0;
+  border-radius: 4px;
+}
+
+/* Nút Sao chép liên kết (Bình thường) */
+.cms-btn-copy {
+  background-color: #ffffff;
+  color: #475569;
+  border-color: #cbd5e1;
+}
+.cms-btn-copy:hover {
+  background-color: #f1f5f9;
+  color: #1e293b;
+  border-color: #94a3b8;
+  transform: translateY(-1px);
+}
+
+/* Trạng thái ĐÃ SAO CHÉP (UX: Xanh lá, đổi chữ và icon trong 2 giây) */
+.cms-btn-copy.copied {
+  background-color: #16a34a !important;
+  border-color: #16a34a !important;
+  color: #ffffff !important;
+  box-shadow: 0 3px 10px rgba(22, 163, 74, 0.4);
+  transform: scale(1.02);
+}
+.cms-btn-copy.copied .cms-copy-icon {
+  display: none !important;
+}
+.cms-btn-copy.copied .cms-check-icon {
+  display: inline-block !important;
+  stroke: #ffffff;
+}
+
+/* Tương thích di động */
+@media (max-width: 600px) {
+  .cms-share-wrapper {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .cms-share-buttons {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 6px;
+  }
+  .cms-share-btn {
+    padding: 8px 6px;
+    font-size: 12px;
+  }
+}
