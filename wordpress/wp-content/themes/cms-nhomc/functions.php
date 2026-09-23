@@ -1896,3 +1896,141 @@ function cms_nhomc_register_pages_widget() {
 }
 add_action('widgets_init', 'cms_nhomc_register_pages_widget');
 
+/* ==========================================================================
+   MODULE 17: AUTHOR BOX - THÔNG TIN TÁC GIẢ BÀI VIẾT (VINH EM)
+   - Chức năng: Khung thông tin cá nhân và giới thiệu ngắn về tác giả bài viết.
+   - Bố cục & Giao diện: Avatar tròn, tên tác giả, bio ngắn và các liên kết mạng xã hội.
+   - Vị trí: Trang chi tiết (Detail page), đặt cuối bài viết trước phần bình luận.
+   ========================================================================== */
+
+/**
+ * Render Khung thông tin tác giả (Module 17: Author Box)
+ *
+ * @param int|null $author_id ID của tác giả (nếu null sẽ tự lấy theo post hiện tại)
+ */
+function cms_nhomc_render_author_box($author_id = null) {
+    if (!$author_id) {
+        $author_id = get_the_author_meta('ID');
+        if (!$author_id) {
+            $author_id = get_post_field('post_author', get_the_ID());
+        }
+    }
+
+    if (!$author_id) {
+        return;
+    }
+
+    // 1. Tên tác giả
+    $author_name = get_the_author_meta('display_name', $author_id);
+    if (empty($author_name)) {
+        $author_name = get_the_author_meta('user_nicename', $author_id);
+    }
+    if (empty($author_name)) {
+        $author_name = 'Ban Biên Tập TDC';
+    }
+
+    // 2. Đường dẫn đến trang lưu trữ bài viết của tác giả
+    $author_url = get_author_posts_url($author_id);
+
+    // 3. Tiểu sử tác giả (Bio)
+    $author_bio = get_the_author_meta('description', $author_id);
+    if (empty($author_bio)) {
+        // Fallback tiểu sử chuyên nghiệp chuẩn TDC nếu tác giả chưa cập nhật bio trong hồ sơ
+        $author_bio = 'Biên tập viên & Giảng viên tại Trường Cao đẳng Công nghệ Thủ Đức (TDC). Đam mê nghiên cứu công nghệ, viết bài và chia sẻ các kiến thức, thông tin tuyển sinh và học thuật hữu ích đến cộng đồng sinh viên.';
+    }
+
+    // 4. Số lượng bài viết đã xuất bản
+    $post_count = count_user_posts($author_id, 'post', true);
+
+    // 5. Ảnh đại diện Avatar tròn
+    $avatar_url = get_avatar_url($author_id, array('size' => 160));
+    $fallback_avatar = 'https://ui-avatars.com/api/?name=' . urlencode($author_name) . '&background=8B1E1E&color=ffffff&size=160&bold=true';
+
+    // 6. Các liên kết mạng xã hội (lấy từ user meta nếu có, fallback liên kết đẹp mắt)
+    $social_fb   = get_the_author_meta('facebook', $author_id) ?: 'https://www.facebook.com';
+    $social_tw   = get_the_author_meta('twitter', $author_id) ?: 'https://twitter.com';
+    $social_in   = get_the_author_meta('linkedin', $author_id) ?: 'https://www.linkedin.com';
+    $social_web  = get_the_author_meta('user_url', $author_id) ?: home_url('/');
+    $user_email  = get_the_author_meta('user_email', $author_id);
+    $social_mail = !empty($user_email) ? 'mailto:' . antispambot($user_email) : '#';
+    ?>
+    <section class="cms-author-box" aria-label="Thông tin tác giả bài viết">
+        <div class="author-box-card">
+            <!-- Cột 1: Avatar tròn -->
+            <div class="author-box-avatar">
+                <a href="<?php echo esc_url($author_url); ?>" class="author-avatar-link" title="Xem thêm bài viết của <?php echo esc_attr($author_name); ?>">
+                    <img src="<?php echo esc_url($avatar_url); ?>" 
+                         alt="<?php echo esc_attr($author_name); ?>" 
+                         class="author-avatar-img" 
+                         width="96" 
+                         height="96" 
+                         loading="lazy" 
+                         onerror="this.onerror=null; this.src='<?php echo esc_url($fallback_avatar); ?>';" />
+                </a>
+            </div>
+
+            <!-- Cột 2: Thông tin tác giả, Bio ngắn & Mạng xã hội -->
+            <div class="author-box-body">
+                <div class="author-box-header">
+                    <div class="author-box-badges">
+                        <span class="author-badge"><i class="fa fa-pencil"></i> Tác giả bài viết</span>
+                        <?php if ($post_count > 0) : ?>
+                            <span class="author-post-count"><i class="fa fa-newspaper-o"></i> <?php echo intval($post_count); ?> bài viết</span>
+                        <?php endif; ?>
+                    </div>
+                    <h3 class="author-box-name">
+                        <a href="<?php echo esc_url($author_url); ?>" title="Xem trang tác giả <?php echo esc_attr($author_name); ?>">
+                            <?php echo esc_html($author_name); ?>
+                        </a>
+                    </h3>
+                </div>
+
+                <!-- Bio ngắn -->
+                <div class="author-box-bio">
+                    <p><?php echo esc_html($author_bio); ?></p>
+                </div>
+
+                <!-- Các liên kết mạng xã hội -->
+                <div class="author-box-social">
+                    <span class="social-label">Kết nối tác giả:</span>
+                    <div class="social-links-list">
+                        <a href="<?php echo esc_url($social_fb); ?>" class="social-btn social-fb" title="Theo dõi qua Facebook" target="_blank" rel="noopener noreferrer">
+                            <i class="fa fa-facebook"></i>
+                        </a>
+                        <a href="<?php echo esc_url($social_tw); ?>" class="social-btn social-tw" title="Theo dõi qua Twitter / X" target="_blank" rel="noopener noreferrer">
+                            <i class="fa fa-twitter"></i>
+                        </a>
+                        <a href="<?php echo esc_url($social_in); ?>" class="social-btn social-in" title="Kết nối qua LinkedIn" target="_blank" rel="noopener noreferrer">
+                            <i class="fa fa-linkedin"></i>
+                        </a>
+                        <a href="<?php echo esc_url($social_web); ?>" class="social-btn social-web" title="Trang web cá nhân" target="_blank" rel="noopener noreferrer">
+                            <i class="fa fa-globe"></i>
+                        </a>
+                        <?php if (!empty($user_email)) : ?>
+                            <a href="<?php echo esc_url($social_mail); ?>" class="social-btn social-mail" title="Gửi thư điện tử (Email)">
+                                <i class="fa fa-envelope-o"></i>
+                            </a>
+                        <?php endif; ?>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <?php
+}
+
+/**
+ * Shortcode [cms_author_box] để hiển thị Author Box linh hoạt
+ */
+function cms_nhomc_author_box_shortcode($atts) {
+    $atts = shortcode_atts(array(
+        'id' => null,
+    ), $atts, 'cms_author_box');
+
+    ob_start();
+    cms_nhomc_render_author_box($atts['id']);
+    return ob_get_clean();
+}
+add_shortcode('cms_author_box', 'cms_nhomc_author_box_shortcode');
+
+

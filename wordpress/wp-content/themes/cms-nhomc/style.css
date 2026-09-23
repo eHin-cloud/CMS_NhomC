@@ -5117,3 +5117,250 @@ ul.timeline>li:before {
     width: 180px;
   }
 }
+
+/* ==========================================================================
+   MODULE 17: AUTHOR BOX - KHUNG THÔNG TIN TÁC GIẢ BÀI VIẾT (VINH EM)
+   - Bố cục: Avatar tròn, tên tác giả, bio ngắn và các liên kết mạng xã hội
+   - Vị trí: Trang chi tiết bài viết (single.php)
+   ========================================================================== */
+
+.cms-author-box {
+  width: 100%;
+  margin: 36px 0 28px 0;
+  box-sizing: border-box;
+}
+
+.author-box-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 26px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-left: 4px solid #8B1E1E; /* Điểm nhấn màu đỏ thương hiệu TDC */
+  border-radius: 12px;
+  padding: 26px 28px;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.04);
+  transition: box-shadow 0.25s ease, border-color 0.25s ease;
+  box-sizing: border-box;
+}
+
+.author-box-card:hover {
+  box-shadow: 0 8px 24px rgba(139, 30, 30, 0.08);
+  border-color: #cbd5e1;
+  border-left-color: #8B1E1E;
+}
+
+/* Cột Avatar tròn */
+.author-box-avatar {
+  flex-shrink: 0;
+}
+
+.author-avatar-link {
+  display: block;
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  overflow: hidden;
+  position: relative;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border: 3px solid #ffffff;
+  outline: 2px solid #e2e8f0;
+  transition: transform 0.3s ease, outline-color 0.3s ease;
+}
+
+.author-avatar-link:hover {
+  transform: scale(1.05);
+  outline-color: #8B1E1E;
+}
+
+.author-avatar-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  display: block;
+}
+
+/* Cột Thông tin tác giả */
+.author-box-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.author-box-header {
+  margin-bottom: 8px;
+}
+
+.author-box-badges {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 6px;
+}
+
+.author-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: #fef2f2;
+  color: #8B1E1E;
+  border: 1px solid #fecaca;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 3px 10px;
+  border-radius: 20px;
+  line-height: 1.2;
+}
+
+.author-post-count {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: #64748b;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.author-box-name {
+  font-size: 20px;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0 0 6px 0;
+  line-height: 1.35;
+  font-family: inherit;
+}
+
+.author-box-name a {
+  color: inherit;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.author-box-name a:hover {
+  color: #8B1E1E;
+}
+
+/* Tiểu sử tác giả (Bio) */
+.author-box-bio {
+  margin: 0 0 16px 0;
+}
+
+.author-box-bio p {
+  font-size: 14.5px;
+  line-height: 1.65;
+  color: #475569;
+  margin: 0;
+}
+
+/* Liên kết mạng xã hội */
+.author-box-social {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding-top: 12px;
+  border-top: 1px dashed #e2e8f0;
+}
+
+.author-box-social .social-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #64748b;
+  white-space: nowrap;
+}
+
+.social-links-list {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.social-links-list .social-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: #f1f5f9;
+  color: #64748b;
+  font-size: 14px;
+  text-decoration: none;
+  border: 1px solid #e2e8f0;
+  transition: all 0.22s ease;
+}
+
+/* Hiệu ứng hover các icon mạng xã hội theo màu thương hiệu */
+.social-links-list .social-fb:hover {
+  background: #1877f2;
+  color: #ffffff;
+  border-color: #1877f2;
+  transform: translateY(-3px);
+  box-shadow: 0 4px 10px rgba(24, 119, 242, 0.3);
+}
+
+.social-links-list .social-tw:hover {
+  background: #1da1f2;
+  color: #ffffff;
+  border-color: #1da1f2;
+  transform: translateY(-3px);
+  box-shadow: 0 4px 10px rgba(29, 161, 242, 0.3);
+}
+
+.social-links-list .social-in:hover {
+  background: #0a66c2;
+  color: #ffffff;
+  border-color: #0a66c2;
+  transform: translateY(-3px);
+  box-shadow: 0 4px 10px rgba(10, 102, 194, 0.3);
+}
+
+.social-links-list .social-web:hover {
+  background: #10b981;
+  color: #ffffff;
+  border-color: #10b981;
+  transform: translateY(-3px);
+  box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3);
+}
+
+.social-links-list .social-mail:hover {
+  background: #ef4444;
+  color: #ffffff;
+  border-color: #ef4444;
+  transform: translateY(-3px);
+  box-shadow: 0 4px 10px rgba(239, 68, 68, 0.3);
+}
+
+/* Responsive trên màn hình nhỏ & Mobile */
+@media (max-width: 640px) {
+  .author-box-card {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 22px 18px;
+    gap: 16px;
+  }
+
+  .author-avatar-link {
+    width: 86px;
+    height: 86px;
+  }
+
+  .author-box-badges {
+    justify-content: center;
+  }
+
+  .author-box-social {
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+  }
+
+  .social-links-list {
+    justify-content: center;
+  }
+}
