@@ -52,4 +52,9 @@ get_header();
 </div>
 
 <?php
+// (20) Newsletter Subscription - Nằm ngay trước Footer trên Homepage (Ponytail Standard)
+if (function_exists('cms_nhomc_render_newsletter_section')) {
+    cms_nhomc_render_newsletter_section();
+}
+
 get_footer();

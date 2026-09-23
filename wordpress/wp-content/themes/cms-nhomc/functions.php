@@ -12,6 +12,9 @@ if (!defined('ABSPATH')) {
 // Nạp bộ xử lý tìm kiếm thông minh tiếng Việt (Viet74K)
 require_once get_template_directory() . '/inc/class-vietnamese-search.php';
 
+// (20) Nạp chức năng Newsletter Subscription (Ponytail Standard)
+require_once get_template_directory() . '/inc/newsletter.php';
+
 function cms_nhomc_setup() {
     // Hỗ trợ thẻ Title tự động của WordPress
     add_theme_support('title-tag');
@@ -77,6 +80,33 @@ function cms_nhomc_scripts() {
         wp_enqueue_script('cms-nhomc-comment-actions', get_template_directory_uri() . '/assets/js/comment-actions.js', array(), filemtime(get_template_directory() . '/assets/js/comment-actions.js'), true);
         wp_localize_script('cms-nhomc-comment-actions', 'cmsNhomcComment', array(
             'ajaxUrl' => admin_url('admin-ajax.php'),
+        ));
+    }
+
+    // (20) Nạp Style & Script cho Newsletter Subscription (Ponytail Standard)
+    $newsletter_css_path = get_template_directory() . '/assets/css/newsletter.css';
+    $newsletter_js_path  = get_template_directory() . '/assets/js/newsletter.js';
+
+    if (file_exists($newsletter_css_path)) {
+        wp_enqueue_style(
+            'cms-nhomc-newsletter-style',
+            get_template_directory_uri() . '/assets/css/newsletter.css',
+            array('cms-nhomc-style'),
+            filemtime($newsletter_css_path)
+        );
+    }
+
+    if (file_exists($newsletter_js_path)) {
+        wp_enqueue_script(
+            'cms-nhomc-newsletter-script',
+            get_template_directory_uri() . '/assets/js/newsletter.js',
+            array(),
+            filemtime($newsletter_js_path),
+            true
+        );
+        wp_localize_script('cms-nhomc-newsletter-script', 'cmsNhomcNewsletter', array(
+            'ajaxUrl' => admin_url('admin-ajax.php'),
+            'nonce'   => wp_create_nonce('cms_nhomc_newsletter_nonce'),
         ));
     }
 }
