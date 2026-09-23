@@ -15,6 +15,8 @@ $search_error = function_exists('cms_nhomc_get_search_error') ? cms_nhomc_get_se
 
 <main class="site-content search-results-page">
     <div class="search-page-container">
+        <!-- Breadcrumbs (Module 19) -->
+        <?php cms_nhomc_breadcrumbs(); ?>
 
         <!-- Khối tiêu đề tìm kiếm chuẩn 100% theo mẫu Bootsnipp 35V6b -->
         <header class="search-page-header text-center">
