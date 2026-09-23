@@ -1011,87 +1011,81 @@ function cms_nhomc_render_archive_widget($title = 'Xem nhiều') {
         </div>
 
         <div class="archive-ranked-body">
-            <!-- TAB 1: Danh sách bài viết mới nhất theo ngày tháng (8 bài) -->
+            <!-- TAB 1: Danh sách bài viết mới nhất theo ngày tháng (8 bài chia thành 4 hàng) -->
             <div class="archive-tab-panel active" id="archive-panel-posts">
-                <div class="archive-ranked-grid">
-                    <!-- Cột 1: Đánh số 1 - 4 -->
-                    <div class="archive-col">
-                        <?php for ($i = 0; $i < 4; $i++) : 
-                            $item = $items_posts[$i];
-                        ?>
+                <div class="archive-ranked-list">
+                    <?php for ($row = 0; $row < 4; $row++) : 
+                        $i_left  = $row;     // Vị trí 0, 1, 2, 3 -> Số 1, 2, 3, 4
+                        $i_right = $row + 4; // Vị trí 4, 5, 6, 7 -> Số 5, 6, 7, 8
+                        $item_left  = $items_posts[$i_left];
+                        $item_right = $items_posts[$i_right];
+                    ?>
+                        <div class="archive-ranked-row">
+                            <!-- Cột trái: Đánh số 1, 2, 3, 4 -->
                             <div class="archive-ranked-item">
-                                <span class="archive-ranked-num"><?php echo ($i + 1); ?></span>
+                                <span class="archive-ranked-num"><?php echo ($i_left + 1); ?></span>
                                 <div class="archive-ranked-content">
-                                    <a href="<?php echo esc_url($item['link']); ?>" class="archive-ranked-link" title="<?php echo esc_attr($item['title']); ?>">
-                                        <?php echo esc_html($item['title']); ?>
+                                    <a href="<?php echo esc_url($item_left['link']); ?>" class="archive-ranked-link" title="<?php echo esc_attr($item_left['title']); ?>">
+                                        <?php echo esc_html($item_left['title']); ?>
                                     </a>
-                                    <?php if (!empty($item['comments'])) : ?>
-                                        <span class="archive-ranked-comments" title="<?php echo esc_attr($item['comments']); ?> bình luận">
-                                            <i class="fa fa-commenting-o"></i> <?php echo intval($item['comments']); ?>
+                                    <?php if (!empty($item_left['comments'])) : ?>
+                                        <span class="archive-ranked-comments" title="<?php echo esc_attr($item_left['comments']); ?> bình luận">
+                                            <i class="fa fa-commenting-o"></i> <?php echo intval($item_left['comments']); ?>
                                         </span>
                                     <?php endif; ?>
                                 </div>
                             </div>
-                        <?php endfor; ?>
-                    </div>
 
-                    <!-- Cột 2: Đánh số 5 - 8 -->
-                    <div class="archive-col">
-                        <?php for ($i = 4; $i < 8; $i++) : 
-                            $item = $items_posts[$i];
-                        ?>
+                            <!-- Cột phải: Đánh số 5, 6, 7, 8 -->
                             <div class="archive-ranked-item">
-                                <span class="archive-ranked-num"><?php echo ($i + 1); ?></span>
+                                <span class="archive-ranked-num"><?php echo ($i_right + 1); ?></span>
                                 <div class="archive-ranked-content">
-                                    <a href="<?php echo esc_url($item['link']); ?>" class="archive-ranked-link" title="<?php echo esc_attr($item['title']); ?>">
-                                        <?php echo esc_html($item['title']); ?>
+                                    <a href="<?php echo esc_url($item_right['link']); ?>" class="archive-ranked-link" title="<?php echo esc_attr($item_right['title']); ?>">
+                                        <?php echo esc_html($item_right['title']); ?>
                                     </a>
-                                    <?php if (!empty($item['comments'])) : ?>
-                                        <span class="archive-ranked-comments" title="<?php echo esc_attr($item['comments']); ?> bình luận">
-                                            <i class="fa fa-commenting-o"></i> <?php echo intval($item['comments']); ?>
+                                    <?php if (!empty($item_right['comments'])) : ?>
+                                        <span class="archive-ranked-comments" title="<?php echo esc_attr($item_right['comments']); ?> bình luận">
+                                            <i class="fa fa-commenting-o"></i> <?php echo intval($item_right['comments']); ?>
                                         </span>
                                     <?php endif; ?>
                                 </div>
                             </div>
-                        <?php endfor; ?>
-                    </div>
+                        </div>
+                    <?php endfor; ?>
                 </div>
             </div>
 
-            <!-- TAB 2: Danh sách mốc lưu trữ theo ngày tháng (8 tháng) -->
+            <!-- TAB 2: Danh sách mốc lưu trữ theo ngày tháng (8 mốc chia thành 4 hàng) -->
             <div class="archive-tab-panel" id="archive-panel-dates" style="display: none;">
-                <div class="archive-ranked-grid">
-                    <!-- Cột 1: Đánh số 1 - 4 -->
-                    <div class="archive-col">
-                        <?php for ($i = 0; $i < 4; $i++) : 
-                            $item = $items_dates[$i];
-                        ?>
+                <div class="archive-ranked-list">
+                    <?php for ($row = 0; $row < 4; $row++) : 
+                        $i_left  = $row;     // Vị trí 0, 1, 2, 3 -> Số 1, 2, 3, 4
+                        $i_right = $row + 4; // Vị trí 4, 5, 6, 7 -> Số 5, 6, 7, 8
+                        $item_left  = $items_dates[$i_left];
+                        $item_right = $items_dates[$i_right];
+                    ?>
+                        <div class="archive-ranked-row">
+                            <!-- Cột trái: Đánh số 1, 2, 3, 4 -->
                             <div class="archive-ranked-item">
-                                <span class="archive-ranked-num"><?php echo ($i + 1); ?></span>
+                                <span class="archive-ranked-num"><?php echo ($i_left + 1); ?></span>
                                 <div class="archive-ranked-content">
-                                    <a href="<?php echo esc_url($item['link']); ?>" class="archive-ranked-link" title="<?php echo esc_attr($item['title']); ?>">
-                                        <?php echo esc_html($item['title']); ?>
+                                    <a href="<?php echo esc_url($item_left['link']); ?>" class="archive-ranked-link" title="<?php echo esc_attr($item_left['title']); ?>">
+                                        <?php echo esc_html($item_left['title']); ?>
                                     </a>
                                 </div>
                             </div>
-                        <?php endfor; ?>
-                    </div>
 
-                    <!-- Cột 2: Đánh số 5 - 8 -->
-                    <div class="archive-col">
-                        <?php for ($i = 4; $i < 8; $i++) : 
-                            $item = $items_dates[$i];
-                        ?>
+                            <!-- Cột phải: Đánh số 5, 6, 7, 8 -->
                             <div class="archive-ranked-item">
-                                <span class="archive-ranked-num"><?php echo ($i + 1); ?></span>
+                                <span class="archive-ranked-num"><?php echo ($i_right + 1); ?></span>
                                 <div class="archive-ranked-content">
-                                    <a href="<?php echo esc_url($item['link']); ?>" class="archive-ranked-link" title="<?php echo esc_attr($item['title']); ?>">
-                                        <?php echo esc_html($item['title']); ?>
+                                    <a href="<?php echo esc_url($item_right['link']); ?>" class="archive-ranked-link" title="<?php echo esc_attr($item_right['title']); ?>">
+                                        <?php echo esc_html($item_right['title']); ?>
                                     </a>
                                 </div>
                             </div>
-                        <?php endfor; ?>
-                    </div>
+                        </div>
+                    <?php endfor; ?>
                 </div>
             </div>
         </div>
