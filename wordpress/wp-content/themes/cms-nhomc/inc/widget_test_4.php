@@ -5,7 +5,7 @@
  * Yêu cầu:
  * 1) Widget có tên: widget_test_4
  * 2) Hiển thị widget_test_4 tại trang chủ, trang danh sách, trang chi tiết; Khu vực: phía trên Footer
- * 3) Giao diện hiển thị: giống chuẩn chỉnh 100% theo hình ảnh mẫu, giữ nguyên cấu trúc
+ * 3) Cấu trúc HTML & CSS chuẩn chỉnh 100% y hệt báo điện tử VietNamNet (https://vietnamnet.vn/)
  *
  * @package CMS_NhomC
  */
@@ -34,7 +34,7 @@ class widget_test_4 extends WP_Widget {
     }
 
     /**
-     * Dữ liệu mặc định chuẩn chỉnh 100% khớp từng chữ theo hình ảnh mẫu
+     * Dữ liệu mặc định chuẩn chỉnh 100% khớp từng chữ theo HTML VietNamNet
      */
     public static function get_default_data() {
         return array(
@@ -51,6 +51,8 @@ class widget_test_4 extends WP_Widget {
             'ads_email'    => 'contact@vietnamnet.vn',
             'tech_email'   => 'support@tech.vietnamnet.vn',
             'price_url'    => 'http://vads.vn',
+            'contact_url'  => 'https://vietnamnet.vn/thong-tin-toa-soan',
+            'ads_url'      => 'https://vads.vn/#vnn_source=trangchu&vnn_medium=menu-bottom',
         );
     }
 
@@ -167,6 +169,8 @@ class widget_test_4 extends WP_Widget {
         $ads_email    = !empty($instance['ads_email']) ? $instance['ads_email'] : $defaults['ads_email'];
         $tech_email   = !empty($instance['tech_email']) ? $instance['tech_email'] : $defaults['tech_email'];
         $price_url    = !empty($instance['price_url']) ? $instance['price_url'] : $defaults['price_url'];
+        $contact_url  = !empty($instance['contact_url']) ? $instance['contact_url'] : $defaults['contact_url'];
+        $ads_url      = !empty($instance['ads_url']) ? $instance['ads_url'] : $defaults['ads_url'];
 
         return array(
             'agency'       => $agency,
@@ -182,156 +186,118 @@ class widget_test_4 extends WP_Widget {
             'ads_email'    => $ads_email,
             'tech_email'   => $tech_email,
             'price_url'    => $price_url,
+            'contact_url'  => $contact_url,
+            'ads_url'      => $ads_url,
         );
     }
 
     /**
-     * Render giao diện Widget ra Frontend (CẤU TRÚC CHUẨN CHỈNH 100% THEO ẢNH MẪU)
+     * Render giao diện Widget ra Frontend (CẤU TRÚC HTML Y HỆT 100% CỦA VIETNAMNET.VN)
      */
     public function widget($args, $instance) {
         $data = self::resolve_data($instance);
-        $logo_url = get_template_directory_uri() . '/assets/images/vietnamnet-logo.png';
+        $theme_img_dir = get_template_directory_uri() . '/assets/images';
 
         echo isset($args['before_widget']) ? $args['before_widget'] : '';
         ?>
-        <div class="vnn-widget-container" id="vnn-widget-test-4">
-            <div class="vnn-widget-inner">
-                
-                <!-- CỘT 1 (BÊN TRÁI): LOGO, TOÀ SOÀN & PHÁP LÝ -->
-                <div class="vnn-col vnn-col-editorial">
-                    <!-- Khối trên: Logo nằm bên trái, 3 dòng Cơ quan / Giấy phép / TBT nằm bên phải logo -->
-                    <div class="vnn-editorial-top-block">
-                        <div class="vnn-logo-column">
-                            <a href="<?php echo esc_url(home_url('/')); ?>" class="vnn-logo-link" title="Báo VietNamNet">
-                                <img src="<?php echo esc_url($logo_url); ?>" alt="VietNamNet" class="vnn-logo-img" />
-                            </a>
-                            <div class="vnn-logo-subtext">VIETNAMNET.VN</div>
-                        </div>
-
-                        <div class="vnn-editorial-summary">
-                            <div class="vnn-text-row">
-                                <span class="vnn-lbl">Cơ quan chủ quản:</span> 
-                                <span class="vnn-val"><?php echo esc_html($data['agency']); ?></span>
-                            </div>
-                            <div class="vnn-text-row">
-                                <span class="vnn-lbl">Số giấy phép:</span> 
-                                <span class="vnn-val"><?php echo esc_html($data['license']); ?></span>, 
-                                <span class="vnn-sub-lbl">cấp ngày</span> 
-                                <span class="vnn-val"><?php echo esc_html($data['license_date']); ?></span>
-                            </div>
-                            <div class="vnn-text-row vnn-row-editor">
-                                <span class="vnn-lbl-editor">Tổng biên tập:</span> 
-                                <strong class="vnn-val-editor"><?php echo esc_html($data['editor']); ?></strong>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Nút Liên hệ toà soạn (nằm bên dưới khối trên) -->
-                    <div class="vnn-action-wrap">
-                        <a href="mailto:<?php echo esc_attr($data['email']); ?>" class="vnn-btn-card">Liên hệ tòa soạn</a>
-                    </div>
-
-                    <!-- Khối thông tin địa chỉ, liên hệ và bản quyền bên dưới -->
-                    <div class="vnn-editorial-bottom-block">
-                        <p class="vnn-text-row vnn-address-row">
-                            <span class="vnn-lbl">Địa chỉ:</span> 
-                            <span class="vnn-val"><?php echo esc_html($data['address']); ?></span>
-                        </p>
-                        <p class="vnn-text-row">
-                            <span class="vnn-lbl">Điện thoại:</span> 
-                            <strong><?php echo esc_html($data['phone']); ?></strong> - 
-                            <span class="vnn-lbl">Hotline:</span> 
-                            <strong><?php echo esc_html($data['hotline']); ?></strong>
-                        </p>
-                        <p class="vnn-text-row">
-                            <span class="vnn-lbl">Email:</span> 
-                            <a href="mailto:<?php echo esc_attr($data['email']); ?>" class="vnn-email-link"><?php echo esc_html($data['email']); ?></a>
-                        </p>
-                        <p class="vnn-text-row vnn-copyright-text">
-                            &copy; 1997 Báo VietNamNet. All rights reserved. Chỉ được phát hành lại thông tin từ website này khi có sự đồng ý bằng văn bản của báo VietNamNet.
-                        </p>
-                    </div>
-                </div>
-
-                <!-- CỘT 2 (Ở GIỮA): QUẢNG CÁO & TRUYỀN THÔNG -->
-                <div class="vnn-col vnn-col-commercial">
-                    <!-- Nút Liên hệ quảng cáo (nằm trên cùng của cột 2) -->
-                    <div class="vnn-action-wrap vnn-action-ads">
-                        <a href="mailto:<?php echo esc_attr($data['ads_email']); ?>" class="vnn-btn-card">Liên hệ quảng cáo</a>
-                    </div>
-
-                    <div class="vnn-commercial-details">
-                        <p class="vnn-text-row vnn-company-title">
+        <div class="footer__bottom" id="widget-test-4-root">
+            <div class="footer__bottom-logo">
+                <a href="<?php echo esc_url(home_url('/')); ?>" data-utm-source="#vnn_source=trangchu&amp;vnn_medium=logo_bottom">
+                    <img src="<?php echo esc_url($theme_img_dir . '/logoVietnamNet.svg'); ?>" onerror="this.src='https://static.vnncdn.net/v1/logo/logoVietnamNet.svg'" alt="Tin tức VietNamNet" width="180" height="45">
+                </a>
+            </div>
+            <div class="footer__bottom-address">
+                <ul class="footer__bottom-list">
+                    <li class="footer__bottom-item"> 
+                        Cơ quan chủ quản: <?php echo esc_html($data['agency']); ?>
+                    </li>
+                    <li class="footer__bottom-item"> 
+                        Số giấy phép: <?php echo esc_html($data['license']); ?>, cấp ngày <?php echo esc_html($data['license_date']); ?>
+                    </li>
+                    <li class="footer__bottom-item text-special"> 
+                        Tổng biên tập: <?php echo esc_html($data['editor']); ?>
+                    </li>
+                    <li class="footer__bottom-item text-title"> 
+                        <a class="footer__bottom-title" title="Liên hệ tòa soạn" href="<?php echo esc_url($data['contact_url']); ?>">Liên hệ tòa soạn</a>
+                    </li>
+                    <li class="footer__bottom-item"> 
+                        Địa chỉ: <?php echo esc_html($data['address']); ?>
+                    </li>
+                    <li class="footer__bottom-item"> 
+                        Điện thoại:  <b class="phone"><?php echo esc_html($data['phone']); ?></b>
+                        - Hotline:  <b class="phone"><?php echo esc_html($data['hotline']); ?></b>
+                    </li>
+                    <li class="footer__bottom-item"> 
+                        Email: <?php echo esc_html($data['email']); ?>
+                    </li>
+                    <li class="footer__bottom-item"> 
+                        © 1997 Báo VietNamNet. All rights reserved.
+                        Chỉ được phát hành lại thông tin từ website này khi có sự
+                        đồng ý bằng văn bản của báo VietNamNet.
+                    </li>
+                </ul>
+            </div>
+            <div class="footer__gom">
+                <div class="footer__bottom-contact">
+                    <ul class="footer__bottom-list">
+                        <li class="footer__bottom-item text-title"> 
+                            <a class="footer__bottom-title" title="Liên hệ quảng cáo" target="_blank" rel="noopener noreferrer" href="<?php echo esc_url($data['ads_url']); ?>">Liên hệ quảng cáo</a>
+                        </li>
+                        <li class="footer__bottom-item"> 
                             Công ty Cổ phần Truyền thông VietNamNet
-                        </p>
-                        <p class="vnn-text-row">
-                            <span class="vnn-lbl">Hotline:</span> 
-                            <strong><?php echo esc_html($data['ads_hn']); ?></strong> (Hà Nội) - 
-                            <strong><?php echo esc_html($data['ads_hcm']); ?></strong> (Tp.HCM)
-                        </p>
-                        <p class="vnn-text-row">
-                            <span class="vnn-lbl">Email:</span> 
-                            <a href="mailto:<?php echo esc_attr($data['ads_email']); ?>" class="vnn-email-link"><?php echo esc_html($data['ads_email']); ?></a>
-                        </p>
-                        <p class="vnn-text-row">
-                            <span class="vnn-lbl">Báo giá:</span> 
-                            <a href="<?php echo esc_url($data['price_url']); ?>" target="_blank" rel="noopener noreferrer" class="vnn-price-link">
-                                <strong><?php echo esc_html($data['price_url']); ?></strong>
+                        </li>
+                        <li class="footer__bottom-item">
+                            Hotline: 
+                            <span class="footer__bottom-item-phone"><?php echo esc_html($data['ads_hn']); ?> (Hà Nội)</span>
+                            - <span class="footer__bottom-item-phone"><?php echo esc_html($data['ads_hcm']); ?> (Tp.HCM)</span>
+                        </li>
+                        <li class="footer__bottom-item">
+                            Email: <?php echo esc_html($data['ads_email']); ?>
+                        </li>
+                        <li class="footer__bottom-item"> 
+                            Báo giá: <a title="http://vads.vn" href="<?php echo esc_url($data['price_url']); ?>" target="_blank" rel="noopener noreferrer"><?php echo esc_html($data['price_url']); ?></a>
+                        </li>
+                        <li class="footer__bottom-item">
+                            Hỗ trợ kỹ thuật: <?php echo esc_html($data['tech_email']); ?>
+                        </li>
+                    </ul>
+                </div>
+            
+                <div class="footer__bottom-follow">
+                    <ul class="footer__bottom-list footer__bottom-text">
+                        <li class="footer__bottom-item text-center">
+                            Theo dõi VietNamNet trên
+                        </li>
+                    </ul>
+                    <ul class="footer__bottom-list footer__bottom-social">
+                        <li class="footer__bottom-item">
+                            <a title="VietNamNet Facebook" target="_blank" rel="noopener noreferrer" href="https://www.facebook.com/vietnamnet.vn">
+                                <img alt="VietNamNet Facebook" src="<?php echo esc_url($theme_img_dir . '/facebook-black.svg'); ?>" onerror="this.src='https://static.vnncdn.net/v1/icon/facebook-black.svg'">
                             </a>
-                        </p>
-                        <p class="vnn-text-row">
-                            <span class="vnn-lbl">Hỗ trợ kỹ thuật:</span> 
-                            <a href="mailto:<?php echo esc_attr($data['tech_email']); ?>" class="vnn-email-link"><?php echo esc_html($data['tech_email']); ?></a>
-                        </p>
+                        </li>
+                        <li class="footer__bottom-item">
+                            <a title="VietNamNet Youtube" target="_blank" rel="noopener noreferrer" href="https://www.youtube.com/c/B%C3%A1oVietNamNetTV">
+                                <img alt="VietNamNet Youtube" src="<?php echo esc_url($theme_img_dir . '/youtube-black.svg'); ?>" onerror="this.src='https://static.vnncdn.net/v1/icon/youtube-black.svg'">
+                            </a>
+                        </li>
+                        <li class="footer__bottom-item">
+                            <a title="VietNamNet Tiktok" target="_blank" rel="noopener noreferrer" href="https://www.tiktok.com/@vietnamnet.vn">
+                                <img alt="VietNamNet Tiktok" src="<?php echo esc_url($theme_img_dir . '/tiktok-black.svg'); ?>" onerror="this.src='https://static.vnncdn.net/v1/icon/tiktok-black.svg'">
+                            </a>
+                        </li>
+                        <li class="footer__bottom-item">
+                            <a title="VietNamNet Zalo" target="_blank" rel="noopener noreferrer" href="http://zalo.me/660139855964186242?src=qr">
+                                <img alt="VietNamNet Zalo" src="<?php echo esc_url($theme_img_dir . '/zalo-black.svg'); ?>" onerror="this.src='https://static.vnncdn.net/v1/icon/zalo-black.svg'">
+                            </a>
+                        </li>
+                    </ul>
+
+                    <div class="footer__bottom-submit">
+                        <a href="https://vietnamnet.vn/download-app" target="_blank" rel="noopener noreferrer">Tải ứng dụng</a>
+                        <a href="https://vietnamnet.vn/doc-gia-gui-bai" target="_blank" rel="noopener noreferrer">Độc giả gửi bài</a>
+                        <a href="https://vietnamnet.vn/tuyen-dung" target="_blank" rel="noopener noreferrer">Tuyển dụng</a>
                     </div>
                 </div>
-
-                <!-- CỘT 3 (BÊN PHẢI): THEO DÕI MẠNG XÃ HỘI & TIỆN ÍCH -->
-                <div class="vnn-col vnn-col-social">
-                    <div class="vnn-social-header-text">Theo dõi VietNamNet trên</div>
-
-                    <!-- 4 Icon mạng xã hội tròn đen chuẩn xác theo ảnh -->
-                    <div class="vnn-social-circle-group">
-                        <!-- Facebook -->
-                        <a href="https://facebook.com/vietnamnet" target="_blank" rel="noopener noreferrer" class="vnn-circle-btn vnn-fb" title="Facebook">
-                            <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
-                                <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
-                            </svg>
-                        </a>
-
-                        <!-- YouTube -->
-                        <a href="https://youtube.com/vietnamnet" target="_blank" rel="noopener noreferrer" class="vnn-circle-btn vnn-yt" title="YouTube">
-                            <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
-                                <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
-                            </svg>
-                        </a>
-
-                        <!-- TikTok -->
-                        <a href="https://tiktok.com/@vietnamnet" target="_blank" rel="noopener noreferrer" class="vnn-circle-btn vnn-tiktok" title="TikTok">
-                            <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
-                                <path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-1.01-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.24 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/>
-                            </svg>
-                        </a>
-
-                        <!-- Zalo -->
-                        <a href="https://zalo.me/vietnamnet" target="_blank" rel="noopener noreferrer" class="vnn-circle-btn vnn-zalo" title="Zalo">
-                            <span class="vnn-zalo-caption">Zalo</span>
-                        </a>
-                    </div>
-
-                    <!-- 2 Dòng tiện ích màu xanh đậm -->
-                    <div class="vnn-links-vertical">
-                        <div class="vnn-links-row">
-                            <a href="#" class="vnn-action-link">Tải ứng dụng</a> 
-                            <span class="vnn-sep-bar">|</span> 
-                            <a href="#" class="vnn-action-link">Độc giả gửi bài</a>
-                        </div>
-                        <div class="vnn-links-row vnn-row-career">
-                            <a href="#" class="vnn-action-link">Tuyển dụng</a>
-                        </div>
-                    </div>
-                </div>
-
             </div>
         </div>
         <?php
