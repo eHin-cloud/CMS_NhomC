@@ -1,28 +1,25 @@
 /**
  * Style cho widget_test_4: VietNamNet Pre-Footer Info & Contact
- * Thiết kế chính xác 100% theo hình ảnh đề bài
+ * Thiết kế chuẩn chỉnh 100% khớp cấu trúc và tỷ lệ theo hình ảnh mẫu
  */
 
-/* Khối bao ngoài Pre-Footer */
+/* Khung bọc khu vực Pre-Footer */
 .cms-pre-footer-section {
   width: 100%;
-  background-color: #f6f7f9;
-  border-top: 1px solid #e2e8f0;
-  border-bottom: 1px solid #e2e8f0;
-  padding: 32px 0 28px 0;
-  margin-top: 24px;
+  background-color: #f7f7f7;
+  border-top: 1px solid #e9ecef;
+  padding: 36px 0 32px 0;
   clear: both;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   color: #2b3445;
-  line-height: 1.55;
   box-sizing: border-box;
 }
 
 .cms-pre-footer-wrapper {
   width: 100%;
-  max-width: 1240px;
+  max-width: 1200px;
   margin: 0 auto;
-  padding: 0 20px;
+  padding: 0 24px;
   box-sizing: border-box;
 }
 
@@ -32,88 +29,95 @@
 }
 
 .vnn-widget-inner {
-  display: grid;
-  grid-template-columns: 1.45fr 1fr 0.75fr;
-  gap: 36px;
+  display: flex;
+  justify-content: space-between;
   align-items: flex-start;
+  gap: 32px;
 }
 
 /* Các cột thông tin */
 .vnn-col {
+  box-sizing: border-box;
+}
+
+/* CỘT 1 (BÊN TRÁI): Chiếm khoảng 48% */
+.vnn-col-editorial {
+  flex: 0 0 48%;
+  max-width: 48%;
+}
+
+/* Khối trên: Logo nằm bên trái, 3 dòng text nằm bên phải logo */
+.vnn-editorial-top-block {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 14px;
+}
+
+.vnn-logo-column {
+  flex: 0 0 108px;
+  width: 108px;
   display: flex;
   flex-direction: column;
-}
-
-/* CỘT 1: Logo & Toà soạn */
-.vnn-brand-header {
-  margin-bottom: 16px;
-}
-
-.vnn-logo-box {
-  display: inline-flex;
   align-items: center;
-  gap: 12px;
+  margin-top: 2px;
 }
 
-.vnn-flame-icon {
-  width: 32px;
-  height: 38px;
-  flex-shrink: 0;
+.vnn-logo-link {
+  display: block;
+  text-decoration: none;
 }
 
-.vnn-brand-typography {
-  display: flex;
-  flex-direction: column;
+.vnn-logo-img {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: contain;
 }
 
-.vnn-brand-title {
-  font-size: 26px;
-  font-weight: 800;
-  color: #c81e28;
-  letter-spacing: -0.5px;
-  line-height: 1.05;
-}
-
-.vnn-brand-subtitle {
+.vnn-logo-subtext {
   font-size: 9.5px;
   font-weight: 800;
   color: #0b57a4;
   letter-spacing: 0.6px;
-  margin-top: 3px;
+  text-align: center;
+  margin-top: 2px;
+  font-family: Arial, sans-serif;
 }
 
-/* Typography các dòng thông tin */
-.vnn-info-line {
-  margin: 0 0 7px 0;
+.vnn-editorial-summary {
+  flex: 1;
+}
+
+/* Định dạng các dòng văn bản */
+.vnn-text-row {
+  margin: 0 0 6px 0;
   font-size: 13.5px;
   color: #334155;
   line-height: 1.5;
 }
 
-.vnn-label {
+.vnn-lbl {
   color: #334155;
   font-weight: 500;
 }
 
-.vnn-sub-label {
+.vnn-sub-lbl {
   color: #475569;
 }
 
-.vnn-val-agency,
-.vnn-val-license,
-.vnn-val-date {
+.vnn-val {
   color: #1e293b;
-  font-weight: 600;
+  font-weight: 500;
 }
 
-/* Dòng Tổng biên tập chữ màu xanh theo mẫu */
-.vnn-editor-line {
+/* Dòng Tổng biên tập chữ màu xanh in đậm chuẩn chỉnh */
+.vnn-row-editor {
   color: #0b57a4 !important;
-  font-size: 14px;
-  margin: 4px 0 14px 0;
+  margin-top: 4px;
 }
 
-.vnn-editor-line .vnn-label {
+.vnn-lbl-editor {
   color: #0b57a4 !important;
   font-weight: 700;
 }
@@ -123,108 +127,122 @@
   font-weight: 800;
 }
 
-/* Nút bấm Liên hệ */
-.vnn-btn-wrap {
+/* Nút bấm liên hệ dạng thẻ xám */
+.vnn-action-wrap {
   margin: 10px 0 16px 0;
 }
 
-.vnn-btn-wrap-ads {
+.vnn-action-ads {
   margin: 0 0 16px 0;
 }
 
-.vnn-btn-secondary {
+.vnn-btn-card {
   display: inline-block;
-  background-color: #ffffff;
-  color: #1e293b !important;
+  background-color: #eeeeee;
+  color: #222222 !important;
   font-size: 13px;
   font-weight: 600;
-  padding: 7px 18px;
-  border-radius: 4px;
-  border: 1px solid #d1d5db;
+  padding: 6px 16px;
+  border-radius: 3px;
+  border: 1px solid #e0e0e0;
   text-decoration: none !important;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
   transition: all 0.2s ease;
   cursor: pointer;
+  line-height: 1.45;
 }
 
-.vnn-btn-secondary:hover {
-  background-color: #f3f4f6;
-  border-color: #9ca3af;
+.vnn-btn-card:hover {
+  background-color: #e2e8f0;
+  border-color: #cbd5e1;
   color: #0b57a4 !important;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
 }
 
-/* Dòng địa chỉ */
-.vnn-address-line {
-  margin-top: 6px;
+/* Khối dưới của cột 1 */
+.vnn-editorial-bottom-block {
+  margin-top: 4px;
+}
+
+.vnn-address-row {
   line-height: 1.55;
 }
 
-.vnn-link {
-  color: #0b57a4;
+.vnn-email-link {
+  color: #222222;
   text-decoration: none;
   font-weight: 500;
   transition: color 0.15s ease;
 }
 
-.vnn-link:hover {
-  color: #003875;
+.vnn-email-link:hover {
+  color: #0b57a4;
   text-decoration: underline;
 }
 
-.vnn-link-highlight {
-  color: #1e293b;
-}
-
-.vnn-link-highlight:hover {
-  color: #0b57a4;
-}
-
-/* Dòng bản quyền */
-.vnn-copyright-line {
+.vnn-copyright-text {
   font-size: 12.5px;
   color: #64748b;
   margin-top: 14px;
   line-height: 1.55;
-  max-width: 95%;
+  max-width: 98%;
 }
 
-/* CỘT 2: Quảng cáo & Liên hệ */
+/* CỘT 2 (Ở GIỮA): Chiếm khoảng 30% */
 .vnn-col-commercial {
-  padding-top: 4px;
+  flex: 0 0 30%;
+  max-width: 30%;
+  padding-top: 0;
 }
 
-.vnn-company-name {
+.vnn-company-title {
   font-weight: 600;
   color: #1e293b;
-  font-size: 14px;
-  margin-bottom: 9px;
+  font-size: 13.5px;
+  margin-bottom: 8px;
 }
 
-/* CỘT 3: Mạng xã hội & Tiện ích */
+.vnn-price-link {
+  color: #1e293b;
+  text-decoration: none;
+}
+
+.vnn-price-link:hover {
+  color: #0b57a4;
+  text-decoration: underline;
+}
+
+/* CỘT 3 (BÊN PHẢI): Chiếm khoảng 22% */
 .vnn-col-social {
-  padding-top: 4px;
+  flex: 0 0 22%;
+  max-width: 22%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding-top: 0;
 }
 
-.vnn-social-heading {
+.vnn-social-header-text {
   font-size: 14px;
   color: #334155;
   margin-bottom: 12px;
   font-weight: 500;
 }
 
-.vnn-social-icons {
+/* 4 Icon mạng xã hội tròn đen */
+.vnn-social-circle-group {
   display: flex;
   align-items: center;
-  gap: 12px;
-  margin-bottom: 22px;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 20px;
 }
 
-.vnn-social-item {
-  width: 34px;
-  height: 34px;
+.vnn-circle-btn {
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
-  background-color: #1e293b;
+  background-color: #222222;
   color: #ffffff !important;
   display: inline-flex;
   align-items: center;
@@ -233,59 +251,60 @@
   transition: transform 0.2s ease, background-color 0.2s ease;
 }
 
-.vnn-social-item:hover {
+.vnn-circle-btn:hover {
   transform: translateY(-2px);
   color: #ffffff !important;
 }
 
-.vnn-social-fb:hover {
+.vnn-fb:hover {
   background-color: #1877f2;
 }
 
-.vnn-social-yt:hover {
+.vnn-yt:hover {
   background-color: #ff0000;
 }
 
-.vnn-social-tiktok:hover {
+.vnn-tiktok:hover {
   background-color: #000000;
 }
 
-.vnn-social-zalo:hover {
+.vnn-zalo:hover {
   background-color: #0068ff;
 }
 
-.vnn-zalo-text {
-  font-size: 10px;
+.vnn-zalo-caption {
+  font-size: 9.5px;
   font-weight: 800;
   letter-spacing: -0.2px;
   font-family: Arial, sans-serif;
 }
 
-/* Các liên kết tiện ích */
-.vnn-utility-links {
+/* Các liên kết màu xanh đậm */
+.vnn-links-vertical {
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: 8px;
+  width: 100%;
 }
 
-.vnn-utility-line {
-  margin: 0;
+.vnn-links-row {
   font-size: 14px;
 }
 
-.vnn-utility-link {
+.vnn-action-link {
   color: #0b57a4 !important;
   font-weight: 700;
   text-decoration: none !important;
   transition: color 0.15s ease;
 }
 
-.vnn-utility-link:hover {
+.vnn-action-link:hover {
   color: #003875 !important;
   text-decoration: underline !important;
 }
 
-.vnn-utility-divider {
+.vnn-sep-bar {
   color: #94a3b8;
   margin: 0 4px;
   font-weight: normal;
@@ -297,14 +316,29 @@
 
 @media (max-width: 992px) {
   .vnn-widget-inner {
-    grid-template-columns: 1fr 1fr;
+    flex-wrap: wrap;
     gap: 28px;
   }
-  
+
+  .vnn-col-editorial {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+
+  .vnn-col-commercial {
+    flex: 0 0 58%;
+    max-width: 58%;
+  }
+
   .vnn-col-social {
-    grid-column: span 2;
-    padding-top: 10px;
-    border-top: 1px dashed #e2e8f0;
+    flex: 0 0 38%;
+    max-width: 38%;
+    align-items: flex-start;
+    text-align: left;
+  }
+
+  .vnn-links-vertical {
+    align-items: flex-start;
   }
 }
 
@@ -314,15 +348,23 @@
   }
 
   .vnn-widget-inner {
-    grid-template-columns: 1fr;
+    flex-direction: column;
     gap: 24px;
   }
 
+  .vnn-col-editorial,
+  .vnn-col-commercial,
   .vnn-col-social {
-    grid-column: span 1;
+    flex: 0 0 100%;
+    max-width: 100%;
   }
 
-  .vnn-btn-wrap {
-    margin: 8px 0 12px 0;
+  .vnn-col-social {
+    align-items: center;
+    text-align: center;
+  }
+
+  .vnn-links-vertical {
+    align-items: center;
   }
 }
