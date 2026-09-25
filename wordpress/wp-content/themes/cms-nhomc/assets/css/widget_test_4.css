@@ -1,0 +1,328 @@
+/**
+ * Style cho widget_test_4: VietNamNet Pre-Footer Info & Contact
+ * Thiết kế chính xác 100% theo hình ảnh đề bài
+ */
+
+/* Khối bao ngoài Pre-Footer */
+.cms-pre-footer-section {
+  width: 100%;
+  background-color: #f6f7f9;
+  border-top: 1px solid #e2e8f0;
+  border-bottom: 1px solid #e2e8f0;
+  padding: 32px 0 28px 0;
+  margin-top: 24px;
+  clear: both;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  color: #2b3445;
+  line-height: 1.55;
+  box-sizing: border-box;
+}
+
+.cms-pre-footer-wrapper {
+  width: 100%;
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 0 20px;
+  box-sizing: border-box;
+}
+
+/* Container chính của Widget */
+.vnn-widget-container {
+  width: 100%;
+}
+
+.vnn-widget-inner {
+  display: grid;
+  grid-template-columns: 1.45fr 1fr 0.75fr;
+  gap: 36px;
+  align-items: flex-start;
+}
+
+/* Các cột thông tin */
+.vnn-col {
+  display: flex;
+  flex-direction: column;
+}
+
+/* CỘT 1: Logo & Toà soạn */
+.vnn-brand-header {
+  margin-bottom: 16px;
+}
+
+.vnn-logo-box {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.vnn-flame-icon {
+  width: 32px;
+  height: 38px;
+  flex-shrink: 0;
+}
+
+.vnn-brand-typography {
+  display: flex;
+  flex-direction: column;
+}
+
+.vnn-brand-title {
+  font-size: 26px;
+  font-weight: 800;
+  color: #c81e28;
+  letter-spacing: -0.5px;
+  line-height: 1.05;
+}
+
+.vnn-brand-subtitle {
+  font-size: 9.5px;
+  font-weight: 800;
+  color: #0b57a4;
+  letter-spacing: 0.6px;
+  margin-top: 3px;
+}
+
+/* Typography các dòng thông tin */
+.vnn-info-line {
+  margin: 0 0 7px 0;
+  font-size: 13.5px;
+  color: #334155;
+  line-height: 1.5;
+}
+
+.vnn-label {
+  color: #334155;
+  font-weight: 500;
+}
+
+.vnn-sub-label {
+  color: #475569;
+}
+
+.vnn-val-agency,
+.vnn-val-license,
+.vnn-val-date {
+  color: #1e293b;
+  font-weight: 600;
+}
+
+/* Dòng Tổng biên tập chữ màu xanh theo mẫu */
+.vnn-editor-line {
+  color: #0b57a4 !important;
+  font-size: 14px;
+  margin: 4px 0 14px 0;
+}
+
+.vnn-editor-line .vnn-label {
+  color: #0b57a4 !important;
+  font-weight: 700;
+}
+
+.vnn-val-editor {
+  color: #0b57a4 !important;
+  font-weight: 800;
+}
+
+/* Nút bấm Liên hệ */
+.vnn-btn-wrap {
+  margin: 10px 0 16px 0;
+}
+
+.vnn-btn-wrap-ads {
+  margin: 0 0 16px 0;
+}
+
+.vnn-btn-secondary {
+  display: inline-block;
+  background-color: #ffffff;
+  color: #1e293b !important;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 7px 18px;
+  border-radius: 4px;
+  border: 1px solid #d1d5db;
+  text-decoration: none !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.vnn-btn-secondary:hover {
+  background-color: #f3f4f6;
+  border-color: #9ca3af;
+  color: #0b57a4 !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+}
+
+/* Dòng địa chỉ */
+.vnn-address-line {
+  margin-top: 6px;
+  line-height: 1.55;
+}
+
+.vnn-link {
+  color: #0b57a4;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.15s ease;
+}
+
+.vnn-link:hover {
+  color: #003875;
+  text-decoration: underline;
+}
+
+.vnn-link-highlight {
+  color: #1e293b;
+}
+
+.vnn-link-highlight:hover {
+  color: #0b57a4;
+}
+
+/* Dòng bản quyền */
+.vnn-copyright-line {
+  font-size: 12.5px;
+  color: #64748b;
+  margin-top: 14px;
+  line-height: 1.55;
+  max-width: 95%;
+}
+
+/* CỘT 2: Quảng cáo & Liên hệ */
+.vnn-col-commercial {
+  padding-top: 4px;
+}
+
+.vnn-company-name {
+  font-weight: 600;
+  color: #1e293b;
+  font-size: 14px;
+  margin-bottom: 9px;
+}
+
+/* CỘT 3: Mạng xã hội & Tiện ích */
+.vnn-col-social {
+  padding-top: 4px;
+}
+
+.vnn-social-heading {
+  font-size: 14px;
+  color: #334155;
+  margin-bottom: 12px;
+  font-weight: 500;
+}
+
+.vnn-social-icons {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 22px;
+}
+
+.vnn-social-item {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background-color: #1e293b;
+  color: #ffffff !important;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none !important;
+  transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.vnn-social-item:hover {
+  transform: translateY(-2px);
+  color: #ffffff !important;
+}
+
+.vnn-social-fb:hover {
+  background-color: #1877f2;
+}
+
+.vnn-social-yt:hover {
+  background-color: #ff0000;
+}
+
+.vnn-social-tiktok:hover {
+  background-color: #000000;
+}
+
+.vnn-social-zalo:hover {
+  background-color: #0068ff;
+}
+
+.vnn-zalo-text {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: -0.2px;
+  font-family: Arial, sans-serif;
+}
+
+/* Các liên kết tiện ích */
+.vnn-utility-links {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.vnn-utility-line {
+  margin: 0;
+  font-size: 14px;
+}
+
+.vnn-utility-link {
+  color: #0b57a4 !important;
+  font-weight: 700;
+  text-decoration: none !important;
+  transition: color 0.15s ease;
+}
+
+.vnn-utility-link:hover {
+  color: #003875 !important;
+  text-decoration: underline !important;
+}
+
+.vnn-utility-divider {
+  color: #94a3b8;
+  margin: 0 4px;
+  font-weight: normal;
+}
+
+/* ==========================================================================
+   RESPONSIVE DESIGN (TABLET & MOBILE)
+   ========================================================================== */
+
+@media (max-width: 992px) {
+  .vnn-widget-inner {
+    grid-template-columns: 1fr 1fr;
+    gap: 28px;
+  }
+  
+  .vnn-col-social {
+    grid-column: span 2;
+    padding-top: 10px;
+    border-top: 1px dashed #e2e8f0;
+  }
+}
+
+@media (max-width: 640px) {
+  .cms-pre-footer-section {
+    padding: 24px 0 20px 0;
+  }
+
+  .vnn-widget-inner {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .vnn-col-social {
+    grid-column: span 1;
+  }
+
+  .vnn-btn-wrap {
+    margin: 8px 0 12px 0;
+  }
+}

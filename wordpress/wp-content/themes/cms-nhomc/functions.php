@@ -15,6 +15,9 @@ require_once get_template_directory() . '/inc/class-vietnamese-search.php';
 // (20) Nạp chức năng Newsletter Subscription (Ponytail Standard)
 require_once get_template_directory() . '/inc/newsletter.php';
 
+// Nạp Widget widget_test_4: VietNamNet Pre-Footer Info & Contact
+require_once get_template_directory() . '/inc/widget_test_4.php';
+
 function cms_nhomc_setup() {
     // Hỗ trợ thẻ Title tự động của WordPress
     add_theme_support('title-tag');
@@ -110,6 +113,17 @@ function cms_nhomc_scripts() {
             'ajaxUrl' => admin_url('admin-ajax.php'),
             'nonce'   => wp_create_nonce('cms_nhomc_newsletter_nonce'),
         ));
+    }
+
+    // Nạp Style cho widget_test_4 (VietNamNet Pre-Footer Info & Contact)
+    $widget_test_4_css_path = get_template_directory() . '/assets/css/widget_test_4.css';
+    if (file_exists($widget_test_4_css_path)) {
+        wp_enqueue_style(
+            'cms-nhomc-widget-test-4-style',
+            get_template_directory_uri() . '/assets/css/widget_test_4.css',
+            array('cms-nhomc-style'),
+            filemtime($widget_test_4_css_path)
+        );
     }
 }
 add_action('wp_enqueue_scripts', 'cms_nhomc_scripts');

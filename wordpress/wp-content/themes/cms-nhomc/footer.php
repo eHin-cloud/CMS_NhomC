@@ -5,6 +5,19 @@
  *
  * @package CMS_NhomC
  */
+
+/**
+ * Hiển thị widget_test_4 tại:
+ * - Trang chủ (is_front_page() || is_home())
+ * - Trang danh sách (is_archive() || is_search())
+ * - Trang chi tiết (is_single())
+ * Khu vực hiển thị: Phía trên Footer
+ */
+if ( is_front_page() || is_home() || is_archive() || is_search() || is_single() ) {
+    if ( function_exists('cms_nhomc_render_widget_test_4') ) {
+        cms_nhomc_render_widget_test_4();
+    }
+}
 ?>
 
 <!-- Footer -->
