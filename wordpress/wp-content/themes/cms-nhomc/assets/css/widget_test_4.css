@@ -156,7 +156,7 @@
 
 /* Cột Theo dõi mạng xã hội (Follow) */
 .footer__bottom-follow {
-  min-width: 190px;
+  min-width: 250px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -171,6 +171,7 @@
   font-family: notosans-regular, Arial, sans-serif;
   font-size: 13px;
   text-align: center;
+  white-space: nowrap;
 }
 
 /* 4 Icon mạng xã hội tròn đen */
@@ -205,33 +206,39 @@
   transform: translateY(-2px);
 }
 
-/* 3 Nút gửi bài / tiện ích bên dưới (.footer__bottom-submit) */
+/* 3 Nút gửi bài / tiện ích bên dưới (.footer__bottom-submit) - ĐẢM BẢO KHÔNG XUỐNG DÒNG */
 .footer__bottom-follow .footer__bottom-submit {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 8px 12px;
-  margin-top: 22px;
-  width: 100%;
+  grid-template-columns: auto auto;
+  justify-content: center;
+  align-items: center;
+  gap: 8px 18px;
+  margin-top: 20px;
+  width: auto;
+  white-space: nowrap;
 }
 
 .footer__bottom-follow .footer__bottom-submit a {
-  color: #2d67ad;
+  color: #2d67ad !important;
   font-family: notosans-bold, Arial, sans-serif;
   font-weight: 700;
-  font-size: 13px;
+  font-size: 13.5px;
   line-height: 20px;
   text-align: center;
-  text-decoration: none;
+  text-decoration: none !important;
+  white-space: nowrap !important;
+  display: inline-block;
   transition: color 0.15s ease;
 }
 
 .footer__bottom-follow .footer__bottom-submit a:hover {
-  color: #1a4a82;
-  text-decoration: underline;
+  color: #1a4a82 !important;
+  text-decoration: underline !important;
 }
 
 .footer__bottom-follow .footer__bottom-submit a:first-child {
   position: relative;
+  padding-right: 14px;
 }
 
 .footer__bottom-follow .footer__bottom-submit a:first-child:after {
@@ -239,7 +246,7 @@
   content: "";
   height: 65%;
   position: absolute;
-  right: -7px;
+  right: -3px;
   top: 50%;
   transform: translateY(-50%);
   width: 1.5px;
@@ -248,6 +255,7 @@
 .footer__bottom-follow .footer__bottom-submit a:last-child {
   grid-column: span 2 / span 2;
   text-align: center;
+  white-space: nowrap !important;
 }
 
 /* ==========================================================================
