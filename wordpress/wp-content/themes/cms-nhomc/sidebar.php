@@ -29,6 +29,11 @@ if (empty($sidebar_type)) {
         cms_nhomc_render_featured_posts_widget(5, 'BÀI VIẾT NỔI BẬT');
     }
 
+    // (20) Newsletter Subscription Widget (Ponytail Standard)
+    if (function_exists('cms_nhomc_render_newsletter_widget')) {
+        cms_nhomc_render_newsletter_widget('NEWSLETTER');
+    }
+
     // 3. Module 12: Hiển thị widget Comments theo mẫu thiết kế (Anh Quý)
     if (function_exists('cms_nhomc_render_comments_widget')) {
         cms_nhomc_render_comments_widget(3, 'Comments');

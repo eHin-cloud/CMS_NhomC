@@ -24,5 +24,7 @@ TestResults.xml
 
 # Cache files
 *.cache
-# WordPress Uploads
+# WordPress Uploads & Temp files
 wordpress/wp-content/uploads/
+wordpress/wp-content/upgrade/
+wordpress/.maintenance
