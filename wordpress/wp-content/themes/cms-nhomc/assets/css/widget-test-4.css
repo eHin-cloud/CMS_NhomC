@@ -1,0 +1,162 @@
+/**
+ * ==========================================================================
+ * WIDGET_TEST_4 STYLESHEET (Podcast Widget)
+ * Thiết kế chính xác theo hình mẫu đề bài:
+ * - Vạch đỏ dọc bên trái tiêu đề Podcast
+ * - Icon tai nghe viền nét mảnh màu xám slate
+ * - Tiêu đề bài viết in đậm màu đen than (#1f2328)
+ * - Đường kẻ đứt nét mảnh ngăn cách giữa các bài viết
+ * - Khu vực hiển thị: Phía trên Footer (Trang chủ, Trang danh sách, Trang chi tiết)
+ * ==========================================================================
+ */
+
+/* 1. KHỐI SECTION VÙNG HIỂN THỊ PHÍA TRÊN FOOTER */
+.cms-above-footer-section {
+  width: 100%;
+  background-color: #ffffff;
+  padding: 35px 0 25px 0;
+  border-top: 1px solid #eef2f6;
+  clear: both;
+}
+
+.cms-above-footer-container {
+  width: 100%;
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 0 20px;
+  box-sizing: border-box;
+}
+
+/* 2. CARD HIỂN THỊ CỦA WIDGET_TEST_4 */
+.cms-podcast-card {
+  width: 100%;
+  background: #ffffff;
+  box-sizing: border-box;
+}
+
+/* 3. HEADER TIÊU ĐỀ: VẠCH ĐỎ DỌC + PODCAST */
+.cms-podcast-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.cms-podcast-accent-bar {
+  display: inline-block;
+  width: 4.5px;
+  height: 22px;
+  background-color: #e51d24;
+  border-radius: 2px;
+  margin-right: 10px;
+  flex-shrink: 0;
+}
+
+.cms-podcast-title {
+  margin: 0;
+  padding: 0;
+  font-size: 22px;
+  font-weight: 700;
+  color: #111827;
+  line-height: 1.25;
+  letter-spacing: -0.2px;
+  font-family: inherit;
+}
+
+/* 4. DANH SÁCH BÀI VIẾT PODCAST */
+.cms-podcast-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.cms-podcast-item {
+  padding: 13px 0;
+  border-bottom: 1px dashed #e2e8f0;
+  box-sizing: border-box;
+}
+
+.cms-podcast-item:first-child {
+  padding-top: 10px;
+}
+
+.cms-podcast-item:last-child {
+  border-bottom: none;
+  padding-bottom: 4px;
+}
+
+/* 5. LINK BÀI VIẾT & ICON TAI NGHE */
+.cms-podcast-link {
+  display: block;
+  text-decoration: none;
+  color: #1f2328;
+  font-size: 15.5px;
+  font-weight: 700;
+  line-height: 1.48;
+  transition: color 0.18s ease;
+  word-break: break-word;
+}
+
+.cms-podcast-link:hover,
+.cms-podcast-link:focus {
+  color: #e51d24;
+  text-decoration: none;
+}
+
+.cms-podcast-icon {
+  display: inline-block;
+  vertical-align: -3px;
+  margin-right: 6px;
+  color: #64748b;
+  flex-shrink: 0;
+  transition: color 0.18s ease;
+}
+
+.cms-podcast-link:hover .cms-podcast-icon {
+  color: #e51d24;
+}
+
+.cms-podcast-svg {
+  display: inline-block;
+  vertical-align: middle;
+  width: 19px;
+  height: 19px;
+}
+
+.cms-podcast-text {
+  vertical-align: middle;
+}
+
+/* 6. RESPONSIVE THIẾT BỊ DI ĐỘNG */
+@media (max-width: 768px) {
+  .cms-above-footer-section {
+    padding: 24px 0 18px 0;
+  }
+
+  .cms-above-footer-container {
+    padding: 0 16px;
+  }
+
+  .cms-podcast-accent-bar {
+    width: 4px;
+    height: 19px;
+    margin-right: 8px;
+  }
+
+  .cms-podcast-title {
+    font-size: 19px;
+  }
+
+  .cms-podcast-item {
+    padding: 11px 0;
+  }
+
+  .cms-podcast-link {
+    font-size: 14.5px;
+    line-height: 1.45;
+  }
+
+  .cms-podcast-svg {
+    width: 18px;
+    height: 18px;
+  }
+}

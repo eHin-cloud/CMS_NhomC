@@ -7,6 +7,30 @@
  */
 ?>
 
+<?php
+/**
+ * Khu vực hiển thị widget_test_4 phía trên Footer
+ * Hiển thị tại: Trang chủ, Trang danh sách, Trang chi tiết
+ */
+if (is_front_page() || is_home() || is_archive() || is_category() || is_tag() || is_tax() || is_search() || is_single()) :
+?>
+<!-- Khu vực hiển thị Widget phía trên Footer (widget_test_4) -->
+<section class="cms-above-footer-section" id="cms-above-footer-section" aria-label="Widget Podcast">
+    <div class="cms-above-footer-container">
+        <?php
+        if (is_active_sidebar('above-footer-sidebar')) {
+            dynamic_sidebar('above-footer-sidebar');
+        } else {
+            the_widget('widget_test_4', array(
+                'title' => 'Podcast',
+                'limit' => 5,
+            ));
+        }
+        ?>
+    </div>
+</section>
+<?php endif; ?>
+
 <!-- Footer -->
 <section id="footer">
     <!-- Nút 3 chấm góc phải trên nếu có theo mẫu Bootsnipp -->

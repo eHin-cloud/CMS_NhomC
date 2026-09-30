@@ -15,6 +15,9 @@ require_once get_template_directory() . '/inc/class-vietnamese-search.php';
 // (20) Nạp chức năng Newsletter Subscription (Ponytail Standard)
 require_once get_template_directory() . '/inc/newsletter.php';
 
+// Nạp chức năng Widget Test 4 (Podcast Widget phía trên Footer)
+require_once get_template_directory() . '/inc/widget_test_4.php';
+
 function cms_nhomc_setup() {
     // Hỗ trợ thẻ Title tự động của WordPress
     add_theme_support('title-tag');
@@ -61,6 +64,11 @@ function cms_nhomc_scripts() {
 
     // Nạp style.css của Theme (sử dụng filemtime để tự động xóa cache trình duyệt khi sửa css)
     wp_enqueue_style('cms-nhomc-style', get_stylesheet_uri(), array('font-awesome'), filemtime(get_stylesheet_directory() . '/style.css'));
+
+    // Nạp CSS cho Widget Test 4 (Podcast phía trên Footer)
+    if (file_exists(get_template_directory() . '/assets/css/widget-test-4.css')) {
+        wp_enqueue_style('cms-nhomc-widget-test-4', get_template_directory_uri() . '/assets/css/widget-test-4.css', array('cms-nhomc-style'), filemtime(get_template_directory() . '/assets/css/widget-test-4.css'));
+    }
 
     // Nạp JavaScript Smart Search & Autocomplete
     wp_enqueue_script('cms-nhomc-smart-search', get_template_directory_uri() . '/assets/js/smart-search.js', array(), '1.0.0', true);
@@ -1157,6 +1165,16 @@ function cms_nhomc_widgets_init() {
         'after_widget'  => '</div></div>',
         'before_title'  => '<h3 class="widget-cat-title">',
         'after_title'   => '</h3><div class="widget-cat-stripe"></div><div class="widget-cat-body">',
+    ));
+
+    register_sidebar(array(
+        'name'          => __('Khu vực phía trên Footer (Above Footer)', 'cms-nhomc'),
+        'id'            => 'above-footer-sidebar',
+        'description'   => __('Khu vực hiển thị widget phía trên Footer cho trang chủ, trang danh sách và trang chi tiết (chứa widget_test_4).', 'cms-nhomc'),
+        'before_widget' => '<div id="%1$s" class="widget-above-footer-item %2$s">',
+        'after_widget'  => '</div>',
+        'before_title'  => '<h3 class="widget-above-footer-title">',
+        'after_title'   => '</h3>',
     ));
 }
 add_action('widgets_init', 'cms_nhomc_widgets_init');
