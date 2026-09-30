@@ -12,6 +12,9 @@ if (!defined('ABSPATH')) {
 // Nạp bộ xử lý tìm kiếm thông minh tiếng Việt (Viet74K)
 require_once get_template_directory() . '/inc/class-vietnamese-search.php';
 
+// (20) Nạp chức năng Newsletter Subscription (Ponytail Standard)
+require_once get_template_directory() . '/inc/newsletter.php';
+
 function cms_nhomc_setup() {
     // Hỗ trợ thẻ Title tự động của WordPress
     add_theme_support('title-tag');
@@ -68,15 +71,44 @@ function cms_nhomc_scripts() {
         'homeUrl' => home_url('/'),
     ));
 
-    // Nạp script trả lời bình luận lồng nhau chuẩn WordPress
+    // Nạp script xử lý Sửa/Xóa bình luận cho tài khoản đã đăng nhập
     if (is_singular() && comments_open()) {
         if (get_option('thread_comments')) {
             wp_enqueue_script('comment-reply');
         }
-        // Nạp script xử lý Sửa/Xóa bình luận cho tài khoản đã đăng nhập
         wp_enqueue_script('cms-nhomc-comment-actions', get_template_directory_uri() . '/assets/js/comment-actions.js', array(), filemtime(get_template_directory() . '/assets/js/comment-actions.js'), true);
         wp_localize_script('cms-nhomc-comment-actions', 'cmsNhomcComment', array(
             'ajaxUrl' => admin_url('admin-ajax.php'),
+        ));
+    }
+
+    // Nạp JavaScript Featured Posts Slider (Module 16 - Anh Quý)
+    wp_enqueue_script('cms-nhomc-featured-slider', get_template_directory_uri() . '/assets/js/featured-slider.js', array(), filemtime(get_template_directory() . '/assets/js/featured-slider.js'), true);
+
+    // (20) Nạp Style & Script cho Newsletter Subscription (Ponytail Standard)
+    $newsletter_css_path = get_template_directory() . '/assets/css/newsletter.css';
+    $newsletter_js_path  = get_template_directory() . '/assets/js/newsletter.js';
+
+    if (file_exists($newsletter_css_path)) {
+        wp_enqueue_style(
+            'cms-nhomc-newsletter-style',
+            get_template_directory_uri() . '/assets/css/newsletter.css',
+            array('cms-nhomc-style'),
+            filemtime($newsletter_css_path)
+        );
+    }
+
+    if (file_exists($newsletter_js_path)) {
+        wp_enqueue_script(
+            'cms-nhomc-newsletter-script',
+            get_template_directory_uri() . '/assets/js/newsletter.js',
+            array(),
+            filemtime($newsletter_js_path),
+            true
+        );
+        wp_localize_script('cms-nhomc-newsletter-script', 'cmsNhomcNewsletter', array(
+            'ajaxUrl' => admin_url('admin-ajax.php'),
+            'nonce'   => wp_create_nonce('cms_nhomc_newsletter_nonce'),
         ));
     }
 }
@@ -1009,87 +1041,81 @@ function cms_nhomc_render_archive_widget($title = 'Xem nhiều') {
         </div>
 
         <div class="archive-ranked-body">
-            <!-- TAB 1: Danh sách bài viết mới nhất theo ngày tháng (8 bài) -->
+            <!-- TAB 1: Danh sách bài viết mới nhất theo ngày tháng (8 bài chia thành 4 hàng) -->
             <div class="archive-tab-panel active" id="archive-panel-posts">
-                <div class="archive-ranked-grid">
-                    <!-- Cột 1: Đánh số 1 - 4 -->
-                    <div class="archive-col">
-                        <?php for ($i = 0; $i < 4; $i++) : 
-                            $item = $items_posts[$i];
-                        ?>
+                <div class="archive-ranked-list">
+                    <?php for ($row = 0; $row < 4; $row++) : 
+                        $i_left  = $row;     // Vị trí 0, 1, 2, 3 -> Số 1, 2, 3, 4
+                        $i_right = $row + 4; // Vị trí 4, 5, 6, 7 -> Số 5, 6, 7, 8
+                        $item_left  = $items_posts[$i_left];
+                        $item_right = $items_posts[$i_right];
+                    ?>
+                        <div class="archive-ranked-row">
+                            <!-- Cột trái: Đánh số 1, 2, 3, 4 -->
                             <div class="archive-ranked-item">
-                                <span class="archive-ranked-num"><?php echo ($i + 1); ?></span>
+                                <span class="archive-ranked-num"><?php echo ($i_left + 1); ?></span>
                                 <div class="archive-ranked-content">
-                                    <a href="<?php echo esc_url($item['link']); ?>" class="archive-ranked-link" title="<?php echo esc_attr($item['title']); ?>">
-                                        <?php echo esc_html($item['title']); ?>
+                                    <a href="<?php echo esc_url($item_left['link']); ?>" class="archive-ranked-link" title="<?php echo esc_attr($item_left['title']); ?>">
+                                        <?php echo esc_html($item_left['title']); ?>
                                     </a>
-                                    <?php if (!empty($item['comments'])) : ?>
-                                        <span class="archive-ranked-comments" title="<?php echo esc_attr($item['comments']); ?> bình luận">
-                                            <i class="fa fa-commenting-o"></i> <?php echo intval($item['comments']); ?>
+                                    <?php if (!empty($item_left['comments'])) : ?>
+                                        <span class="archive-ranked-comments" title="<?php echo esc_attr($item_left['comments']); ?> bình luận">
+                                            <i class="fa fa-commenting-o"></i> <?php echo intval($item_left['comments']); ?>
                                         </span>
                                     <?php endif; ?>
                                 </div>
                             </div>
-                        <?php endfor; ?>
-                    </div>
 
-                    <!-- Cột 2: Đánh số 5 - 8 -->
-                    <div class="archive-col">
-                        <?php for ($i = 4; $i < 8; $i++) : 
-                            $item = $items_posts[$i];
-                        ?>
+                            <!-- Cột phải: Đánh số 5, 6, 7, 8 -->
                             <div class="archive-ranked-item">
-                                <span class="archive-ranked-num"><?php echo ($i + 1); ?></span>
+                                <span class="archive-ranked-num"><?php echo ($i_right + 1); ?></span>
                                 <div class="archive-ranked-content">
-                                    <a href="<?php echo esc_url($item['link']); ?>" class="archive-ranked-link" title="<?php echo esc_attr($item['title']); ?>">
-                                        <?php echo esc_html($item['title']); ?>
+                                    <a href="<?php echo esc_url($item_right['link']); ?>" class="archive-ranked-link" title="<?php echo esc_attr($item_right['title']); ?>">
+                                        <?php echo esc_html($item_right['title']); ?>
                                     </a>
-                                    <?php if (!empty($item['comments'])) : ?>
-                                        <span class="archive-ranked-comments" title="<?php echo esc_attr($item['comments']); ?> bình luận">
-                                            <i class="fa fa-commenting-o"></i> <?php echo intval($item['comments']); ?>
+                                    <?php if (!empty($item_right['comments'])) : ?>
+                                        <span class="archive-ranked-comments" title="<?php echo esc_attr($item_right['comments']); ?> bình luận">
+                                            <i class="fa fa-commenting-o"></i> <?php echo intval($item_right['comments']); ?>
                                         </span>
                                     <?php endif; ?>
                                 </div>
                             </div>
-                        <?php endfor; ?>
-                    </div>
+                        </div>
+                    <?php endfor; ?>
                 </div>
             </div>
 
-            <!-- TAB 2: Danh sách mốc lưu trữ theo ngày tháng (8 tháng) -->
+            <!-- TAB 2: Danh sách mốc lưu trữ theo ngày tháng (8 mốc chia thành 4 hàng) -->
             <div class="archive-tab-panel" id="archive-panel-dates" style="display: none;">
-                <div class="archive-ranked-grid">
-                    <!-- Cột 1: Đánh số 1 - 4 -->
-                    <div class="archive-col">
-                        <?php for ($i = 0; $i < 4; $i++) : 
-                            $item = $items_dates[$i];
-                        ?>
+                <div class="archive-ranked-list">
+                    <?php for ($row = 0; $row < 4; $row++) : 
+                        $i_left  = $row;     // Vị trí 0, 1, 2, 3 -> Số 1, 2, 3, 4
+                        $i_right = $row + 4; // Vị trí 4, 5, 6, 7 -> Số 5, 6, 7, 8
+                        $item_left  = $items_dates[$i_left];
+                        $item_right = $items_dates[$i_right];
+                    ?>
+                        <div class="archive-ranked-row">
+                            <!-- Cột trái: Đánh số 1, 2, 3, 4 -->
                             <div class="archive-ranked-item">
-                                <span class="archive-ranked-num"><?php echo ($i + 1); ?></span>
+                                <span class="archive-ranked-num"><?php echo ($i_left + 1); ?></span>
                                 <div class="archive-ranked-content">
-                                    <a href="<?php echo esc_url($item['link']); ?>" class="archive-ranked-link" title="<?php echo esc_attr($item['title']); ?>">
-                                        <?php echo esc_html($item['title']); ?>
+                                    <a href="<?php echo esc_url($item_left['link']); ?>" class="archive-ranked-link" title="<?php echo esc_attr($item_left['title']); ?>">
+                                        <?php echo esc_html($item_left['title']); ?>
                                     </a>
                                 </div>
                             </div>
-                        <?php endfor; ?>
-                    </div>
 
-                    <!-- Cột 2: Đánh số 5 - 8 -->
-                    <div class="archive-col">
-                        <?php for ($i = 4; $i < 8; $i++) : 
-                            $item = $items_dates[$i];
-                        ?>
+                            <!-- Cột phải: Đánh số 5, 6, 7, 8 -->
                             <div class="archive-ranked-item">
-                                <span class="archive-ranked-num"><?php echo ($i + 1); ?></span>
+                                <span class="archive-ranked-num"><?php echo ($i_right + 1); ?></span>
                                 <div class="archive-ranked-content">
-                                    <a href="<?php echo esc_url($item['link']); ?>" class="archive-ranked-link" title="<?php echo esc_attr($item['title']); ?>">
-                                        <?php echo esc_html($item['title']); ?>
+                                    <a href="<?php echo esc_url($item_right['link']); ?>" class="archive-ranked-link" title="<?php echo esc_attr($item_right['title']); ?>">
+                                        <?php echo esc_html($item_right['title']); ?>
                                     </a>
                                 </div>
                             </div>
-                        <?php endfor; ?>
-                    </div>
+                        </div>
+                    <?php endfor; ?>
                 </div>
             </div>
         </div>
@@ -1153,9 +1179,10 @@ function cms_nhomc_create_default_categories() {
 add_action('after_setup_theme', 'cms_nhomc_create_default_categories');
 
 /**
- * Render Widget: COMMENTS (Bình luận) - Module 14 (Hien/14-comments)
+ * Render Widget: COMMENTS (Bình luận) - Module 12 (Anh Quý)
+ * Mặc định hiển thị danh sách dạng liên kết chữ chuẩn 100% theo thiết kế Hình 1.
  */
-function cms_nhomc_render_comments_widget($limit = 5, $title = 'Comments') {
+function cms_nhomc_render_comments_widget($limit = 3, $title = 'Comments', $show_meta = false) {
     $comments = get_comments(array(
         'number'      => intval($limit) * 2,
         'status'      => 'approve',
@@ -1187,9 +1214,9 @@ function cms_nhomc_render_comments_widget($limit = 5, $title = 'Comments') {
     // Dữ liệu mẫu chuẩn y chang mẫu hình ảnh nếu chưa có bình luận
     if (empty($display_items)) {
         $sample_comments = array(
-            array('author' => 'Thành Viên', 'content' => 'Bài viết hay quá, rất hữu ích!', 'date' => date('d/m/Y')),
-            array('author' => 'Độc Giả', 'content' => 'Cảm ơn tác giả đã chia sẻ nội dung này.', 'date' => date('d/m/Y')),
-            array('author' => 'Khách', 'content' => 'Trình bày chi tiết, dễ hiểu và chuyên nghiệp.', 'date' => date('d/m/Y')),
+            array('author' => 'Thành Viên', 'content' => 'Đúng Thật Sự ngốc', 'date' => date('d/m/Y')),
+            array('author' => 'Độc Giả', 'content' => 'Hiền ngốc quá', 'date' => date('d/m/Y')),
+            array('author' => 'Khách', 'content' => 'Bài viết hay quá', 'date' => date('d/m/Y')),
             array('author' => 'Sinh Viên', 'content' => 'Nội dung bài viết rất thực tế và chất lượng.', 'date' => date('d/m/Y')),
             array('author' => 'Admin', 'content' => 'Chào mừng bạn đến với hệ thống CMS Nhóm C!', 'date' => date('d/m/Y')),
         );
@@ -1219,18 +1246,22 @@ function cms_nhomc_render_comments_widget($limit = 5, $title = 'Comments') {
             <?php foreach ($display_items as $item) : ?>
                 <li class="widget-comments-item">
                     <a href="<?php echo esc_url($item['link']); ?>" class="widget-comments-link">
-                        <span class="widget-comment-content"><?php echo esc_html($item['content']); ?></span>
-                        <?php if (!empty($item['author'])) : ?>
-                            <span class="widget-comment-meta">
-                                <span class="widget-comment-author">
-                                    <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-                                    <?php echo esc_html($item['author']); ?>
+                        <?php if ($show_meta) : ?>
+                            <span class="widget-comment-content"><?php echo esc_html($item['content']); ?></span>
+                            <?php if (!empty($item['author'])) : ?>
+                                <span class="widget-comment-meta">
+                                    <span class="widget-comment-author">
+                                        <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                                        <?php echo esc_html($item['author']); ?>
+                                    </span>
+                                    <?php if (!empty($item['date'])) : ?>
+                                        <span class="widget-comment-dot">&bull;</span>
+                                        <span class="widget-comment-date"><?php echo esc_html($item['date']); ?></span>
+                                    <?php endif; ?>
                                 </span>
-                                <?php if (!empty($item['date'])) : ?>
-                                    <span class="widget-comment-dot">&bull;</span>
-                                    <span class="widget-comment-date"><?php echo esc_html($item['date']); ?></span>
-                                <?php endif; ?>
-                            </span>
+                            <?php endif; ?>
+                        <?php else : ?>
+                            <?php echo esc_html($item['content']); ?>
                         <?php endif; ?>
                     </a>
                 </li>
@@ -1907,6 +1938,143 @@ function cms_nhomc_register_pages_widget() {
 }
 add_action('widgets_init', 'cms_nhomc_register_pages_widget');
 
+/* ==========================================================================
+   MODULE 17: AUTHOR BOX - THÔNG TIN TÁC GIẢ BÀI VIẾT (VINH EM)
+   - Chức năng: Khung thông tin cá nhân và giới thiệu ngắn về tác giả bài viết.
+   - Bố cục & Giao diện: Avatar tròn, tên tác giả, bio ngắn và các liên kết mạng xã hội.
+   - Vị trí: Trang chi tiết (Detail page), đặt cuối bài viết trước phần bình luận.
+   ========================================================================== */
+
+/**
+ * Render Khung thông tin tác giả (Module 17: Author Box)
+ *
+ * @param int|null $author_id ID của tác giả (nếu null sẽ tự lấy theo post hiện tại)
+ */
+function cms_nhomc_render_author_box($author_id = null) {
+    if (!$author_id) {
+        $author_id = get_the_author_meta('ID');
+        if (!$author_id) {
+            $author_id = get_post_field('post_author', get_the_ID());
+        }
+    }
+
+    if (!$author_id) {
+        return;
+    }
+
+    // 1. Tên tác giả
+    $author_name = get_the_author_meta('display_name', $author_id);
+    if (empty($author_name)) {
+        $author_name = get_the_author_meta('user_nicename', $author_id);
+    }
+    if (empty($author_name)) {
+        $author_name = 'Ban Biên Tập TDC';
+    }
+
+    // 2. Đường dẫn đến trang lưu trữ bài viết của tác giả
+    $author_url = get_author_posts_url($author_id);
+
+    // 3. Tiểu sử tác giả (Bio)
+    $author_bio = get_the_author_meta('description', $author_id);
+    if (empty($author_bio)) {
+        // Fallback tiểu sử chuyên nghiệp chuẩn TDC nếu tác giả chưa cập nhật bio trong hồ sơ
+        $author_bio = 'Biên tập viên & Giảng viên tại Trường Cao đẳng Công nghệ Thủ Đức (TDC). Đam mê nghiên cứu công nghệ, viết bài và chia sẻ các kiến thức, thông tin tuyển sinh và học thuật hữu ích đến cộng đồng sinh viên.';
+    }
+
+    // 4. Số lượng bài viết đã xuất bản
+    $post_count = count_user_posts($author_id, 'post', true);
+
+    // 5. Ảnh đại diện Avatar tròn
+    $avatar_url = get_avatar_url($author_id, array('size' => 160));
+    $fallback_avatar = 'https://ui-avatars.com/api/?name=' . urlencode($author_name) . '&background=8B1E1E&color=ffffff&size=160&bold=true';
+
+    // 6. Các liên kết mạng xã hội (lấy từ user meta nếu có, fallback liên kết đẹp mắt)
+    $social_fb   = get_the_author_meta('facebook', $author_id) ?: 'https://www.facebook.com';
+    $social_tw   = get_the_author_meta('twitter', $author_id) ?: 'https://twitter.com';
+    $social_in   = get_the_author_meta('linkedin', $author_id) ?: 'https://www.linkedin.com';
+    $social_web  = get_the_author_meta('user_url', $author_id) ?: home_url('/');
+    $user_email  = get_the_author_meta('user_email', $author_id);
+    $social_mail = !empty($user_email) ? 'mailto:' . antispambot($user_email) : '#';
+    ?>
+    <section class="cms-author-box" aria-label="Thông tin tác giả bài viết">
+        <div class="author-box-card">
+            <!-- Cột 1: Avatar tròn -->
+            <div class="author-box-avatar">
+                <a href="<?php echo esc_url($author_url); ?>" class="author-avatar-link" title="Xem thêm bài viết của <?php echo esc_attr($author_name); ?>">
+                    <img src="<?php echo esc_url($avatar_url); ?>" 
+                         alt="<?php echo esc_attr($author_name); ?>" 
+                         class="author-avatar-img" 
+                         width="96" 
+                         height="96" 
+                         loading="lazy" 
+                         onerror="this.onerror=null; this.src='<?php echo esc_url($fallback_avatar); ?>';" />
+                </a>
+            </div>
+
+            <!-- Cột 2: Thông tin tác giả, Bio ngắn & Mạng xã hội -->
+            <div class="author-box-body">
+                <div class="author-box-header">
+                    <div class="author-box-badges">
+                        <span class="author-badge"><i class="fa fa-pencil"></i> Tác giả bài viết</span>
+                        <?php if ($post_count > 0) : ?>
+                            <span class="author-post-count"><i class="fa fa-newspaper-o"></i> <?php echo intval($post_count); ?> bài viết</span>
+                        <?php endif; ?>
+                    </div>
+                    <h3 class="author-box-name">
+                        <a href="<?php echo esc_url($author_url); ?>" title="Xem trang tác giả <?php echo esc_attr($author_name); ?>">
+                            <?php echo esc_html($author_name); ?>
+                        </a>
+                    </h3>
+                </div>
+
+                <!-- Bio ngắn -->
+                <div class="author-box-bio">
+                    <p><?php echo esc_html($author_bio); ?></p>
+                </div>
+
+                <!-- Các liên kết mạng xã hội -->
+                <div class="author-box-social">
+                    <span class="social-label">Kết nối tác giả:</span>
+                    <div class="social-links-list">
+                        <a href="<?php echo esc_url($social_fb); ?>" class="social-btn social-fb" title="Theo dõi qua Facebook" target="_blank" rel="noopener noreferrer">
+                            <i class="fa fa-facebook"></i>
+                        </a>
+                        <a href="<?php echo esc_url($social_tw); ?>" class="social-btn social-tw" title="Theo dõi qua Twitter / X" target="_blank" rel="noopener noreferrer">
+                            <i class="fa fa-twitter"></i>
+                        </a>
+                        <a href="<?php echo esc_url($social_in); ?>" class="social-btn social-in" title="Kết nối qua LinkedIn" target="_blank" rel="noopener noreferrer">
+                            <i class="fa fa-linkedin"></i>
+                        </a>
+                        <a href="<?php echo esc_url($social_web); ?>" class="social-btn social-web" title="Trang web cá nhân" target="_blank" rel="noopener noreferrer">
+                            <i class="fa fa-globe"></i>
+                        </a>
+                        <?php if (!empty($user_email)) : ?>
+                            <a href="<?php echo esc_url($social_mail); ?>" class="social-btn social-mail" title="Gửi thư điện tử (Email)">
+                                <i class="fa fa-envelope-o"></i>
+                            </a>
+                        <?php endif; ?>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <?php
+}
+
+/**
+ * Shortcode [cms_author_box] để hiển thị Author Box linh hoạt
+ */
+function cms_nhomc_author_box_shortcode($atts) {
+    $atts = shortcode_atts(array(
+        'id' => null,
+    ), $atts, 'cms_author_box');
+
+    ob_start();
+    cms_nhomc_render_author_box($atts['id']);
+    return ob_get_clean();
+}
+add_shortcode('cms_author_box', 'cms_nhomc_author_box_shortcode');
+
 /**
  * =========================================================================
  * MODULE 19: BREADCRUMBS NAVIGATION (Điều hướng phân cấp chuẩn SEO Schema.org)
@@ -2157,4 +2325,161 @@ function cms_nhomc_init_sample_views() {
 }
 add_action('init', 'cms_nhomc_init_sample_views');
 
+/**
+ * =========================================================================
+ * MODULE 16: FEATURED POSTS SLIDER / HERO CAROUSEL (Anh Quý)
+ * =========================================================================
+ * Hiển thị khối slider bài viết tiêu điểm nổi bật ở đầu trang chủ.
+ * Hỗ trợ hiển thị ảnh đại diện, chuyên mục, ngày đăng, tiêu đề và trích dẫn.
+ */
+function cms_nhomc_render_featured_slider($limit = 4, $title = 'TIN TIÊU ĐIỂM') {
+    $limit = !empty($limit) ? absint($limit) : 4;
 
+    // 1. Thử lấy các bài viết ghim (Sticky Posts) trước
+    $sticky = get_option('sticky_posts');
+    $args = array(
+        'posts_per_page'      => $limit,
+        'post_status'         => 'publish',
+        'ignore_sticky_posts' => 1,
+    );
+
+    if (!empty($sticky)) {
+        $args['post__in'] = $sticky;
+    }
+
+    $slider_query = new WP_Query($args);
+
+    // 2. Nếu không có sticky posts hoặc ít hơn 2 bài, lấy bài viết mới nhất
+    if (!$slider_query->have_posts() || $slider_query->post_count < 2) {
+        wp_reset_postdata();
+        $args = array(
+            'posts_per_page'      => $limit,
+            'post_status'         => 'publish',
+            'ignore_sticky_posts' => 1,
+            'orderby'             => 'date',
+            'order'               => 'DESC',
+        );
+        $slider_query = new WP_Query($args);
+    }
+
+    if (!$slider_query->have_posts()) {
+        wp_reset_postdata();
+        return;
+    }
+
+    $posts_data = array();
+    while ($slider_query->have_posts()) {
+        $slider_query->the_post();
+        $pid        = get_the_ID();
+        $categories = get_the_category($pid);
+        $cat_name   = !empty($categories) ? $categories[0]->name : 'Tin tức';
+        $cat_link   = !empty($categories) ? get_category_link($categories[0]->term_id) : '#';
+
+        $posts_data[] = array(
+            'id'       => $pid,
+            'title'    => get_the_title($pid),
+            'link'     => get_permalink($pid),
+            'thumb'    => function_exists('cms_nhomc_get_post_thumbnail_url') ? cms_nhomc_get_post_thumbnail_url($pid) : get_the_post_thumbnail_url($pid, 'full'),
+            'date'     => get_the_date('d/m/Y', $pid),
+            'author'   => get_the_author_meta('display_name'),
+            'cat_name' => $cat_name,
+            'cat_link' => $cat_link,
+            'excerpt'  => wp_trim_words(get_the_excerpt($pid), 24, '...'),
+        );
+    }
+    wp_reset_postdata();
+
+    if (empty($posts_data)) {
+        return;
+    }
+    ?>
+    <section class="cms-featured-slider-section" aria-label="<?php echo esc_attr($title); ?>">
+        <div class="cms-slider-header-bar">
+            <h2 class="cms-slider-heading">
+                <span class="cms-slider-heading-icon"><i class="fa fa-bolt" aria-hidden="true"></i></span>
+                <span class="cms-slider-heading-text"><?php echo esc_html($title); ?></span>
+            </h2>
+        </div>
+
+        <div class="cms-featured-slider" role="region" aria-roledescription="carousel" aria-label="<?php echo esc_attr($title); ?>">
+            <!-- Thanh tiến trình tự động chuyển slide -->
+            <div class="cms-slider-progress"><div class="cms-slider-progress-bar"></div></div>
+
+            <!-- Khung chiếu slides -->
+            <div class="cms-slider-viewport">
+                <?php foreach ($posts_data as $idx => $item) : ?>
+                    <article class="cms-slider-slide<?php echo ($idx === 0) ? ' is-active' : ''; ?>" data-index="<?php echo esc_attr($idx); ?>" role="group" aria-roledescription="slide" aria-label="<?php printf('%d / %d', $idx + 1, count($posts_data)); ?>" <?php echo ($idx !== 0) ? 'aria-hidden="true"' : 'aria-hidden="false"'; ?>>
+                        <div class="cms-slider-media">
+                            <a href="<?php echo esc_url($item['link']); ?>" class="cms-slider-media-link" tabindex="<?php echo ($idx === 0) ? '0' : '-1'; ?>">
+                                <img src="<?php echo esc_url($item['thumb']); ?>" alt="<?php echo esc_attr($item['title']); ?>" loading="<?php echo ($idx === 0) ? 'eager' : 'lazy'; ?>" class="cms-slider-img" />
+                            </a>
+                            <div class="cms-slider-overlay"></div>
+                        </div>
+
+                        <div class="cms-slider-caption">
+                            <div class="cms-slider-meta">
+                                <a href="<?php echo esc_url($item['cat_link']); ?>" class="cms-slider-category-badge" tabindex="<?php echo ($idx === 0) ? '0' : '-1'; ?>">
+                                    <?php echo esc_html($item['cat_name']); ?>
+                                </a>
+                                <span class="cms-slider-meta-item cms-slider-date">
+                                    <i class="fa fa-calendar-o" aria-hidden="true"></i> <?php echo esc_html($item['date']); ?>
+                                </span>
+                                <span class="cms-slider-meta-item cms-slider-author">
+                                    <i class="fa fa-user-circle-o" aria-hidden="true"></i> <?php echo esc_html($item['author']); ?>
+                                </span>
+                            </div>
+
+                            <h3 class="cms-slider-title">
+                                <a href="<?php echo esc_url($item['link']); ?>" tabindex="<?php echo ($idx === 0) ? '0' : '-1'; ?>">
+                                    <?php echo esc_html($item['title']); ?>
+                                </a>
+                            </h3>
+
+                            <?php if (!empty($item['excerpt'])) : ?>
+                                <p class="cms-slider-desc"><?php echo esc_html($item['excerpt']); ?></p>
+                            <?php endif; ?>
+
+                            <div class="cms-slider-actions">
+                                <a href="<?php echo esc_url($item['link']); ?>" class="cms-slider-btn-read" tabindex="<?php echo ($idx === 0) ? '0' : '-1'; ?>">
+                                    <span>Xem chi tiết</span>
+                                    <i class="fa fa-arrow-right" aria-hidden="true"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </article>
+                <?php endforeach; ?>
+            </div>
+
+            <!-- Nút điều hướng chuyển bài -->
+            <button type="button" class="cms-slider-nav cms-slider-nav-prev" aria-label="Bài trước">
+                <i class="fa fa-chevron-left" aria-hidden="true"></i>
+            </button>
+            <button type="button" class="cms-slider-nav cms-slider-nav-next" aria-label="Bài kế tiếp">
+                <i class="fa fa-chevron-right" aria-hidden="true"></i>
+            </button>
+
+            <!-- Chấm chỉ mục phân trang (Dots) -->
+            <div class="cms-slider-dots" role="tablist" aria-label="Danh sách bài viết tiêu điểm">
+                <?php foreach ($posts_data as $idx => $item) : ?>
+                    <button type="button" class="cms-slider-dot<?php echo ($idx === 0) ? ' is-active' : ''; ?>" data-slide-to="<?php echo esc_attr($idx); ?>" role="tab" aria-label="<?php printf('Chuyển tới bài viết %d', $idx + 1); ?>" <?php echo ($idx === 0) ? 'aria-current="true"' : ''; ?>></button>
+                <?php endforeach; ?>
+            </div>
+        </div>
+    </section>
+    <?php
+}
+
+/**
+ * Shortcode [cms_featured_slider]
+ */
+function cms_nhomc_featured_slider_shortcode($atts) {
+    $atts = shortcode_atts(array(
+        'limit' => 4,
+        'title' => 'TIN TIÊU ĐIỂM',
+    ), $atts, 'cms_featured_slider');
+
+    ob_start();
+    cms_nhomc_render_featured_slider(intval($atts['limit']), sanitize_text_field($atts['title']));
+    return ob_get_clean();
+}
+add_shortcode('cms_featured_slider', 'cms_nhomc_featured_slider_shortcode');

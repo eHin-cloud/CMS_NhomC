@@ -151,6 +151,11 @@ get_header();
                     <!-- ================= HẾT MODULE 18 ================= -->
 
 
+                    <!-- Module #17: Author Box (Thông tin tác giả bài viết & Tiểu sử tác giả) -->
+                    <?php if (function_exists('cms_nhomc_render_author_box')) : ?>
+                        <?php cms_nhomc_render_author_box(); ?>
+                    <?php endif; ?>
+
                     <!-- Bài viết liên quan -->
                     <?php
                     $related_args = array(

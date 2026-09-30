@@ -170,7 +170,7 @@ $search_error = function_exists('cms_nhomc_get_search_error') ? cms_nhomc_get_se
             <aside class="cms-module-14-sidebar">
                 <section class="cms-module-14-comments-section" id="module-14-comments" aria-label="<?php esc_attr_e('Bình luận - Module 14', 'cms-nhomc'); ?>">
                     <?php if (function_exists('cms_nhomc_render_comments_widget')) : ?>
-                        <?php cms_nhomc_render_comments_widget(4, 'COMMENTS'); ?>
+                        <?php cms_nhomc_render_comments_widget(4, 'COMMENTS', true); ?>
                     <?php endif; ?>
                 </section>
             </aside>
