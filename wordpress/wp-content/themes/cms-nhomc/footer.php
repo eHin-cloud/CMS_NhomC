@@ -7,6 +7,13 @@
  */
 ?>
 
+<?php
+// Khu vực hiển thị widget_test_4 phía trên Footer (Trang chủ, Trang danh sách, Trang chi tiết)
+if (function_exists('cms_nhomc_render_before_footer_widget')) {
+    cms_nhomc_render_before_footer_widget();
+}
+?>
+
 <!-- Footer -->
 <section id="footer">
     <!-- Nút 3 chấm góc phải trên nếu có theo mẫu Bootsnipp -->

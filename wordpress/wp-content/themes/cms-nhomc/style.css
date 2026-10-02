@@ -10940,3 +10940,276 @@ ul.timeline>li:before {
     bottom: 14px;
   }
 }
+
+/* ==========================================================================
+   KHỐI CHUYÊN MỤC TIN TỨC BÁO CHÍ (CATEGORY NEWS BLOCK) - PHONG CÁCH BÁO ĐIỆN TỬ
+   ========================================================================== */
+.cms-category-news-block {
+  background: #ffffff;
+  padding: 16px 18px 20px 18px;
+  margin-bottom: 24px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  box-sizing: border-box;
+}
+
+/* 1. Header Khối: Đường kẻ xám chạy ngang trên cùng, vạch xanh đè lên */
+.cms-cat-block-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  border-top: 1px solid #e5e5e5;
+  padding-top: 10px;
+  padding-bottom: 14px;
+  position: relative;
+}
+
+.cms-cat-heading-group {
+  position: relative;
+  display: inline-flex;
+  flex-direction: column;
+}
+
+/* Vạch xanh đè lên đường kẻ ngang phía trên */
+.cms-cat-top-bar {
+  position: absolute;
+  top: -11px;
+  left: 0;
+  width: 38px;
+  height: 3px;
+  background-color: #1a5ea6;
+  border-radius: 0;
+}
+
+.cms-cat-main-title {
+  margin: 0;
+  font-size: 21px;
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: -0.2px;
+}
+
+.cms-cat-main-title a {
+  text-decoration: none !important;
+  color: #222222 !important;
+  transition: color 0.2s ease;
+}
+
+.cms-cat-main-title a:hover {
+  color: #1a5ea6 !important;
+}
+
+/* Danh mục con (Sub-nav) & Icon Menu */
+.cms-cat-sub-nav {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 2px;
+}
+
+.cms-cat-sub-links {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14.5px;
+}
+
+.cms-cat-sub-links .cms-sub-link {
+  text-decoration: none !important;
+  color: #4f555d !important;
+  font-weight: 400;
+  transition: color 0.2s ease;
+}
+
+.cms-cat-sub-links .cms-sub-link:hover {
+  color: #1a5ea6 !important;
+}
+
+.cms-cat-sub-links .cms-sub-separator {
+  color: #71777f;
+  font-size: 13px;
+}
+
+/* Biểu tượng 3 gạch danh mục */
+.cms-cat-menu-icon {
+  display: inline-flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 17px;
+  height: 11px;
+  cursor: pointer;
+  margin-left: 2px;
+}
+
+.cms-cat-menu-icon span {
+  display: block;
+  height: 1.5px;
+  width: 100%;
+  background-color: #666666;
+  border-radius: 0;
+}
+
+.cms-cat-menu-icon:hover span {
+  background-color: #1a5ea6;
+}
+
+/* 2. Tin Tiêu Điểm (Lead Post): Ảnh bên trái + Tiêu đề đen đậm bên phải */
+.cms-cat-lead-post {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  margin-bottom: 14px;
+}
+
+.cms-cat-lead-media {
+  flex: 0 0 135px;
+  width: 135px;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  border-radius: 2px;
+  background-color: #f1f5f9;
+}
+
+.cms-cat-lead-media a {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.cms-cat-lead-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.25s ease;
+}
+
+.cms-cat-lead-post:hover .cms-cat-lead-img {
+  transform: scale(1.03);
+}
+
+.cms-cat-lead-body {
+  flex: 1;
+}
+
+.cms-cat-lead-title {
+  margin: 0;
+  font-size: 16.5px;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.cms-cat-lead-title a {
+  color: #1b1b1b !important;
+  text-decoration: none !important;
+  transition: color 0.2s ease;
+}
+
+.cms-cat-lead-title a:hover {
+  color: #1a5ea6 !important;
+}
+
+/* 3. Danh Sách Tin Phụ (Sub Posts List) - Dạng văn bản cách dòng thoáng, không gạch ngang theo ảnh mẫu */
+.cms-cat-sub-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.cms-cat-sub-item {
+  padding: 8px 0;
+  border: none !important;
+}
+
+.cms-cat-sub-title {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.45;
+}
+
+.cms-cat-sub-title a {
+  color: #2c2c2c !important;
+  text-decoration: none !important;
+  transition: color 0.2s ease;
+}
+
+.cms-cat-sub-title a:hover {
+  color: #1a5ea6 !important;
+}
+
+/* Badge bình luận */
+.cms-cat-comment-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  margin-left: 6px;
+  vertical-align: middle;
+}
+
+.cms-cat-comment-badge .cms-comment-icon {
+  width: 13px;
+  height: 13px;
+  fill: #939ba3;
+  vertical-align: middle;
+}
+
+.cms-cat-comment-badge .cms-comment-num {
+  font-size: 13px;
+  color: #1a5ea6;
+  font-weight: 600;
+  line-height: 1;
+}
+
+/* Vạch phân cách khối phía dưới */
+.cms-cat-bottom-divider {
+  width: 38px;
+  height: 3px;
+  background-color: #1a5ea6;
+  margin-top: 16px;
+  border-radius: 0;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .cms-category-news-block {
+    padding: 12px 10px 16px 10px;
+  }
+  .cms-cat-main-title {
+    font-size: 18px;
+  }
+  .cms-cat-lead-media {
+    flex: 0 0 120px;
+    width: 120px;
+  }
+  .cms-cat-lead-title {
+    font-size: 15.5px;
+  }
+  .cms-cat-sub-title {
+    font-size: 14.5px;
+  }
+}
+
+/* ==========================================================================
+   KHU VỰC HIỂN THỊ PHÍA TRÊN FOOTER (BEFORE FOOTER AREA - WIDGET_TEST_4)
+   ========================================================================== */
+.cms-before-footer-area {
+  width: 100%;
+  margin-top: 30px;
+  margin-bottom: 25px;
+  clear: both;
+}
+
+.cms-before-footer-area .cms-before-footer-widget,
+.cms-before-footer-area .widget_test_4 {
+  max-width: 440px;
+  margin: 0 auto;
+}
+
+.cms-before-footer-area .cms-category-news-block {
+  border: 1px solid #e8e8e8;
+  border-radius: 2px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+}
+
+
+
