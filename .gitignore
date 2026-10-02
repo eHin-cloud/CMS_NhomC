@@ -28,3 +28,9 @@ TestResults.xml
 wordpress/wp-content/uploads/
 wordpress/wp-content/upgrade/
 wordpress/.maintenance
+
+# Screenshots & submission zips
+*.png
+*.zip
+screenshots/
+nhom-C/
