@@ -1,5 +1,8 @@
 <?php
 /**
+ * ==============================================================================
+ * MODULE BÀI TẬP THƯỜNG XUYÊN 1: CATEGORY NEWS BOX (VINH EM - Branch: VinhEm/TX1)
+ * ==============================================================================
  * Module Khối Tin Chuyên Mục (Category News Box) Phong Cách Báo Chí & Widget widget_test_4
  * Thiết kế chuẩn theo mẫu báo điện tử:
  * - Vạch chỉ thị màu xanh góc trên
@@ -7,6 +10,11 @@
  * - 1 Tin tiêu điểm: Ảnh đại diện (trái) + Tiêu đề (phải)
  * - 4 Tin phụ: Danh sách tiêu đề + Icon số lượng bình luận
  * - Hỗ trợ Random bài viết theo yêu cầu
+ * - Hỗ trợ Shortcode [category_news_box] và Widget WordPress trực quan
+ *
+ * Tác giả: Huỳnh Văn Vinh Em (vinhem)
+ * Branch Git: VinhEm/TX1
+ * ==============================================================================
  *
  * @package CMS_NhomC
  */

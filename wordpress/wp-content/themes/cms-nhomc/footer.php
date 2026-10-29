@@ -8,7 +8,17 @@
 ?>
 
 <?php
-// Khu vực hiển thị widget_test_4 phía trên Footer (Trang chủ, Trang danh sách, Trang chi tiết)
+/**
+ * ==============================================================================
+ * MODULE BÀI TẬP THƯỜNG XUYÊN 1: CATEGORY NEWS BOX (VINH EM - Branch: VinhEm/TX1)
+ * - Vị trí: Khu vực phía trên Footer (Trước thẻ <section id="footer">)
+ * - Chức năng: Hiển thị Khối tin chuyên mục phong cách báo chí hiện đại hoặc widget_test_4.
+ *   Cấu trúc gồm: Vạch chỉ thị màu xanh, tiêu đề chuyên mục, 1 bài tin tiêu điểm (ảnh bên
+ *   trái, tiêu đề bên phải) và 4 bài tin phụ kèm icon bình luận.
+ * - Tự động hiển thị trên: Trang chủ (is_home), Trang chuyên mục (is_archive), Trang chi tiết (is_single).
+ * - Logic gọi hàm: cms_nhomc_render_before_footer_widget() định nghĩa trong inc/category-news-box.php
+ * ==============================================================================
+ */
 if (function_exists('cms_nhomc_render_before_footer_widget')) {
     cms_nhomc_render_before_footer_widget();
 }

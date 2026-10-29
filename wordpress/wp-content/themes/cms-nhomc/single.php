@@ -17,7 +17,15 @@ get_header();
             <?php cms_nhomc_render_categories_widget(); ?>
         </aside>
 
-        <!-- Cột giữa: Detail (Module 6) -->
+        <!-- ==========================================================================
+             CỘT GIỮA: MODULE 6 - DETAIL (CHI TIẾT BÀI VIẾT) (VINH EM - Branch: VinhEm/6-Detail)
+             - Vị trí: Main column trung tâm của trang single.php (.cms-single-main-column)
+             - Chức năng: Hiển thị trọn vẹn nội dung bài viết theo cấu trúc layout 3 cột,
+               bao gồm: Breadcrumbs điều hướng, Tiêu đề bài viết H1, Post Meta (Tác giả,
+               Ngày đăng, Lượt xem, Thời gian đọc), Đoạn sapo dẫn đề, Nội dung chính
+               the_content(), Danh sách thẻ Tags và Khung Author Box tác giả.
+             - Đảm bảo giao diện chuẩn responsive co giãn mượt mà từ PC đến Mobile.
+             ========================================================================== -->
         <main class="cms-single-main-column">
             <?php while (have_posts()) : the_post(); 
                 $post_id     = get_the_ID();
@@ -27,12 +35,13 @@ get_header();
                 // Module 19: Tăng lượt xem bài viết có cơ chế chống spam
                 cms_nhomc_track_post_views($post_id);
             ?>
+                <!-- Khung bao bọc bài viết chi tiết -->
                 <article id="post-<?php the_ID(); ?>" <?php post_class('cms-single-article'); ?>>
                     
-                    <!-- Breadcrumbs (Module 19) -->
+                    <!-- 1. Breadcrumbs Navigation (Module 19) -->
                     <?php cms_nhomc_breadcrumbs(); ?>
 
-                    <!-- Tiêu đề bài viết -->
+                    <!-- 2. Tiêu đề bài viết chi tiết H1 (Module 6 Detail) -->
                     <h1 class="single-post-title"><?php the_title(); ?></h1>
 
                     <!-- Meta bài viết: Tác giả, Ngày đăng, Lượt xem & Thời gian đọc (Module 19) -->
@@ -151,7 +160,15 @@ get_header();
                     <!-- ================= HẾT MODULE 18 ================= -->
 
 
-                    <!-- Module #17: Author Box (Thông tin tác giả bài viết & Tiểu sử tác giả) -->
+                    <!-- ==============================================================================
+                         MODULE 17: AUTHOR BOX - THÔNG TIN TÁC GIẢ BÀI VIẾT (VINH EM - Branch: VinhEm/17-AuthorBox)
+                         - Vị trí: Đặt trang trọng ở cuối bài viết, trước mục Bài viết liên quan
+                         - Chức năng: Giới thiệu tác giả bài viết gồm: Ảnh đại diện Avatar tròn,
+                           Họ tên tác giả, Huy hiệu chức vụ (Biên tập viên TDC), Số lượng bài viết
+                           đã đóng góp, Đoạn giới thiệu tiểu sử (Bio) và Các liên kết mạng xã hội
+                           (Facebook, Twitter, LinkedIn, Website cá nhân, Email liên hệ).
+                         - Logic gọi hàm: cms_nhomc_render_author_box() trong functions.php
+                         ============================================================================== -->
                     <?php if (function_exists('cms_nhomc_render_author_box')) : ?>
                         <?php cms_nhomc_render_author_box(); ?>
                     <?php endif; ?>

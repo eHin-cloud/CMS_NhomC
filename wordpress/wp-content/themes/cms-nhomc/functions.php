@@ -563,17 +563,35 @@ function cms_nhomc_get_post_thumbnail_url($post_id) {
 }
 
 /**
- * Render single post card matching the design specification
+ * ==============================================================================
+ * MODULE 2: CONTENT - DANH SÁCH BÀI VIẾT NẰM NGANG (VINH EM - Branch: VinhEm/2-content)
+ * ==============================================================================
+ * Hàm render thẻ bài viết nằm ngang (Post Card) chuẩn thiết kế đồ án CMS Nhóm C.
+ * 
+ * Logic xử lý chi tiết:
+ * 1. Nhận $post_id hoặc lấy đối tượng $post hiện tại trong vòng lặp WordPress.
+ * 2. Tách ngày, tháng, năm đăng bài (get_the_date) để hiển thị Date Badge độc đáo.
+ * 3. Lấy đường dẫn bài viết (get_permalink) và tiêu đề bài viết (get_the_title).
+ * 4. Truy vấn danh sách chuyên mục (get_the_category) và tạo danh sách liên kết HTML.
+ * 5. Lấy ảnh đại diện bài viết (cms_nhomc_get_post_thumbnail_url) với fallback thông minh.
+ * 6. Lấy đoạn trích tóm tắt (post_excerpt) hoặc tự sinh để người đọc nắm bắt thông tin.
+ * 7. Xuất cấu trúc thẻ bài viết <article class="cms-post-card"> tối ưu SEO và Responsive.
+ *
+ * @param int|null $post_id ID bài viết cần hiển thị
+ * ==============================================================================
  */
 function cms_nhomc_render_post_card($post_id = null) {
+    // 1. Kiểm tra và lấy dữ liệu đối tượng bài viết
     $post = get_post($post_id);
     if (!$post) return;
 
+    // 2. Trích xuất thông tin ngày tháng để tạo Date Badge dạng hộp số nổi bật
     $day   = get_the_date('d', $post);
     $month = get_the_date('n', $post);
     $year  = get_the_date('Y', $post);
     $month_label = 'THÁNG ' . $month;
 
+    // 3. Đường dẫn chi tiết và tiêu đề chuẩn hóa
     $permalink = get_permalink($post);
     $title     = get_the_title($post);
 
@@ -943,8 +961,23 @@ function cms_nhomc_render_categories_widget($title = 'Categories') {
 }
 
 /**
- * Render Widget: ARCHIVE (Lưu trữ theo ngày tháng / Bài viết mới nhất) - Module 11
- * Thiết kế giao diện 2 cột đánh số 1 - 8 theo chuẩn thiết kế spec
+ * ==============================================================================
+ * MODULE 11: ARCHIVE - LƯU TRỮ THEO NGÀY THÁNG / XEM NHIỀU (VINH EM - Branch: VinhEm/11-Archive)
+ * ==============================================================================
+ * Hàm render widget Archive chuyên nghiệp hiển thị 8 mục chia làm 2 cột đánh số 1-8.
+ *
+ * Logic xử lý chi tiết:
+ * 1. Truy vấn 8 bài viết xem nhiều nhất (hoặc bài mới nhất) dựa trên custom field
+ *    meta_key 'cms_post_views' (tích hợp cùng Module 19 của nhóm).
+ * 2. Fallback tự động lấy bài viết mới nhất nếu bài viết chưa có đủ số lượt xem.
+ * 3. Hỗ trợ 2 chế độ xem thông qua tab chuyển đổi:
+ *    - Tab "Mới nhất": 8 bài viết được chia làm 4 hàng, mỗi hàng gồm 2 cột đối xứng
+ *      (Cặp số: 1-5, 2-6, 3-7, 4-8), có hiển thị số lượng bình luận.
+ *    - Tab "Ngày tháng": 8 mốc thời gian lưu trữ bài viết theo ngày/tháng/năm.
+ * 4. Canh chỉnh layout bằng CSS Grid & Flexbox đảm bảo chiều cao các hàng ngang bằng nhau.
+ *
+ * @param string $title Tiêu đề widget (Mặc định: 'Xem nhiều')
+ * ==============================================================================
  */
 function cms_nhomc_render_archive_widget($title = 'Xem nhiều') {
     // 1. Lấy danh sách bài viết có lượt xem cao nhất (Tích hợp Module 19 Post Views vào Module 11)
@@ -1942,10 +1975,11 @@ function cms_nhomc_register_pages_widget() {
 add_action('widgets_init', 'cms_nhomc_register_pages_widget');
 
 /* ==========================================================================
-   MODULE 17: AUTHOR BOX - THÔNG TIN TÁC GIẢ BÀI VIẾT (VINH EM)
+   MODULE 17: AUTHOR BOX - THÔNG TIN TÁC GIẢ BÀI VIẾT (VINH EM - Branch: VinhEm/17-AuthorBox)
    - Chức năng: Khung thông tin cá nhân và giới thiệu ngắn về tác giả bài viết.
-   - Bố cục & Giao diện: Avatar tròn, tên tác giả, bio ngắn và các liên kết mạng xã hội.
-   - Vị trí: Trang chi tiết (Detail page), đặt cuối bài viết trước phần bình luận.
+   - Bố cục & Giao diện: Avatar tròn 96px, tên tác giả, bio ngắn, số bài viết và 5 liên kết MXH.
+   - Vị trí: Đặt ở cuối bài viết trong trang chi tiết (single.php), trước phần bình luận.
+   - Logic: Tự động trích xuất metadata người dùng WordPress (user meta), có cơ chế fallback.
    ========================================================================== */
 
 /**
