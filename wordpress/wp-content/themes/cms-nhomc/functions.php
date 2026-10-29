@@ -15,6 +15,9 @@ require_once get_template_directory() . '/inc/class-vietnamese-search.php';
 // (20) Nạp chức năng Newsletter Subscription (Ponytail Standard)
 require_once get_template_directory() . '/inc/newsletter.php';
 
+// Nạp chức năng Khối Tin Chuyên Mục Báo Chí (Category News Box)
+require_once get_template_directory() . '/inc/category-news-box.php';
+
 function cms_nhomc_setup() {
     // Hỗ trợ thẻ Title tự động của WordPress
     add_theme_support('title-tag');
